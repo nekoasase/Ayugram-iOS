@@ -27,6 +27,7 @@
 
 "Settings.ChatList.Header" = "CHAT LIST";
 "Settings.CompactChatList" = "Compact Chat List";
+"Settings.HideTypingInChatList" = "Hide \"typing…\" in chat list";
 
 "Settings.Profiles.Header" = "PROFILES";
 

@@ -27,6 +27,7 @@
 
 "Settings.ChatList.Header" = "СПИСОК ЧАТОВ";
 "Settings.CompactChatList" = "Компактный список чатов";
+"Settings.HideTypingInChatList" = "Скрыть «печатает…» в списке чатов";
 
 "Settings.Profiles.Header" = "ПРОФИЛИ";
 

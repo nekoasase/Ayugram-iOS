@@ -7,6 +7,7 @@ import SwiftSignalKit
 import TelegramPresentationData
 import ChatTitleActivityNode
 import LocalizedPeerData
+import SGSimpleSettings
 
 final class ChatListInputActivitiesNode: ASDisplayNode {
     private let activityNode: ChatTitleActivityNode
@@ -27,7 +28,7 @@ final class ChatListInputActivitiesNode: ASDisplayNode {
             
             var state = ChatTitleActivityNodeState.none
             
-            if !activities.isEmpty {
+            if !SGSimpleSettings.shared.hideTypingInChatList, !activities.isEmpty {
                 var commonKey: Int32? = activities[0].1.key
                 for i in 1 ..< activities.count {
                     if activities[i].1.key != commonKey {

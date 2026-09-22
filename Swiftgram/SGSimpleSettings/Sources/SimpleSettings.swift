@@ -126,6 +126,7 @@ public class SGSimpleSettings {
         case showRegDate
         case regDateCache
         case compactChatList
+        case hideTypingInChatList
         case compactFolderNames
         case allChatsTitleLengthOverride
 //        case allChatsFolderPositionOverride
@@ -261,6 +262,7 @@ public class SGSimpleSettings {
         Keys.showRegDate.rawValue: true,
         Keys.regDateCache.rawValue: [:],
         Keys.compactChatList.rawValue: false,
+        Keys.hideTypingInChatList.rawValue: false,
         Keys.compactFolderNames.rawValue: false,
         Keys.allChatsTitleLengthOverride.rawValue: AllChatsTitleLengthOverride.none.rawValue,
 //        Keys.allChatsFolderPositionOverride.rawValue: AllChatsFolderPositionOverride.none.rawValue
@@ -433,6 +435,9 @@ public class SGSimpleSettings {
     
     @UserDefault(key: Keys.compactChatList.rawValue)
     public var compactChatList: Bool
+    
+    @UserDefault(key: Keys.hideTypingInChatList.rawValue)
+    public var hideTypingInChatList: Bool
 
     @UserDefault(key: Keys.compactFolderNames.rawValue)
     public var compactFolderNames: Bool

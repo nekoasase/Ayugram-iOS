@@ -88,6 +88,7 @@ private enum SGBoolSetting: String {
     case showCreationDate
     case showRegDate
     case compactChatList
+    case hideTypingInChatList
     case compactFolderNames
     case allChatsHidden
     case defaultEmojisFirst
@@ -169,6 +170,7 @@ private func SGControllerEntries(presentationData: PresentationData, callListSet
     
     entries.append(.header(id: id.count, section: .chatList, text: i18n("Settings.ChatList.Header", lang), badge: nil))
     entries.append(.toggle(id: id.count, section: .chatList, settingName: .compactChatList, value: SGSimpleSettings.shared.compactChatList, text: i18n("Settings.CompactChatList", lang), enabled: true))
+    entries.append(.toggle(id: id.count, section: .chatList, settingName: .hideTypingInChatList, value: SGSimpleSettings.shared.hideTypingInChatList, text: i18n("Settings.HideTypingInChatList", lang), enabled: true))
     entries.append(.toggle(id: id.count, section: .chatList, settingName: .disableChatSwipeOptions, value: !SGSimpleSettings.shared.disableChatSwipeOptions, text: i18n("Settings.ChatSwipeOptions", lang), enabled: true))
     entries.append(.toggle(id: id.count, section: .chatList, settingName: .disableDeleteChatSwipeOption, value: !SGSimpleSettings.shared.disableDeleteChatSwipeOption, text: i18n("Settings.DeleteChatSwipeOption", lang), enabled: !SGSimpleSettings.shared.disableChatSwipeOptions))
     
@@ -476,6 +478,8 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
         case .compactChatList:
             SGSimpleSettings.shared.compactChatList = value
             askForRestart?()
+        case .hideTypingInChatList:
+            SGSimpleSettings.shared.hideTypingInChatList = value
         case .compactFolderNames:
             SGSimpleSettings.shared.compactFolderNames = value
         case .allChatsHidden:
