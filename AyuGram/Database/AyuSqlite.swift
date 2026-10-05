@@ -22,6 +22,16 @@ public enum AyuSqliteValue {
 }
 
 extension AyuSqliteValue {
+    /// True for a SQL `NULL`.
+    ///
+    /// Distinct from a missing dictionary key: a selected column that is NULL is
+    /// present as ``null``, and the typed accessors below all return `nil` for it,
+    /// so code that needs to tell "NULL" from "absent" has to ask here.
+    public var isNull: Bool {
+        if case .null = self { return true }
+        return false
+    }
+
     public var int64Value: Int64? {
         if case .integer(let value) = self { return value }
         return nil
@@ -128,9 +138,18 @@ final class AyuSqliteStatement {
         sqlite3_clear_bindings(self.handle)
     }
 
-    /// Advances to the next row. Returns false once the statement is done.
+    /// Raw result of `sqlite3_step`: `SQLITE_ROW`, `SQLITE_DONE`, or an error code.
+    ///
+    /// Callers must not treat `SQLITE_DONE` and a failure as the same thing — that
+    /// is how a rejected INSERT silently becomes a no-op.
+    func stepCode() -> Int32 {
+        return sqlite3_step(self.handle)
+    }
+
+    /// Advances to the next row. Returns false once the statement is done **or**
+    /// has failed; use ``stepCode()`` when the difference matters.
     func step() -> Bool {
-        return sqlite3_step(self.handle) == SQLITE_ROW
+        return self.stepCode() == SQLITE_ROW
     }
 
     var columnCount: Int32 {
@@ -186,8 +205,8 @@ public final class AyuSqlite {
 
         // WAL matches the Android original; the archive is written while the
         // user is actively using the client.
-        guard self.execute("PRAGMA journal_mode = WAL"),
-              self.execute("PRAGMA foreign_keys = ON") else {
+        guard self.exec("PRAGMA journal_mode = WAL"),
+              self.exec("PRAGMA foreign_keys = ON") else {
             sqlite3_close(handle)
             self.handle = nil
             return nil
@@ -207,15 +226,21 @@ public final class AyuSqlite {
         return String(cString: message)
     }
 
-    /// Runs one or more statements, ignoring any result rows.
-    @discardableResult
-    public func execute(_ sql: String) -> Bool {
+    /// Runs one or more statements, ignoring any result rows, reporting failure
+    /// as a `Bool`.
+    ///
+    /// Deliberately not an overload of ``execute(_:)-swift.method``: two methods
+    /// differing only by throwing-ness and return type make call sites ambiguous,
+    /// and the ambiguity is exactly the kind of thing that only shows up at
+    /// type-check time.
+    private func exec(_ sql: String) -> Bool {
         guard let handle = self.handle else { return false }
         return sqlite3_exec(handle, sql, nil, nil, nil) == SQLITE_OK
     }
 
+    /// Runs one or more statements, throwing on failure.
     public func execute(_ sql: String) throws {
-        guard self.execute(sql) else {
+        guard self.exec(sql) else {
             throw AyuSqliteError(message: self.lastError ?? "unknown error", sql: sql)
         }
     }
@@ -241,27 +266,52 @@ public final class AyuSqlite {
 
         let names = statement.columnNames()
         var rows: [[String: AyuSqliteValue]] = []
-        while statement.step() {
+
+        var code = statement.stepCode()
+        while code == SQLITE_ROW {
             var row: [String: AyuSqliteValue] = [:]
             for index in 0 ..< statement.columnCount {
                 let name = names[Int(index)]
                 row[name.isEmpty ? "column\(index)" : name] = statement.value(at: index)
             }
             rows.append(row)
+            code = statement.stepCode()
+        }
+        // Anything other than DONE means the statement failed part-way through.
+        // Stopping silently would return a truncated result set as if it were the
+        // whole answer.
+        guard code == SQLITE_DONE else {
+            throw AyuSqliteError(
+                message: self.lastError ?? "query failed with sqlite code \(code)",
+                sql: sql
+            )
         }
         return rows
     }
 
-    /// Runs a statement that does not return rows.
+    /// Runs a statement that does not return rows, throwing if it fails.
     public func run(_ sql: String, _ bindings: [AyuSqliteValue] = []) throws {
         guard let statement = AyuSqliteStatement(database: self.handle, sql: sql) else {
             throw AyuSqliteError(message: self.lastError ?? "could not prepare statement", sql: sql)
         }
         statement.bind(bindings)
-        guard !statement.step() else {
+
+        var code = statement.stepCode()
+        if code == SQLITE_ROW {
             // A row came back where none was expected; drain it.
-            while statement.step() {}
-            return
+            repeat {
+                code = statement.stepCode()
+            } while code == SQLITE_ROW
+        }
+        // SQLITE_DONE is the only acceptable outcome. Treating any other code as
+        // success is how a rejected INSERT (NOT NULL, constraint, datatype) turns
+        // into a silent no-op — a bug this wrapper had, caught by the data-layer
+        // tests on the Mac.
+        guard code == SQLITE_DONE else {
+            throw AyuSqliteError(
+                message: self.lastError ?? "statement failed with sqlite code \(code)",
+                sql: sql
+            )
         }
     }
 
@@ -273,7 +323,7 @@ public final class AyuSqlite {
             try self.execute("COMMIT")
             return result
         } catch {
-            _ = self.execute("ROLLBACK")
+            _ = self.exec("ROLLBACK")
             throw error
         }
     }
