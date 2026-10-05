@@ -1,0 +1,14 @@
+diff --git a/Swiftgram/SGSettingsUI/BUILD b/Swiftgram/SGSettingsUI/BUILD
+index dc1613e7..a0aa2073 100644
+--- a/Swiftgram/SGSettingsUI/BUILD
++++ b/Swiftgram/SGSettingsUI/BUILD
+@@ -16,6 +16,9 @@ swift_library(
+         "-warnings-as-errors",
+     ],
+     deps = [
++        # MARK: AyuGram
++        # The AyuGram section of this screen reads and writes AyuSettings.
++        "//AyuGram/AyuSettings:AyuSettings",
+         "//Swiftgram/SGItemListUI:SGItemListUI",
+         "//Swiftgram/SGLogging:SGLogging",
+         "//Swiftgram/SGSimpleSettings:SGSimpleSettings",

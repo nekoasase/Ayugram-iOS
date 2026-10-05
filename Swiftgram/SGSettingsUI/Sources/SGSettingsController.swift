@@ -3,6 +3,8 @@ import SGLogging
 import SGSimpleSettings
 import SGStrings
 import SGAPIToken
+// MARK: AyuGram
+import AyuSettings
 
 import SGItemListUI
 import Foundation
@@ -43,6 +45,8 @@ private enum SGControllerSection: Int32, SGItemListSection {
     case contextMenu
     case accountColors
     case other
+    // MARK: AyuGram
+    case ayugram
 }
 
 private enum SGBoolSetting: String {
@@ -106,6 +110,15 @@ private enum SGBoolSetting: String {
     case nyStyleSnow
     case nyStyleLightning
     case tabBarSearchEnabled
+    // MARK: AyuGram
+    // Backed by AyuSettings rather than SGSimpleSettings; the change handler below
+    // routes these to the AyuGram store.
+    case ayuGhostMode
+    case ayuGhostModeStories
+    case ayuSaveDeletedMessages
+    case ayuSaveEditedMessages
+    case ayuSaveReadMarks
+    case ayuAdBlockSponsored
 }
 
 private enum SGOneFromManySetting: String {
@@ -329,6 +342,23 @@ private func SGControllerEntries(presentationData: PresentationData, callListSet
     entries.append(.toggle(id: id.count, section: .other, settingName: .hidePhoneInSettings, value: SGSimpleSettings.shared.hidePhoneInSettings, text: i18n("Settings.HidePhoneInSettingsUI", lang), enabled: true))
     entries.append(.notice(id: id.count, section: .other, text: i18n("Settings.HidePhoneInSettingsUI.Notice", lang)))
     
+    // MARK: AyuGram
+    // The AyuGram feature switches. They live in their own store (AyuSettings), so
+    // the change handler routes them separately; everything else here — the entry
+    // types, the search filter, the restart prompt — is reused as is.
+    id.increment(10000)
+    entries.append(.header(id: id.count, section: .ayugram, text: "AyuGram", badge: nil))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostMode, value: AyuSettings.shared.ghostModeEnabled, text: "Ghost Mode", enabled: true))
+    entries.append(.notice(id: id.count, section: .ayugram, text: "Does not report read receipts, typing or online status. Applies to every chat unless a chat has its own override."))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostModeStories, value: AyuSettings.shared.ghostModeStories, text: "Ghost Mode for Stories", enabled: AyuSettings.shared.ghostModeEnabled))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveDeletedMessages, value: AyuSettings.shared.saveDeletedMessages, text: "Save Deleted Messages", enabled: true))
+    entries.append(.notice(id: id.count, section: .ayugram, text: "Keeps deleted and edited messages in AyuGram's own database, separately from the message cache."))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveEditedMessages, value: AyuSettings.shared.saveEditedMessages, text: "Save Edit History", enabled: AyuSettings.shared.saveDeletedMessages))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveReadMarks, value: AyuSettings.shared.saveReadMarks, text: "Save Read Dates", enabled: true))
+    entries.append(.notice(id: id.count, section: .ayugram, text: "Records who read a message and when. Telegram does not report the reader for read contents in groups, so those are stored without one."))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuAdBlockSponsored, value: AyuSettings.shared.adBlockEnabled, text: "Block Sponsored Messages", enabled: true))
+    entries.append(.notice(id: id.count, section: .ayugram, text: "Hides sponsored posts in channels. Filter lists and web content blocking are not implemented."))
+    
     return filterSGItemListUIEntrires(entries: entries, by: state.searchQuery)
 }
 
@@ -398,6 +428,24 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
             ).start()
         case .startTelescopeWithRearCam:
             SGSimpleSettings.shared.startTelescopeWithRearCam = value
+        // MARK: AyuGram
+        // AyuGram switches write to their own store. `simplePromise` is signalled
+        // for the ones that gate another toggle's enabled state, which is how the
+        // Swiftgram settings above already handle their dependencies.
+        case .ayuGhostMode:
+            AyuSettings.shared.ghostModeEnabled = value
+            simplePromise.set(true)
+        case .ayuGhostModeStories:
+            AyuSettings.shared.ghostModeStories = value
+        case .ayuSaveDeletedMessages:
+            AyuSettings.shared.saveDeletedMessages = value
+            simplePromise.set(true)
+        case .ayuSaveEditedMessages:
+            AyuSettings.shared.saveEditedMessages = value
+        case .ayuSaveReadMarks:
+            AyuSettings.shared.saveReadMarks = value
+        case .ayuAdBlockSponsored:
+            AyuSettings.shared.adBlockEnabled = value
         case .hideStories:
             SGSimpleSettings.shared.hideStories = value
         case .showProfileId:

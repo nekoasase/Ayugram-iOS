@@ -16,6 +16,9 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        # MARK: AyuGram
+        # The AyuGram section of this screen reads and writes AyuSettings.
+        "//AyuGram/AyuSettings:AyuSettings",
         "//Swiftgram/SGItemListUI:SGItemListUI",
         "//Swiftgram/SGLogging:SGLogging",
         "//Swiftgram/SGSimpleSettings:SGSimpleSettings",

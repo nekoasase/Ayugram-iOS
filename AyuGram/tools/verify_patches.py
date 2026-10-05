@@ -44,6 +44,8 @@ EXPECTED_TARGETS = {
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessages.swift",
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift",
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift",
+    "Swiftgram/SGSettingsUI/BUILD",
+    "Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift",
 }
 
 TARGET_RE = re.compile(r"^\+\+\+ b/(.+)$", re.MULTILINE)
