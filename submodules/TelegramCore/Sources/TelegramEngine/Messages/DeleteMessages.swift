@@ -2,6 +2,8 @@ import Foundation
 import Postbox
 import SwiftSignalKit
 import TelegramApi
+// MARK: AyuGram
+import AyuArchive
 
 func addMessageMediaResourceIdsToRemove(media: Media, resourceIds: inout [MediaResourceId]) {
     if let image = media as? TelegramMediaImage {
@@ -23,6 +25,15 @@ func addMessageMediaResourceIdsToRemove(message: Message, resourceIds: inout [Me
 }
 
 public func _internal_deleteMessages(transaction: Transaction, mediaBox: MediaBox, ids: [MessageId], deleteMedia: Bool = true, manualAddMessageThreadStatsDifference: ((MessageThreadKey, Int, Int) -> Void)? = nil) {
+    // MARK: AyuGram
+    // Anti-delete. This is the single funnel every deletion path goes through —
+    // updates, "delete for everyone", autoremove, history validation, secret
+    // chats and failed sends — so hooking here catches them all without touching
+    // eight call sites. It must run before `transaction.deleteMessages` below,
+    // because afterwards the message contents are gone; the recorder reads them
+    // here and persists them off the postbox queue.
+    AyuArchiveRecorder.shared.recordDeletions(transaction: transaction, ids: ids)
+
     var resourceIds: [MediaResourceId] = []
     if deleteMedia {
         for id in ids {

@@ -51,6 +51,26 @@ public final class AyuDatabase {
         return base.appendingPathComponent(fileName).path
     }
 
+    /// Archive file for one account.
+    ///
+    /// Mirrors the Android original, whose databases are documented as
+    /// per-account `ayu-data*` files: "Database location -
+    /// `/data/data/PACKAGE/databases/ayu-data*`". Keeping accounts in separate
+    /// files means two accounts can never mix the history of the same channel,
+    /// which is the one thing a shared file could not prevent, because a channel
+    /// id is identical across accounts.
+    public static func path(accountId: Int64) -> String {
+        let base = FileManager.default
+            .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
+        return base.appendingPathComponent("ayugram-\(accountId).sqlite").path
+    }
+
+    /// Opens the archive belonging to `accountId`.
+    public convenience init(accountId: Int64) {
+        self.init(path: AyuDatabase.path(accountId: accountId))
+    }
+
     // MARK: - Migrations
 
     /// `PRAGMA user_version`, the same slot Room uses to record its schema version.

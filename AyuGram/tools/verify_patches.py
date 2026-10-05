@@ -35,9 +35,11 @@ SETTINGS = ROOT / "AyuSettings" / "Sources" / "AyuSettings.swift"
 # The patch set is allowed to touch exactly these files, nothing else.
 EXPECTED_TARGETS = {
     "submodules/TelegramCore/BUILD",
+    "submodules/TelegramCore/Sources/Account/Account.swift",
     "submodules/TelegramCore/Sources/State/ManagedAccountPresence.swift",
     "submodules/TelegramCore/Sources/State/SynchronizePeerReadState.swift",
     "submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift",
+    "submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessages.swift",
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift",
 }
 
@@ -136,11 +138,10 @@ def main():
             line for line in text.splitlines()
             if line.startswith("+") and not line.startswith("+++")
         )
-        match = re.search(r'"//(AyuGram/[^"]+):([A-Za-z_][A-Za-z0-9_]*)"', added)
-        check("build patch adds an AyuGram module dependency", match is not None,
+        match = re.findall(r'"//(AyuGram/[^"]+):([A-Za-z_][A-Za-z0-9_]*)"', added)
+        check("build patch adds AyuGram module dependencies", bool(match),
               "" if match else "no added //AyuGram/... label found")
-        if match:
-            package, target = match.group(1), match.group(2)
+        for package, target in match:
             module_build = ROOT / package[len("AyuGram/"):] / "BUILD"
             ok = module_build.exists() and target in module_build.read_text(encoding="utf-8")
             check(f"build dependency //{package}:{target} resolves to an existing target",

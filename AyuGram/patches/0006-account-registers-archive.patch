@@ -1,0 +1,18 @@
+diff --git a/submodules/TelegramCore/Sources/Account/Account.swift b/submodules/TelegramCore/Sources/Account/Account.swift
+index ffff9140..80b7cb4c 100644
+--- a/submodules/TelegramCore/Sources/Account/Account.swift
++++ b/submodules/TelegramCore/Sources/Account/Account.swift
+@@ -1247,6 +1247,13 @@ public class Account {
+         self.network = network
+         self.networkArguments = networkArguments
+         self.peerId = peerId
++        // MARK: AyuGram
++        // Register the account with the archive recorder. `Postbox.Transaction`
++        // does not expose the account peer id and the deletion funnel in
++        // DeleteMessages.swift has no account parameter, so the id is captured
++        // once here, where it is authoritative. This is a statement, not a use of
++        // `self`, so it is valid before the initializer completes.
++        AyuArchiveRecorder.shared.connect(accountId: peerId.toInt64())
+         
+         self.auxiliaryMethods = auxiliaryMethods
+         self.supplementary = supplementary
