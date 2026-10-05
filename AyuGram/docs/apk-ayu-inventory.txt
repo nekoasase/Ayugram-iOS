@@ -1,4 +1,4 @@
-﻿APK: C:\Users\neko_asase\Downloads\vanilla-ayuGram-universal-20250101.apk
+APK: C:\Users\neko_asase\Downloads\vanilla-ayuGram-universal-20250101.apk
 dex files: 5, distinct strings: 136425
 
 ===== AyuGram classes (75) =====

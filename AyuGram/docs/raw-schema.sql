@@ -1,4 +1,4 @@
-﻿-- AyuGram iOS: schema extracted verbatim from vanilla-ayuGram APK
+-- AyuGram iOS: schema extracted verbatim from vanilla-ayuGram APK
 -- Source: com.radolyn.ayugram (AyuDatabase), tables of the patch layer
 -- Do not edit by hand: regenerate with tools/extract_schema.py
 

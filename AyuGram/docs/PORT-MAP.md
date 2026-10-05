@@ -1,62 +1,62 @@
-﻿# AyuGram â†’ iOS: ÐºÐ°Ñ€Ñ‚Ð° Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ°
+# AyuGram → iOS: карта переноса
 
-Ð”Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚ ÑÐ¾ÑÑ‚Ð°Ð²Ð»ÐµÐ½ Ð¿Ð¾ Ñ„Ð°ÐºÑ‚Ð°Ð¼, Ð¸Ð·Ð²Ð»ÐµÑ‡Ñ‘Ð½Ð½Ñ‹Ð¼ Ð¸Ð· `vanilla-ayuGram-universal-20250101.apk`
-(ÑÐ¼. `apk-ayu-inventory.txt`, ÑÐºÑ€Ð¸Ð¿Ñ‚ `../tools/apk_ayu_inventory.py`).
+Документ составлен по фактам, извлечённым из `vanilla-ayuGram-universal-20250101.apk`
+(см. `apk-ayu-inventory.txt`, скрипт `../tools/apk_ayu_inventory.py`).
 
-## 0. Ð§Ñ‚Ð¾ Ð¿Ñ€ÐµÐ´ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ ÑÐ¾Ð±Ð¾Ð¹ Ð¾Ñ€Ð¸Ð³Ð¸Ð½Ð°Ð»
+## 0. Что представляет собой оригинал
 
-| ÐŸÐ°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ | Ð—Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ |
+| Параметр | Значение |
 |---|---|
-| ÐŸÐ°ÐºÐµÑ‚ | `com.radolyn.ayugram` |
-| Ð‘Ð°Ð·Ð° | Telegram Android **11.5.3** |
-| Ð Ð¾Ð´Ð¸Ñ‚ÐµÐ»ÑŒÑÐºÐ¸Ð¹ Ñ„Ð¾Ñ€Ðº | [exteraGram](https://github.com/exteraSquad/exteraGram) |
-| ÐšÐ¾Ð´ | 5 Ã— `classes*.dex`, ~30 ÐœÐ‘ Ð±Ð°Ð¹Ñ‚ÐºÐ¾Ð´Ð°, 136 425 ÑƒÐ½Ð¸ÐºÐ°Ð»ÑŒÐ½Ñ‹Ñ… ÑÑ‚Ñ€Ð¾Ðº |
-| ÐÐ°Ñ‚Ð¸Ð²ÐºÐ° | `libtmessages.49.so` (21â€“28 ÐœÐ‘/Ð°Ñ€Ñ…), `libmaps-mobile`, `libvosk`, `libetgadblock`, `libjnidispatch` |
-| Ð¡Ð»Ð¾Ð¸ | AyuGram: 75 ÐºÐ»Ð°ÑÑÐ¾Ð² `com.radolyn.ayugram.*`<br>exteraGram: 159 ÐºÐ»Ð°ÑÑÐ¾Ð² `com.exteragram.messenger.*` |
+| Пакет | `com.radolyn.ayugram` |
+| База | Telegram Android **11.5.3** |
+| Родительский форк | [exteraGram](https://github.com/exteraSquad/exteraGram) |
+| Код | 5 × `classes*.dex`, ~30 МБ байткода, 136 425 уникальных строк |
+| Нативка | `libtmessages.49.so` (21–28 МБ/арх), `libmaps-mobile`, `libvosk`, `libetgadblock`, `libjnidispatch` |
+| Слои | AyuGram: 75 классов `com.radolyn.ayugram.*`<br>exteraGram: 159 классов `com.exteragram.messenger.*` |
 
-ÐšÐ»ÑŽÑ‡ÐµÐ²Ð¾Ð¹ Ð²Ñ‹Ð²Ð¾Ð´ Ð°ÑƒÐ´Ð¸Ñ‚Ð°: **Ñ„Ð¸Ñ‡Ð¸ AyuGram â€” ÑÑ‚Ð¾ Ð½Ðµ UI-ÐºÐ¾ÑÐ¼ÐµÑ‚Ð¸ÐºÐ°, Ð° Ñ‚Ð¾Ð½ÐºÐ¸Ð¹ Ð¿Ð°Ñ‚Ñ‡-ÑÐ»Ð¾Ð¹ Ð¿Ð¾Ð²ÐµÑ€Ñ…
-Ð³Ð¾Ñ‚Ð¾Ð²Ð¾Ð³Ð¾ ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð°.** 75 ÐºÐ»Ð°ÑÑÐ¾Ð² â€” ÑÑ‚Ð¾ data layer (Room/SQLite) + Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ + Ñ…ÑƒÐºÐ¸ Ð²
-Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸ÐºÐ¸ MTProto-Ð°Ð¿Ð´ÐµÐ¹Ñ‚Ð¾Ð². Ð˜Ð¼ÐµÐ½Ð½Ð¾ Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ð¿ÐµÑ€ÐµÐ½Ð¾Ñ Ð½Ð° iOS Ñ€ÐµÐ°Ð»ÐµÐ½: Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ñ‚ÑÑ Ð½Ðµ
-ÐºÐ»Ð¸ÐµÐ½Ñ‚, Ð° ÑÑ‚Ð¾Ñ‚ ÑÐ»Ð¾Ð¹.
+Ключевой вывод аудита: **фичи AyuGram — это не UI-косметика, а тонкий патч-слой поверх
+готового клиента.** 75 классов — это data layer (Room/SQLite) + настройки + хуки в
+обработчики MTProto-апдейтов. Именно поэтому перенос на iOS реален: переносится не
+клиент, а этот слой.
 
-## 1. Ð¡Ñ‚Ñ€Ð°Ñ‚ÐµÐ³Ð¸Ñ
+## 1. Стратегия
 
-**ÐÐµ Ð´ÐµÐ»Ð°ÐµÐ¼:** Ð¿ÐµÑ€ÐµÐ¿Ð¸ÑÑ‹Ð²Ð°Ð½Ð¸Ðµ Telegram-ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð° Ñ Ð½ÑƒÐ»Ñ (Android-Ð²ÐµÑ€ÑÐ¸Ñ >1 Ð¼Ð»Ð½ ÑÑ‚Ñ€Ð¾Ðº,
-iOS-Ð²ÐµÑ€ÑÐ¸Ñ ~700k ÑÑ‚Ñ€Ð¾Ðº Swift/ObjC â€” ÑÑ‚Ð¾ Ñ‡ÐµÐ»Ð¾Ð²ÐµÐºÐ¾-Ð³Ð¾Ð´Ñ‹).
+**Не делаем:** переписывание Telegram-клиента с нуля (Android-версия >1 млн строк,
+iOS-версия ~700k строк Swift/ObjC — это человеко-годы).
 
-**Ð”ÐµÐ»Ð°ÐµÐ¼:** Ñ„Ð¾Ñ€Ðº [Swiftgram/Telegram-iOS](https://github.com/Swiftgram/Telegram-iOS)
-(Ð¶Ð¸Ð²Ð¾Ð¹ Ð¼Ð¾Ð´-Ñ„Ð¾Ñ€Ðº Telegram-iOS, Ñ‚Ð¾Ñ‚ Ð¶Ðµ, Ñ‡Ñ‚Ð¾ Ð¿Ñ€Ð¾Ð´Ð°Ñ‘Ñ‚ÑÑ Ð² App Store) Ð¸ Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ð¼ Ð² Ð½ÐµÐ³Ð¾
-Ð¿Ð°Ñ‚Ñ‡-ÑÐ»Ð¾Ð¹ AyuGram ÐºÐ°Ðº Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ð¼Ð¾Ð´ÑƒÐ»ÑŒ `AyuGram/`. Ð¡Ñ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ð° ÑÐ»Ð¾Ñ Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€ÑÐµÑ‚
-android-Ð¾Ñ€Ð¸Ð³Ð¸Ð½Ð°Ð», Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð°Ð¿ÑÑ‚Ñ€Ð¸Ð¼Ð½Ñ‹Ðµ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ñ AyuGram Ð¼Ð¾Ð¶Ð½Ð¾ Ð±Ñ‹Ð»Ð¾ Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÐ¸Ñ‚ÑŒ Ð¼ÐµÑ…Ð°Ð½Ð¸Ñ‡ÐµÑÐºÐ¸:
+**Делаем:** форк [Swiftgram/Telegram-iOS](https://github.com/Swiftgram/Telegram-iOS)
+(живой мод-форк Telegram-iOS, тот же, что продаётся в App Store) и переносим в него
+патч-слой AyuGram как отдельный модуль `AyuGram/`. Структура слоя повторяет
+android-оригинал, чтобы апстримные изменения AyuGram можно было переносить механически:
 
 ```
 AyuGram/
-â”œâ”€â”€ Database/          # Ð¿Ð¾Ñ€Ñ‚ Room â†’ GRDB/SQLite, ÑÑ…ÐµÐ¼Ð° 1:1 Ð¸Ð· DEX
-â”‚   â”œâ”€â”€ Entities/
-â”‚   â””â”€â”€ DAOs/
-â”œâ”€â”€ Features/
-â”‚   â”œâ”€â”€ GhostMode/
-â”‚   â”œâ”€â”€ AntiDelete/
-â”‚   â”œâ”€â”€ EditedHistory/
-â”‚   â”œâ”€â”€ SpyRead/
-â”‚   â”œâ”€â”€ RegexFilters/
-â”‚   â””â”€â”€ AdBlock/
-â”œâ”€â”€ Settings/          # UI Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº + Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ Ñ„Ð»Ð°Ð³Ð¾Ð²
-â””â”€â”€ AyuState.swift     # Ð°Ð½Ð°Ð»Ð¾Ð³ com.radolyn.ayugram.AyuState
+├── Database/          # порт Room → GRDB/SQLite, схема 1:1 из DEX
+│   ├── Entities/
+│   └── DAOs/
+├── Features/
+│   ├── GhostMode/
+│   ├── AntiDelete/
+│   ├── EditedHistory/
+│   ├── SpyRead/
+│   ├── RegexFilters/
+│   └── AdBlock/
+├── Settings/          # UI настроек + хранение флагов
+└── AyuState.swift     # аналог com.radolyn.ayugram.AyuState
 ```
 
-## 2. Data layer â€” Ð¿Ð¾Ñ€Ñ‚Ð¸Ñ€ÑƒÐµÑ‚ÑÑ Ð±ÑƒÐºÐ²Ð°Ð»ÑŒÐ½Ð¾
+## 2. Data layer — портируется буквально
 
-Ð¡Ñ…ÐµÐ¼Ñ‹ Ñ‚Ð°Ð±Ð»Ð¸Ñ† Ð¸Ð·Ð²Ð»ÐµÑ‡ÐµÐ½Ñ‹ Ð¸Ð· DEX Ð´Ð¾ÑÐ»Ð¾Ð²Ð½Ð¾, Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ð¿Ð¾Ñ€Ñ‚ Ð¾Ð´Ð½Ð¾Ð·Ð½Ð°Ñ‡ÐµÐ½.
+Схемы таблиц извлечены из DEX дословно, поэтому порт однозначен.
 
-### Anti-delete / Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð¿Ñ€Ð°Ð²Ð¾Ðº
+### Anti-delete / история правок
 
 ```
 DeletedMessage, DeletedMessageFull, DeletedMessageReaction,
 DeletedDialog, EditedMessage
 ```
 
-### Spy (ÐºÑ‚Ð¾ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð»)
+### Spy (кто прочитал)
 
 ```sql
 CREATE TABLE SpyMessageRead (
@@ -65,54 +65,54 @@ CREATE TABLE SpyMessageRead (
   messageId INTEGER NOT NULL, entityCreateDate INTEGER NOT NULL);
 CREATE INDEX index_SpyMessageRead_userId_dialogId_messageId
   ON SpyMessageRead (userId, dialogId, messageId);
--- SpyMessageContentsRead â€” Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ‡Ð½Ð° Ð¿Ð¾ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ðµ
+-- SpyMessageContentsRead — идентична по структуре
 ```
 
-### Regex-Ñ„Ð¸Ð»ÑŒÑ‚Ñ€Ñ‹
+### Regex-фильтры
 
 ```
 RegexFilter, RegexFilterGlobalExclusion  (+ HashablePattern, AyuFilterUtils)
 ```
 
-ÐŸÐ¾Ñ€Ñ‚: Room â†’ [GRDB](https://github.com/groue/GRDB.swift). ÐœÐ¸Ð³Ñ€Ð°Ñ†Ð¸Ð¸
-(`AyuDatabase_AutoMigration_23_24_Impl` â€¦ `_31_32_Impl`, Ñ‚.Ðµ. Ð²ÐµÑ€ÑÐ¸Ð¸ 23â†’32) Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÑÑ‚ÑÑ
-ÐºÐ°Ðº Ð¿Ð¾ÑÐ»ÐµÐ´Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾ÑÑ‚ÑŒ GRDB-Ð¼Ð¸Ð³Ñ€Ð°Ñ†Ð¸Ð¹ Ñ Ñ‚ÐµÐ¼Ð¸ Ð¶Ðµ Ð½Ð¾Ð¼ÐµÑ€Ð°Ð¼Ð¸.
+Порт: Room → [GRDB](https://github.com/groue/GRDB.swift). Миграции
+(`AyuDatabase_AutoMigration_23_24_Impl` … `_31_32_Impl`, т.е. версии 23→32) переносятся
+как последовательность GRDB-миграций с теми же номерами.
 
-## 3. ÐœÐ°Ñ‚Ñ€Ð¸Ñ†Ð° Ñ„Ð¸Ñ‡ Ð¸ Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð²Ñ€ÐµÐ·ÐºÐ¸ Ð² iOS
+## 3. Матрица фич и точки врезки в iOS
 
-| # | Ð¤Ð¸Ñ‡Ð° | Android-Ñ€ÐµÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ñ | Ð¢Ð¾Ñ‡ÐºÐ° Ð²Ñ€ÐµÐ·ÐºÐ¸ Ð² Telegram-iOS | Ð¡Ð»Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ |
+| # | Фича | Android-реализация | Точка врезки в Telegram-iOS | Сложность |
 |---|---|---|---|---|
-| 1 | **Ghost Mode** â€” Ð½Ðµ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÑ‚ÑŒ read/online/typing | `AyuState`, `ayughostconfig`, `ayughostexclusionsconfig`, per-chat Ð¸ÑÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ | ÐŸÐµÑ€ÐµÑ…Ð²Ð°Ñ‚ Ð¸ÑÑ…Ð¾Ð´ÑÑ‰Ð¸Ñ… Ð·Ð°Ð¿Ñ€Ð¾ÑÐ¾Ð² Ð² `TelegramCore`: `messages.readHistory`, `channels.readHistory`, `messages.setTyping`, `account.updateStatus`, `stories.readStories`. Ð¤Ð»Ð°Ð³ Ð½Ð° ÑƒÑ€Ð¾Ð²Ð½Ðµ `Account`/`Network` | ÑÑ€ÐµÐ´Ð½ÑÑ |
-| 2 | **Anti-delete** â€” Ð°Ñ€Ñ…Ð¸Ð² ÑƒÐ´Ð°Ð»Ñ‘Ð½Ð½Ð¾Ð³Ð¾ | `DeletedMessageDao`, `DeletedMessageReaction`, `updateDeleteMessages` | ÐžÐ±Ñ€Ð°Ð±Ð¾Ñ‚ÐºÐ° `updateDeleteMessages` / `updateDeleteChannelMessages` / `updateDeleteScheduledMessages` Ð´Ð¾ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ Ð¸Ð· `MessageHistory`; ÑÐ¾Ñ…Ñ€Ð°Ð½ÑÑ‚ÑŒ ÑÐ½Ð°Ð¿ÑˆÐ¾Ñ‚ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ | Ð²Ñ‹ÑÐ¾ÐºÐ°Ñ |
-| 3 | **Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð¿Ñ€Ð°Ð²Ð¾Ðº** | `EditedMessageDao` | `updateEditMessage` / `updateEditChannelMessage` â€” ÑÐ½Ð°Ð¿ÑˆÐ¾Ñ‚ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÐµÐ¹ Ñ€ÐµÐ²Ð¸Ð·Ð¸Ð¸ | ÑÑ€ÐµÐ´Ð½ÑÑ |
-| 4 | **Spy: ÐºÑ‚Ð¾ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð»** | `SpyDao`, Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð²Ñ‹ÑˆÐµ | `updateReadMessagesContents`, `updateChannelReadMessagesContents`, `messages.getMessageReadParticipants` | ÑÑ€ÐµÐ´Ð½ÑÑ |
-| 5 | **Regex-Ñ„Ð¸Ð»ÑŒÑ‚Ñ€Ñ‹** | `AyuFilterUtils`, `HashablePattern` | Ð¤Ð¸Ð»ÑŒÑ‚Ñ€Ð°Ñ†Ð¸Ñ Ð½Ð° Ð²ÑÑ‚Ð°Ð²ÐºÐµ Ð² Ð¸ÑÑ‚Ð¾Ñ€Ð¸ÑŽ Ñ‡Ð°Ñ‚Ð° Ð¸ Ð² ÑÐ¿Ð¸ÑÐºÐµ Ð´Ð¸Ð°Ð»Ð¾Ð³Ð¾Ð² | Ð½Ð¸Ð·ÐºÐ°Ñ |
-| 6 | **Adblock** | `AdBlockClient` + Ð½Ð°Ñ‚Ð¸Ð²Ð½Ñ‹Ð¹ `libetgadblock.so`, ÐºÐ¾ÑÐ¼ÐµÑ‚Ð¸Ñ‡ÐµÑÐºÐ¸Ðµ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð° | ÐÐ°Ñ‚Ð¸Ð²Ð½Ð¾Ð³Ð¾ Ð°Ð½Ð°Ð»Ð¾Ð³Ð° Ð½ÐµÑ‚. ÐŸÐ¾Ñ€Ñ‚: Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ñ‹Ðµ filter-ÑÐ¿Ð¸ÑÐºÐ¸ + Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²ÐºÐ° sponsored-ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹ Ð½Ð° ÑƒÑ€Ð¾Ð²Ð½Ðµ Ð°Ð¿Ð´ÐµÐ¹Ñ‚Ð¾Ð²; `WKContentRuleList` Ð´Ð»Ñ Ð²ÑÑ‚Ñ€Ð¾ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð²ÐµÐ±Ð° (Instant View) | Ð²Ñ‹ÑÐ¾ÐºÐ°Ñ |
-| 7 | **Ð›Ð¾ÐºÐ°Ð»ÑŒÐ½Ð°Ñ Ñ‚Ñ€Ð°Ð½ÑÐºÑ€Ð¸Ð¿Ñ†Ð¸Ñ** | `libvosk.so` + Ð¼Ð¾Ð´ÐµÐ»ÑŒ (Ð² APK â€” `vosk-model-small-cs`) | **ÐÐµ Ð½ÑƒÐ¶ÐµÐ½ Vosk:** Ð² iOS 17+ ÐµÑÑ‚ÑŒ `SFSpeechRecognizer` Ñ on-device Ñ€Ð°ÑÐ¿Ð¾Ð·Ð½Ð°Ð²Ð°Ð½Ð¸ÐµÐ¼ â€” Ð½Ð°Ñ‚Ð¸Ð²Ð½Ñ‹Ð¹ Ð¸ Ð±Ð¾Ð»ÐµÐµ ÐºÐ°Ñ‡ÐµÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹ Ð¿ÑƒÑ‚ÑŒ | Ð½Ð¸Ð·ÐºÐ°Ñ |
-| 8 | **ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸** | exteraGram settings screens | ÐžÑ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ `AyuGramSettingsController` + Ñ€Ð°Ð·Ð´ÐµÐ» Ð² Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ°Ñ… | ÑÑ€ÐµÐ´Ð½ÑÑ |
-| 9 | **Ð’Ð¸Ð·ÑƒÐ°Ð»ÑŒÐ½Ñ‹Ðµ Ð¼Ð°Ñ€ÐºÐµÑ€Ñ‹** | `DeletedMarkCross/EyeCrossed/TrashBin/Text/Nothing`, `EditedMarkText` | ÐšÐ°ÑÑ‚Ð¾Ð¼Ð½Ñ‹Ðµ Ð°Ñ‚Ñ€Ð¸Ð±ÑƒÑ‚Ñ‹ Ð² Ñ€ÐµÐ½Ð´ÐµÑ€Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹ (`ChatMessageItemView`) | ÑÑ€ÐµÐ´Ð½ÑÑ |
+| 1 | **Ghost Mode** — не отправлять read/online/typing | `AyuState`, `ayughostconfig`, `ayughostexclusionsconfig`, per-chat исключения | Перехват исходящих запросов в `TelegramCore`: `messages.readHistory`, `channels.readHistory`, `messages.setTyping`, `account.updateStatus`, `stories.readStories`. Флаг на уровне `Account`/`Network` | средняя |
+| 2 | **Anti-delete** — архив удалённого | `DeletedMessageDao`, `DeletedMessageReaction`, `updateDeleteMessages` | Обработка `updateDeleteMessages` / `updateDeleteChannelMessages` / `updateDeleteScheduledMessages` до удаления из `MessageHistory`; сохранять снапшот сообщения | высокая |
+| 3 | **История правок** | `EditedMessageDao` | `updateEditMessage` / `updateEditChannelMessage` — снапшот предыдущей ревизии | средняя |
+| 4 | **Spy: кто прочитал** | `SpyDao`, таблицы выше | `updateReadMessagesContents`, `updateChannelReadMessagesContents`, `messages.getMessageReadParticipants` | средняя |
+| 5 | **Regex-фильтры** | `AyuFilterUtils`, `HashablePattern` | Фильтрация на вставке в историю чата и в списке диалогов | низкая |
+| 6 | **Adblock** | `AdBlockClient` + нативный `libetgadblock.so`, косметические правила | Нативного аналога нет. Порт: локальные filter-списки + блокировка sponsored-сообщений на уровне апдейтов; `WKContentRuleList` для встроенного веба (Instant View) | высокая |
+| 7 | **Локальная транскрипция** | `libvosk.so` + модель (в APK — `vosk-model-small-cs`) | **Не нужен Vosk:** в iOS 17+ есть `SFSpeechRecognizer` с on-device распознаванием — нативный и более качественный путь | низкая |
+| 8 | **Настройки** | exteraGram settings screens | Отдельный `AyuGramSettingsController` + раздел в настройках | средняя |
+| 9 | **Визуальные маркеры** | `DeletedMarkCross/EyeCrossed/TrashBin/Text/Nothing`, `EditedMarkText` | Кастомные атрибуты в рендере сообщений (`ChatMessageItemView`) | средняя |
 
-## 4. Ð§Ñ‚Ð¾ ÑƒÐ¶Ðµ ÐµÑÑ‚ÑŒ Ð½Ð° iOS Ð¸ Ð½Ðµ Ð¿Ð¸ÑˆÐµÑ‚ÑÑ Ð·Ð°Ð½Ð¾Ð²Ð¾
+## 4. Что уже есть на iOS и не пишется заново
 
-- **Telegram-iOS** â€” MTProto-ÑÑ‚ÐµÐº `TelegramCore` (Ð½Ðµ TDLib), Ñ€ÐµÐ½Ð´ÐµÑ€ Ñ‡Ð°Ñ‚Ð¾Ð², Ð¼ÐµÐ´Ð¸Ð°, Ð·Ð²Ð¾Ð½ÐºÐ¸.
-- **Swiftgram** â€” Ð¼Ð¾Ð´-ÑÐ»Ð¾Ð¹: ÑÐ²Ð¾Ð¸ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸, ÑÐºÑ€Ñ‹Ñ‚Ð¸Ðµ ÑÑ‚Ð°Ñ‚ÑƒÑÐ¾Ð² Ð¸ Ñ‚.Ð¿. Ð¢Ð¾Ñ‡Ð½Ñ‹Ð¹ ÑÐ¿Ð¸ÑÐ¾Ðº
-  Ð¿ÐµÑ€ÐµÑÐµÑ‡ÐµÐ½Ð¸Ð¹ ÑÐ²ÐµÑ€Ð¸Ñ‚ÑŒ Ð¿Ð¾ÑÐ»Ðµ ÐºÐ»Ð¾Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ (`rg -i "ghost|antidelete|noread"` Ð¿Ð¾ Ñ€ÐµÐ¿Ðµ).
-- **ghostgram** ([ichmagmaus111/ghostgram](https://github.com/ichmagmaus111/ghostgram)) â€”
-  iOS-Ñ„Ð¾Ñ€Ðº Ñ Anti-Delete, Ghost Mode Ð¸ Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¾Ð¹ Ñ‚Ñ€Ð°Ð½ÑÐºÑ€Ð¸Ð¿Ñ†Ð¸ÐµÐ¹. ÐŸÐ¾Ð»ÐµÐ·ÐµÐ½ ÐºÐ°Ðº **Ñ€ÐµÑ„ÐµÑ€ÐµÐ½Ñ
-  Ñ€ÐµÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ð¸**, Ñ‚Ðµ Ð¶Ðµ Ñ„Ð¸Ñ‡Ð¸ ÑƒÐ¶Ðµ Ñ€ÐµÑˆÐµÐ½Ñ‹ Ð½Ð° Swift.
+- **Telegram-iOS** — MTProto-стек `TelegramCore` (не TDLib), рендер чатов, медиа, звонки.
+- **Swiftgram** — мод-слой: свои настройки, скрытие статусов и т.п. Точный список
+  пересечений сверить после клонирования (`rg -i "ghost|antidelete|noread"` по репе).
+- **ghostgram** ([ichmagmaus111/ghostgram](https://github.com/ichmagmaus111/ghostgram)) —
+  iOS-форк с Anti-Delete, Ghost Mode и локальной транскрипцией. Полезен как **референс
+  реализации**, те же фичи уже решены на Swift.
 
-## 5. Ð¢Ñ€ÐµÐ±Ð¾Ð²Ð°Ð½Ð¸Ñ ÑÐ±Ð¾Ñ€ÐºÐ¸
+## 5. Требования сборки
 
-Ð˜Ð· `versions.json` Swiftgram master:
+Из `versions.json` Swiftgram master:
 
-| ÐšÐ¾Ð¼Ð¿Ð¾Ð½ÐµÐ½Ñ‚ | Ð’ÐµÑ€ÑÐ¸Ñ |
+| Компонент | Версия |
 |---|---|
 | Telegram iOS | 12.9.2 |
 | Xcode | **26.2** |
 | macOS | **26** |
 | Bazel | 8.4.2 |
 
-Ð¡Ð±Ð¾Ñ€ÐºÐ°:
+Сборка:
 
 ```bash
 git clone --recursive -j8 https://github.com/Swiftgram/Telegram-iOS.git
@@ -122,77 +122,77 @@ python3 build-system/Make/Make.py \
     --xcodeManagedCodesigning
 ```
 
-## 6. Ð Ð¸ÑÐºÐ¸ Ð¸ Ñ‡ÐµÑÑ‚Ð½Ñ‹Ðµ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð¸Ñ
+## 6. Риски и честные ограничения
 
-1. **Xcode 26.2 Ñ‚Ñ€ÐµÐ±ÑƒÐµÑ‚ macOS 26.** Ð•ÑÐ»Ð¸ Mac mini Ð½Ðµ Ð¿Ð¾Ð´Ð´ÐµÑ€Ð¶Ð¸Ð²Ð°ÐµÑ‚ macOS 26 â€” Ð±ÐµÑ€Ñ‘Ð¼
-   Ð±Ð¾Ð»ÐµÐµ ÑÑ‚Ð°Ñ€Ñ‹Ð¹ Ñ‚ÐµÐ³ Swiftgram Ð¸Ð»Ð¸ Ñ„Ð»Ð°Ð³ `--overrideXcodeVersion` (Ñ Ñ€Ð¸ÑÐºÐ¾Ð¼ Ð¾ÑˆÐ¸Ð±Ð¾Ðº ÑÐ±Ð¾Ñ€ÐºÐ¸).
-2. **api_id/api_hash Ð¾Ð±ÑÐ·Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹.** Ð‘ÐµÐ· ÑÐ²Ð¾ÐµÐ³Ð¾ `api_id` Ñ
-   [core.telegram.org](https://core.telegram.org/api/obtaining_api_id) Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð½Ðµ
-   Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑÑ Ðº Telegram. Ð­Ñ‚Ð¾ Ñ‚Ñ€ÐµÐ±Ð¾Ð²Ð°Ð½Ð¸Ðµ Telegram, Ð¾Ð±Ð¾Ð¹Ñ‚Ð¸ Ð½ÐµÐ»ÑŒÐ·Ñ.
-3. **Push-ÑƒÐ²ÐµÐ´Ð¾Ð¼Ð»ÐµÐ½Ð¸Ñ Ð¿Ñ€Ð¸ ÑÐ°Ð¹Ð´Ð»Ð¾Ð°Ð´Ðµ.** Ð¡ Ð±ÐµÑÐ¿Ð»Ð°Ñ‚Ð½Ñ‹Ð¼ Apple ID ÑÐ±Ð¾Ñ€ÐºÐ° Ð¶Ð¸Ð²Ñ‘Ñ‚ 7 Ð´Ð½ÐµÐ¹ Ð¸
-   **Ñ‚ÐµÑ€ÑÐµÑ‚ APNs-Ð¿ÑƒÑˆÐ¸** (Ð½ÑƒÐ¶Ð½Ñ‹ entitlements Ð¿Ð»Ð°Ñ‚Ð½Ð¾Ð³Ð¾ Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚Ð°). TrollStore ÑÐ½Ð¸Ð¼Ð°ÐµÑ‚
-   Ð¿Ñ€Ð¾Ð±Ð»ÐµÐ¼Ñƒ ÑÑ€Ð¾ÐºÐ°, Ð½Ð¾ Ð½Ðµ Ñ Ð¿ÑƒÑˆÐ°Ð¼Ð¸.
-4. **App Store Ð·Ð°ÐºÑ€Ñ‹Ñ‚.** Apple Ð¾Ñ‚ÐºÐ»Ð¾Ð½ÑÐµÑ‚ Ñ„Ð¾Ñ€ÐºÐ¸ Telegram â€” Ñ‚Ð¾Ð»ÑŒÐºÐ¾ ÑÐ°Ð¹Ð´Ð»Ð¾Ð°Ð´.
-5. **ÐŸÑ€Ð°Ð²Ð¾Ð²Ð°Ñ ÑÑ‚Ð¾Ñ€Ð¾Ð½Ð°.** Telegram-iOS Ð¿Ð¾Ð´ GPLv2: ÑÐ²Ð¾Ð¹ Ñ„Ð¾Ñ€Ðº Ð¾Ð±ÑÐ·Ð°Ð½ Ð±Ñ‹Ñ‚ÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¼.
-   ÐÐ°Ð·Ð²Ð°Ð½Ð¸Ðµ Ð¸ Ð»Ð¾Ð³Ð¾Ñ‚Ð¸Ð¿ Telegram Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÑŒ Ð½ÐµÐ»ÑŒÐ·Ñ (Ñ‚Ð¾Ð¶Ðµ Ñ‚Ñ€ÐµÐ±Ð¾Ð²Ð°Ð½Ð¸Ðµ Telegram).
+1. **Xcode 26.2 требует macOS 26.** Если Mac mini не поддерживает macOS 26 — берём
+   более старый тег Swiftgram или флаг `--overrideXcodeVersion` (с риском ошибок сборки).
+2. **api_id/api_hash обязательны.** Без своего `api_id` с
+   [core.telegram.org](https://core.telegram.org/api/obtaining_api_id) приложение не
+   подключится к Telegram. Это требование Telegram, обойти нельзя.
+3. **Push-уведомления при сайдлоаде.** С бесплатным Apple ID сборка живёт 7 дней и
+   **теряет APNs-пуши** (нужны entitlements платного аккаунта). TrollStore снимает
+   проблему срока, но не с пушами.
+4. **App Store закрыт.** Apple отклоняет форки Telegram — только сайдлоад.
+5. **Правовая сторона.** Telegram-iOS под GPLv2: свой форк обязан быть открытым.
+   Название и логотип Telegram использовать нельзя (тоже требование Telegram).
 
-## 7. Ð¡Ñ‚Ð°Ñ‚ÑƒÑ Ñ€Ð°Ð±Ð¾Ñ‚
+## 7. Статус работ
 
-### Ð“Ð¾Ñ‚Ð¾Ð²Ð¾ Ð¸ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐµÐ½Ð¾ (Ð½Ðµ Ñ‚Ñ€ÐµÐ±ÑƒÐµÑ‚ macOS)
+### Готово и проверено (не требует macOS)
 
-Ð’ÐµÑÑŒ data layer Ð¿Ð°Ñ‚Ñ‡-ÑÐ»Ð¾Ñ â€” Ñ‚Ð¾, Ñ‡Ñ‚Ð¾ Ð² Android Ð¶Ð¸Ð²Ñ‘Ñ‚ Ð² `com.radolyn.ayugram.database.*`.
+Весь data layer патч-слоя — то, что в Android живёт в `com.radolyn.ayugram.database.*`.
 
-| ÐÑ€Ñ‚ÐµÑ„Ð°ÐºÑ‚ | Ð§Ñ‚Ð¾ ÑÑ‚Ð¾ | ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° |
+| Артефакт | Что это | Проверка |
 |---|---|---|
-| `docs/raw-schema.sql` | Ð´Ð¾ÑÐ»Ð¾Ð²Ð½Ñ‹Ð¹ Ð´Ð°Ð¼Ð¿ DDL Ð¸Ð· APK (57 statements) | Ð¸Ð·Ð²Ð»ÐµÑ‡Ñ‘Ð½ Ð¸Ð· dex |
-| `AyuGram/Database/Schema/schema.sql` | ÐºÐ°Ð½Ð¾Ð½Ð¸Ñ‡ÐµÑÐºÐ°Ñ Ñ„Ð¸Ð½Ð°Ð»ÑŒÐ½Ð°Ñ ÑÑ…ÐµÐ¼Ð°, 8 Ñ‚Ð°Ð±Ð»Ð¸Ñ† + 10 Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð² | `tools/verify_schema.py` â€” 20 Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¾Ðº Ð² Ñ€ÐµÐ°Ð»ÑŒÐ½Ð¾Ð¼ SQLite |
-| `AyuGram/Database/Schema/AyuSchema.generated.swift` | Ñ‚Ðµ Ð¶Ðµ statements ÐºÐ°Ðº Swift-ÐºÐ¾Ð½ÑÑ‚Ð°Ð½Ñ‚Ñ‹ | `tools/gen_swift_schema.py --check` |
-| `AyuGram/Database/AyuDatabase.swift` | GRDB-Ð¼Ð¸Ð³Ñ€Ð°Ñ‚Ð¾Ñ€ + Ð¸Ð¼Ð¿Ð¾Ñ€Ñ‚Ñ‘Ñ€ Ð±Ð°Ð·Ñ‹ Ð¸Ð· Android | `tools/verify_importer.py` â€” 23 Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ¸ |
-| `AyuGram/Database/Entities/*.swift` | 8 ÑÑƒÑ‰Ð½Ð¾ÑÑ‚ÐµÐ¹, Ð²ÐºÐ»ÑŽÑ‡Ð°Ñ generic-Ñ€ÐµÐºÐ¾Ñ€Ð´ Ð½Ð° 35 ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº | `tools/verify_models.py` â€” 36 Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¾Ðº |
-| `tools/verify_all.py` | ÐµÐ´Ð¸Ð½Ð°Ñ Ñ‚Ð¾Ñ‡ÐºÐ° Ð²Ñ…Ð¾Ð´Ð° Ð´Ð»Ñ CI | `all 4 checks passed` |
-| `.github/workflows/verify.yml` | Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ¸ Ð½Ð° ubuntu/windows/macos | YAML Ð²Ð°Ð»Ð¸Ð´ÐµÐ½ |
-| `.github/workflows/build-ios.yml` | ÑÐ±Ð¾Ñ€ÐºÐ° Ð½Ð° macOS-Ñ€Ð°Ð½Ð½ÐµÑ€Ðµ (Ñ€ÑƒÑ‡Ð½Ð¾Ð¹ Ð·Ð°Ð¿ÑƒÑÐº) | YAML Ð²Ð°Ð»Ð¸Ð´ÐµÐ½, Ñ‚Ñ€ÐµÐ±ÑƒÐµÑ‚ Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾Ð³Ð¾Ð½Ð° |
+| `docs/raw-schema.sql` | дословный дамп DDL из APK (57 statements) | извлечён из dex |
+| `AyuGram/Database/Schema/schema.sql` | каноническая финальная схема, 8 таблиц + 10 индексов | `tools/verify_schema.py` — 20 проверок в реальном SQLite |
+| `AyuGram/Database/Schema/AyuSchema.generated.swift` | те же statements как Swift-константы | `tools/gen_swift_schema.py --check` |
+| `AyuGram/Database/AyuDatabase.swift` | GRDB-мигратор + импортёр базы из Android | `tools/verify_importer.py` — 23 проверки |
+| `AyuGram/Database/Entities/*.swift` | 8 сущностей, включая generic-рекорд на 35 колонок | `tools/verify_models.py` — 36 проверок |
+| `tools/verify_all.py` | единая точка входа для CI | `all 4 checks passed` |
+| `.github/workflows/verify.yml` | проверки на ubuntu/windows/macos | YAML валиден |
+| `.github/workflows/build-ios.yml` | сборка на macOS-раннере (ручной запуск) | YAML валиден, требует первого прогона |
 
-Ð”Ð²Ðµ Ð¾ÑˆÐ¸Ð±ÐºÐ¸, Ð½Ð°Ð¹Ð´ÐµÐ½Ð½Ñ‹Ðµ Ñ‚ÐµÑÑ‚Ð°Ð¼Ð¸, Ð° Ð½Ðµ Ð³Ð»Ð°Ð·Ð°Ð¼Ð¸:
+Две ошибки, найденные тестами, а не глазами:
 
-1. **ÐŸÐ¾Ñ€ÑÐ´Ð¾Ðº Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¹ Ð² Ð¸Ð¼Ð¿Ð¾Ñ€Ñ‚Ñ‘Ñ€Ðµ.** `ADD COLUMN reversed` Ð´Ð¾ Ð¿ÐµÑ€ÐµÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ
-   `RegexFilter` Ð¼Ð¾Ð»Ñ‡Ð° Ñ‚ÐµÑ€ÑÐµÑ‚ ÐºÐ¾Ð»Ð¾Ð½ÐºÑƒ, Ð¿Ð¾Ñ‚Ð¾Ð¼Ñƒ Ñ‡Ñ‚Ð¾ rebuild Ð½Ðµ ÐºÐ¾Ð¿Ð¸Ñ€ÑƒÐµÑ‚ ÐµÑ‘.
-   Ð’ÐµÑ€Ð½Ñ‹Ð¹ Ð¿Ð¾Ñ€ÑÐ´Ð¾Ðº: rebuild â†’ `reversed`. Ð—Ð°ÐºÑ€ÐµÐ¿Ð»ÐµÐ½Ð¾ Ñ€ÐµÐ³Ñ€ÐµÑÑÐ¸Ð¾Ð½Ð½Ñ‹Ð¼ Ñ‚ÐµÑÑ‚Ð¾Ð¼.
-2. **ÐŸÐ°Ñ€ÑÐµÑ€ Ñ‡ÐµÐºÐµÑ€Ð°** Ð¿ÑƒÑ‚Ð°Ð» enum-Ñ‹ Ñ‚Ð°Ð±Ð»Ð¸Ñ† (`AyuDeletedMessageTable`) Ñ ÑÐ°Ð¼Ð¸Ð¼Ð¸
-   ÑÑƒÑ‰Ð½Ð¾ÑÑ‚ÑÐ¼Ð¸, Ð¿Ð¾Ñ‚Ð¾Ð¼Ñƒ Ñ‡Ñ‚Ð¾ Ð¾Ð½Ð¸ Ñ‚Ð¾Ð¶Ðµ Ð¾Ð±ÑŠÑÐ²Ð»ÑÑŽÑ‚ `databaseTableName`.
+1. **Порядок операций в импортёре.** `ADD COLUMN reversed` до пересоздания
+   `RegexFilter` молча теряет колонку, потому что rebuild не копирует её.
+   Верный порядок: rebuild → `reversed`. Закреплено регрессионным тестом.
+2. **Парсер чекера** путал enum-ы таблиц (`AyuDeletedMessageTable`) с самими
+   сущностями, потому что они тоже объявляют `databaseTableName`.
 
-### Ð¢Ñ€ÐµÐ±ÑƒÐµÑ‚ Mac (Ð·Ð°Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ð½Ð¾ Ð´Ð¾ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ Remote Login)
+### Требует Mac (заблокировано до включения Remote Login)
 
-- ÐšÐ»Ð¾Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ð±Ð°Ð·Ñ‹ Swiftgram/Telegram-iOS Ñ ÑÐ°Ð±Ð¼Ð¾Ð´ÑƒÐ»ÑÐ¼Ð¸.
-- Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ° Xcode 26.2 (ÑÐ²ÐµÑ€Ð¸Ñ‚ÑŒ Ñ Ð²ÐµÑ€ÑÐ¸ÐµÐ¹ macOS; ÐµÑÐ»Ð¸ macOS < 26 â€” Ð±Ñ€Ð°Ñ‚ÑŒ Ð±Ð¾Ð»ÐµÐµ
-  ÑÑ‚Ð°Ñ€Ñ‹Ð¹ Ñ‚ÐµÐ³ Swiftgram Ð¸Ð»Ð¸ `--overrideXcodeVersion`).
-- ÐŸÐµÑ€Ð²Ð°Ñ ÑÐ±Ð¾Ñ€ÐºÐ° Ð±Ð°Ð·Ñ‹ Ð±ÐµÐ· Ð¿Ð°Ñ‚Ñ‡-ÑÐ»Ð¾Ñ (Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ°, Ñ‡Ñ‚Ð¾ Ð¾ÐºÑ€ÑƒÐ¶ÐµÐ½Ð¸Ðµ Ð¶Ð¸Ð²Ð¾Ðµ).
-- Ð ÐµÐ°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ñ Ñ„Ð¸Ñ‡, Ñ‚Ñ€ÐµÐ±ÑƒÑŽÑ‰Ð¸Ñ… Ð¸ÑÑ…Ð¾Ð´Ð½Ð¸ÐºÐ¾Ð² Telegram-iOS: Ð¿ÐµÑ€ÐµÑ…Ð²Ð°Ñ‚ Ð°Ð¿Ð´ÐµÐ¹Ñ‚Ð¾Ð²
-  MTProto (`updateDeleteMessages`, `updateReadMessagesContents`, â€¦),
-  Ghost Mode Ð½Ð° ÑƒÑ€Ð¾Ð²Ð½Ðµ Ð¸ÑÑ…Ð¾Ð´ÑÑ‰Ð¸Ñ… Ð·Ð°Ð¿Ñ€Ð¾ÑÐ¾Ð², UI Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº.
-- Ð¡Ð±Ð¾Ñ€ÐºÐ° IPA Ð¸ ÑÐ°Ð¹Ð´Ð»Ð¾Ð°Ð´.
+- Клонирование базы Swiftgram/Telegram-iOS с сабмодулями.
+- Установка Xcode 26.2 (сверить с версией macOS; если macOS < 26 — брать более
+  старый тег Swiftgram или `--overrideXcodeVersion`).
+- Первая сборка базы без патч-слоя (проверка, что окружение живое).
+- Реализация фич, требующих исходников Telegram-iOS: перехват апдейтов
+  MTProto (`updateDeleteMessages`, `updateReadMessagesContents`, …),
+  Ghost Mode на уровне исходящих запросов, UI настроек.
+- Сборка IPA и сайдлоад.
 
-### ÐžÑÐ¾Ð·Ð½Ð°Ð½Ð½Ð¾ Ð½Ðµ Ð½Ð°Ñ‡Ð°Ñ‚Ð¾
+### Осознанно не начато
 
-ÐšÐ¾Ð´, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð½ÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾ ÑÐºÐ¾Ð¼Ð¿Ð¸Ð»Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð¸ Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ, Ð¿Ð¸ÑÐ°Ñ‚ÑŒ Ð²Ñ€ÐµÐ´Ð½Ð¾: Ð¾Ð½ ÑÐ¾Ð·Ð´Ð°Ñ‘Ñ‚
-Ð²Ð¸Ð´Ð¸Ð¼Ð¾ÑÑ‚ÑŒ Ð¿Ñ€Ð¾Ð³Ñ€ÐµÑÑÐ° Ð¸ ÐºÐ¾Ð¿Ð¸Ñ‚ Ð¾ÑˆÐ¸Ð±ÐºÐ¸. Ð¤Ð¸Ñ‡Ð¸, Ñ‚Ñ€ÐµÐ±ÑƒÑŽÑ‰Ð¸Ðµ Ð¸ÑÑ…Ð¾Ð´Ð½Ð¸ÐºÐ¾Ð² Telegram-iOS,
-Ð±ÑƒÐ´ÑƒÑ‚ Ð½Ð°Ð¿Ð¸ÑÐ°Ð½Ñ‹ Ð¿Ð¾ÑÐ»Ðµ ÐºÐ»Ð¾Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ Ð±Ð°Ð·Ñ‹ â€” Ñ‚Ð¾Ð³Ð´Ð° ÐºÐ°Ð¶Ð´Ð°Ñ Ð¸Ð· Ð½Ð¸Ñ… Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÑ‚ÑÑ ÑÐ±Ð¾Ñ€ÐºÐ¾Ð¹.
+Код, который невозможно скомпилировать и проверить, писать вредно: он создаёт
+видимость прогресса и копит ошибки. Фичи, требующие исходников Telegram-iOS,
+будут написаны после клонирования базы — тогда каждая из них проверяется сборкой.
 
-## 8. Ð¢Ð¾Ñ‡Ð½Ñ‹Ðµ Ñ‚Ð¾Ñ‡ÐºÐ¸ Ð²Ñ€ÐµÐ·ÐºÐ¸ (Ð½Ð°Ð¹Ð´ÐµÐ½Ñ‹ Ð² Ð¸ÑÑ…Ð¾Ð´Ð½Ð¸ÐºÐ°Ñ…, Ð½Ðµ Ð¿Ñ€ÐµÐ´Ð¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ)
+## 8. Точные точки врезки (найдены в исходниках, не предположения)
 
-Ð‘Ð°Ð·Ð° ÑÐºÐ»Ð¾Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð° Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¾: `D:\ayugram-src\Telegram-iOS` â€” 30 292 Ñ„Ð°Ð¹Ð»Ð°, 396 ÐœÐ‘,
-Telegram iOS 12.9.2. Ð’ÑÑ‘ Ð½Ð¸Ð¶Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾ Ñ‡Ñ‚ÐµÐ½Ð¸ÐµÐ¼ ÐºÐ¾Ð´Ð°.
+База склонирована локально: `D:\ayugram-src\Telegram-iOS` — 30 292 файла, 396 МБ,
+Telegram iOS 12.9.2. Всё ниже найдено чтением кода.
 
-### 8.1 Ghost Mode â€” Ñ‡ÐµÑ‚Ñ‹Ñ€Ðµ Ñ‚Ð¾Ñ‡ÐºÐ¸
+### 8.1 Ghost Mode — четыре точки
 
-| Ð§Ñ‚Ð¾ Ð¿Ð¾Ð´Ð°Ð²Ð»ÑÐµÐ¼ | Ð¤Ð°Ð¹Ð» | Ð¡Ñ‚Ñ€Ð¾ÐºÐ¸ | Ð’Ñ‹Ð·Ð¾Ð² |
+| Что подавляем | Файл | Строки | Вызов |
 |---|---|---|---|
-| ÐžÐ½Ð»Ð°Ð¹Ð½-ÑÑ‚Ð°Ñ‚ÑƒÑ | `submodules/TelegramCore/Sources/State/ManagedAccountPresence.swift` | 56, 60 | `account.updateStatus(offline:)` |
-| ÐžÑ‚Ð¼ÐµÑ‚ÐºÐ° Ð¿Ñ€Ð¾Ñ‡Ñ‚ÐµÐ½Ð¸Ñ | `submodules/TelegramCore/Sources/State/SynchronizePeerReadState.swift` | 254, 284 | `channels.readHistory`, `messages.readHistory` |
-| Ð˜Ð½Ð´Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð¿ÐµÑ‡Ð°Ñ‚Ð¸ | `submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift` | 184 | `messages.setTyping` |
-| ÐŸÑ€Ð¾ÑÐ¼Ð¾Ñ‚Ñ€ ÑÑ‚Ð¾Ñ€Ð¸Ñ | `.../TelegramEngine/Messages/TelegramEngineMessages.swift` | 1634â€“1640 | **ÑƒÐ¶Ðµ ÑÐ´ÐµÐ»Ð°Ð½Ð¾ Swiftgram** |
+| Онлайн-статус | `submodules/TelegramCore/Sources/State/ManagedAccountPresence.swift` | 56, 60 | `account.updateStatus(offline:)` |
+| Отметка прочтения | `submodules/TelegramCore/Sources/State/SynchronizePeerReadState.swift` | 254, 284 | `channels.readHistory`, `messages.readHistory` |
+| Индикатор печати | `submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift` | 184 | `messages.setTyping` |
+| Просмотр сторис | `.../TelegramEngine/Messages/TelegramEngineMessages.swift` | 1634–1640 | **уже сделано Swiftgram** |
 
-Ð¨Ð°Ð±Ð»Ð¾Ð½, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¼ ÑÑ‚Ð¾ Ð´ÐµÐ»Ð°ÐµÑ‚ ÑÐ°Ð¼ Swiftgram (Ñ‚Ð¾Ñ‚ Ð¶Ðµ Ñ„Ð°Ð¹Ð», ÑÑ‚Ñ€Ð¾ÐºÐ¸ 1634â€“1640):
+Шаблон, которым это делает сам Swiftgram (тот же файл, строки 1634–1640):
 
 ```swift
 public func markStoryAsSeen(peerId: EnginePeer.Id, id: Int32, asPinned: Bool) -> Signal<Never, NoError> {
@@ -204,25 +204,25 @@ public func markStoryAsSeen(peerId: EnginePeer.Id, id: Int32, asPinned: Bool) ->
 }
 ```
 
-ÐŸÐ°Ñ‚Ñ‚ÐµÑ€Ð½ â€” Ð¾Ð±ÐµÑ€Ð½ÑƒÑ‚ÑŒ Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¹ Ð¼ÐµÑ‚Ð¾Ð´ Ð´Ð²Ð¸Ð¶ÐºÐ° Ð¸ Ð¾Ð±Ð¾Ñ€Ð²Ð°Ñ‚ÑŒ Ð²Ñ‹Ð·Ð¾Ð². Ð”Ð»Ñ AyuGram Ñ‚Ð¾ Ð¶Ðµ ÑÐ°Ð¼Ð¾Ðµ
-Ð² Ñ‚Ñ€Ñ‘Ñ… Ð¾ÑÑ‚Ð°Ð²ÑˆÐ¸Ñ…ÑÑ Ñ‚Ð¾Ñ‡ÐºÐ°Ñ…, Ð¿Ð»ÑŽÑ per-chat Ð¸ÑÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ (Ð² Android â€” `ayughostexclusionsconfig`).
+Паттерн — обернуть публичный метод движка и оборвать вызов. Для AyuGram то же самое
+в трёх оставшихся точках, плюс per-chat исключения (в Android — `ayughostexclusionsconfig`).
 
-### 8.2 Ð§Ñ‚Ð¾ Ð½Ð° iOS ÑƒÐ¶Ðµ ÐµÑÑ‚ÑŒ â€” Ð½Ðµ Ð¿Ð¸ÑˆÐµÐ¼ Ð·Ð°Ð½Ð¾Ð²Ð¾
+### 8.2 Что на iOS уже есть — не пишем заново
 
-ÐÐ°Ð¹Ð´ÐµÐ½Ð¾ Ð² `Swiftgram/SGSimpleSettings/Sources/SimpleSettings.swift`:
+Найдено в `Swiftgram/SGSimpleSettings/Sources/SimpleSettings.swift`:
 
-- `storyStealthMode` + `canUseStealthMode` + `isStealthModeEnabled` â€” ÑÑ‚ÐµÐ»Ñ-Ñ€ÐµÐ¶Ð¸Ð¼ Ð´Ð»Ñ ÑÑ‚Ð¾Ñ€Ð¸Ñ;
-- `messageFilterKeywords` â€” Ñ„Ð¸Ð»ÑŒÑ‚Ñ€ Ð¿Ð¾ ÐºÐ»ÑŽÑ‡ÐµÐ²Ñ‹Ð¼ ÑÐ»Ð¾Ð²Ð°Ð¼ (**Ð½Ð¾ Ð½Ðµ regex**);
-- `transcriptionBackend` = `default | apple` â€” **Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ð°Ñ Ñ‚Ñ€Ð°Ð½ÑÐºÑ€Ð¸Ð¿Ñ†Ð¸Ñ Ñ‡ÐµÑ€ÐµÐ· Apple**, Ñ‚Ð¾ ÐµÑÑ‚ÑŒ
-  Vosk Ð¸Ð· Android-Ð²ÐµÑ€ÑÐ¸Ð¸ Ð½Ðµ Ð½ÑƒÐ¶ÐµÐ½, Ñ‡Ñ‚Ð¾ Ð¿Ð¾Ð´Ñ‚Ð²ÐµÑ€Ð¶Ð´Ð°ÐµÑ‚ Ð²Ñ‹Ð²Ð¾Ð´ Ñ€Ð°Ð·Ð´ÐµÐ»Ð° 3;
+- `storyStealthMode` + `canUseStealthMode` + `isStealthModeEnabled` — стелс-режим для сторис;
+- `messageFilterKeywords` — фильтр по ключевым словам (**но не regex**);
+- `transcriptionBackend` = `default | apple` — **локальная транскрипция через Apple**, то есть
+  Vosk из Android-версии не нужен, что подтверждает вывод раздела 3;
 - `hideReactions`, `secondsInMessages`, `showRegDate`, `showDC`, `showProfileId`,
   `hideStories`, `warnOnStoriesOpen`, `translationBackend` (`default|gtranslate|system`).
 
-Ð§ÐµÐ³Ð¾ Ð² Ð´ÐµÑ€ÐµÐ²Ðµ **Ð½ÐµÑ‚** (grep Ð¿Ð¾ Ð²ÑÐµÐ¼Ñƒ Ñ€ÐµÐ¿Ð¾Ð·Ð¸Ñ‚Ð¾Ñ€Ð¸ÑŽ Ð¿ÑƒÑÑ‚): Ð°Ð½Ñ‚Ð¸-ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ, Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð¿Ñ€Ð°Ð²Ð¾Ðº,
-spy Â«ÐºÑ‚Ð¾ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð»Â», regex-Ñ„Ð¸Ð»ÑŒÑ‚Ñ€Ñ‹, Ghost Mode Ð´Ð»Ñ Ñ‡Ð°Ñ‚Ð¾Ð² (ÐµÑÑ‚ÑŒ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð´Ð»Ñ ÑÑ‚Ð¾Ñ€Ð¸Ñ).
-Ð Ð¾Ð²Ð½Ð¾ ÑÑ‚Ð¾ Ð¸ ÑÐ¾ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ Ñ€Ð°Ð±Ð¾Ñ‚Ñƒ.
+Чего в дереве **нет** (grep по всему репозиторию пуст): анти-удаление, история правок,
+spy «кто прочитал», regex-фильтры, Ghost Mode для чатов (есть только для сторис).
+Ровно это и составляет работу.
 
-### 8.3 ÐšÐ°Ðº ÑƒÑÑ‚Ñ€Ð¾ÐµÐ½ Ñ„Ð¾Ñ€Ðº: Ñ„Ð¸Ñ‡Ð° = Bazel-Ð¼Ð¾Ð´ÑƒÐ»ÑŒ
+### 8.3 Как устроен форк: фича = Bazel-модуль
 
 ```
 Swiftgram/SGSimpleSettings/BUILD
@@ -245,227 +245,227 @@ swift_library(
 )
 ```
 
-ÐŸÐ¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ðº Ð´Ð²Ð¸Ð¶ÐºÑƒ: `submodules/TelegramCore/BUILD`, ÑÑ‚Ñ€Ð¾ÐºÐ° 5 â€”
-`"//Swiftgram/SGSimpleSettings:SGSimpleSettings"`. Ð¢Ð¾ ÐµÑÑ‚ÑŒ Ñ„Ð¾Ñ€Ðº Ð¿Ñ€Ð°Ð²Ð¸Ñ‚ TelegramCore Ð½Ð°Ð¿Ñ€ÑÐ¼ÑƒÑŽ.
+Подключение к движку: `submodules/TelegramCore/BUILD`, строка 5 —
+`"//Swiftgram/SGSimpleSettings:SGSimpleSettings"`. То есть форк правит TelegramCore напрямую.
 
-Ð¡Ð¾Ð³Ð»Ð°ÑˆÐµÐ½Ð¸Ðµ Ð¾ Ñ€Ð°Ð·Ð¼ÐµÑ‚ÐºÐµ Ð¿Ñ€Ð°Ð²Ð¾Ðº: `# MARK: Swiftgram` Ð² Bazel-Ñ„Ð°Ð¹Ð»Ð°Ñ… Ð¸ `// MARK: Swiftgram`
-Ð² Swift. Ð”Ð»Ñ AyuGram Ð´ÐµÐ»Ð°ÐµÐ¼ ÑÐ¸Ð¼Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡Ð½Ð¾: ÐºÐ°Ñ‚Ð°Ð»Ð¾Ð³ `AyuGram/` ÑÐ¾ ÑÐ²Ð¾Ð¸Ð¼Ð¸ Ð¼Ð¾Ð´ÑƒÐ»ÑÐ¼Ð¸ Ð¸ Ð¼ÐµÑ‚ÐºÐ¸
-`# MARK: AyuGram` / `// MARK: AyuGram` â€” Ñ‚Ð°Ðº Ð¿Ñ€Ð°Ð²ÐºÐ¸ Ð½Ðµ ÑÐ¼ÐµÑˆÐ¸Ð²Ð°ÑŽÑ‚ÑÑ Ñ Ð°Ð¿ÑÑ‚Ñ€Ð¸Ð¼Ð¾Ð¼ Ð¸ Ð²Ð¸Ð´Ð½Ñ‹ Ð² diff.
+Соглашение о разметке правок: `# MARK: Swiftgram` в Bazel-файлах и `// MARK: Swiftgram`
+в Swift. Для AyuGram делаем симметрично: каталог `AyuGram/` со своими модулями и метки
+`# MARK: AyuGram` / `// MARK: AyuGram` — так правки не смешиваются с апстримом и видны в diff.
 
-### 8.4 Ð˜Ð¡ÐŸÐ ÐÐ’Ð›Ð•ÐÐ˜Ð• Ñ€ÐµÑˆÐµÐ½Ð¸Ñ: Ñ…Ñ€Ð°Ð½Ð¸Ð»Ð¸Ñ‰Ðµ â€” Ð½Ðµ GRDB
+### 8.4 ИСПРАВЛЕНИЕ решения: хранилище — не GRDB
 
-ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð¸ÑÑ…Ð¾Ð´Ð½Ð¸ÐºÐ¾Ð² Ð¾Ñ‚Ð¼ÐµÐ½Ð¸Ð»Ð° Ð¿ÐµÑ€Ð²Ð¾Ð½Ð°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð²Ñ‹Ð±Ð¾Ñ€. **GRDB Ð² Ð´ÐµÑ€ÐµÐ²Ðµ Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²ÑƒÐµÑ‚.**
-Postbox (ÑˆÑ‚Ð°Ñ‚Ð½Ð¾Ðµ Ñ…Ñ€Ð°Ð½Ð¸Ð»Ð¸Ñ‰Ðµ Telegram) â€” ÑÑ‚Ð¾ key-value `ValueBox` Ð¿Ð¾Ð²ÐµÑ€Ñ… sqlite
-(`submodules/Postbox/Sources/SqliteValueBox.swift`), Ð° Ð½Ðµ Ñ€ÐµÐ»ÑÑ†Ð¸Ð¾Ð½Ð½Ð°Ñ Ð¡Ð£Ð‘Ð”: Â«Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹Â»
-Ð²Ñ€Ð¾Ð´Ðµ `MessageHistoryTable` Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ñ‹ ÐºÐ°Ðº ÐºÐ»ÑŽÑ‡â†’Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ, Ð° Ð½Ðµ ÐºÐ°Ðº SQL-Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ñ Ð¸Ð½Ð´ÐµÐºÑÐ°Ð¼Ð¸.
+Проверка исходников отменила первоначальный выбор. **GRDB в дереве отсутствует.**
+Postbox (штатное хранилище Telegram) — это key-value `ValueBox` поверх sqlite
+(`submodules/Postbox/Sources/SqliteValueBox.swift`), а не реляционная СУБД: «таблицы»
+вроде `MessageHistoryTable` реализованы как ключ→значение, а не как SQL-таблицы с индексами.
 
-Ð¡Ð»ÐµÐ´ÑÑ‚Ð²Ð¸Ñ:
+Следствия:
 
-- ÐŸÐ¸ÑÐ°Ñ‚ÑŒ Ð½Ð° GRDB Ð½ÐµÐ»ÑŒÐ·Ñ, Ð½Ðµ Ð²ÐµÐ½Ð´Ð¾Ñ€Ð¸Ð² ÑÑ‚Ð¾Ñ€Ð¾Ð½Ð½ÑŽÑŽ Ð·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð¾ÑÑ‚ÑŒ Ð¸ Ð½Ðµ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¸Ð² ÐµÑ‘ Ð¿Ð¾Ð´ Bazel.
-- ÐŸÐµÑ€ÐµÐ¿Ð¸ÑÑ‹Ð²Ð°Ñ‚ÑŒ ÑÑ…ÐµÐ¼Ñƒ AyuGram Ð¿Ð¾Ð´ key-value â€” Ð·Ð½Ð°Ñ‡Ð¸Ñ‚ Ð¿Ð¾Ñ‚ÐµÑ€ÑÑ‚ÑŒ Ñ€ÐµÐ»ÑÑ†Ð¸Ð¾Ð½Ð½ÑƒÑŽ ÑÑ…ÐµÐ¼Ñƒ
-  (Ð¸Ð½Ð´ÐµÐºÑÑ‹, JOIN'Ñ‹) Ð¸ Ð²ÑÑŽ ÑƒÐ¶Ðµ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐµÐ½Ð½ÑƒÑŽ Ñ€Ð°Ð±Ð¾Ñ‚Ñƒ.
+- Писать на GRDB нельзя, не вендорив стороннюю зависимость и не настроив её под Bazel.
+- Переписывать схему AyuGram под key-value — значит потерять реляционную схему
+  (индексы, JOIN'ы) и всю уже проверенную работу.
 
-**Ð ÐµÑˆÐµÐ½Ð¸Ðµ:** raw SQL Ñ‡ÐµÑ€ÐµÐ· sqlcipher, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð² Ð´ÐµÑ€ÐµÐ²Ðµ ÑƒÐ¶Ðµ ÑÐ»Ð¸Ð½ÐºÐ¾Ð²Ð°Ð½, Ð¿Ð»ÑŽÑ Ñ‚Ð¾Ð½ÐºÐ°Ñ
-Ñ‚Ð¸Ð¿Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð°Ñ Ð¾Ð±Ñ‘Ñ€Ñ‚ÐºÐ° (open / prepare / bind / step / column) â€” Ð¿Ð¾Ñ€ÑÐ´ÐºÐ° 200â€“300 ÑÑ‚Ñ€Ð¾Ðº,
-Ð±ÐµÐ· ÑÑ‚Ð¾Ñ€Ð¾Ð½Ð½Ð¸Ñ… Ð·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð¾ÑÑ‚ÐµÐ¹.
+**Решение:** raw SQL через sqlcipher, который в дереве уже слинкован, плюс тонкая
+типизированная обёртка (open / prepare / bind / step / column) — порядка 200–300 строк,
+без сторонних зависимостей.
 
-Ð§Ñ‚Ð¾ Ð¿Ñ€Ð¸ ÑÑ‚Ð¾Ð¼ **ÑÐ¾Ñ…Ñ€Ð°Ð½ÑÐµÑ‚ÑÑ Ð±ÐµÐ· Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ð¹**: `AyuGram/Database/Schema/schema.sql`
-(8 Ñ‚Ð°Ð±Ð»Ð¸Ñ†, 10 Ð¸Ð½Ð´ÐµÐºÑÐ¾Ð²), Ð¼Ð¸Ð³Ñ€Ð°Ñ†Ð¸Ð¸ Ð¸ Ð¸Ð¼Ð¿Ð¾Ñ€Ñ‚Ñ‘Ñ€ Ð±Ð°Ð·Ñ‹ Ð¸Ð· Android â€” ÑÑ‚Ð¾ Ñ‡Ð¸ÑÑ‚Ñ‹Ð¹ SQL,
-Ð¾Ð½ Ð½Ðµ Ð·Ð°Ð²Ð¸ÑÐ¸Ñ‚ Ð¾Ñ‚ Ð´Ð²Ð¸Ð¶ÐºÐ°. Ð¡ÑƒÑ‰Ð½Ð¾ÑÑ‚Ð¸ Ð¾ÑÑ‚Ð°ÑŽÑ‚ÑÑ `Codable`-ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ð°Ð¼Ð¸ Ñ Ð¼Ð°Ð¿Ð¿Ð¸Ð½Ð³Ð¾Ð¼ ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº
-Ñ‡ÐµÑ€ÐµÐ· `CodingKeys`, Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ð°Ð²Ñ‚Ð¾ÑÐ²ÐµÑ€ÐºÐ° `tools/verify_models.py` Ð¿Ñ€Ð¾Ð´Ð¾Ð»Ð¶Ð°ÐµÑ‚ Ñ€Ð°Ð±Ð¾Ñ‚Ð°Ñ‚ÑŒ.
-Ð£Ð±Ð¸Ñ€Ð°ÑŽÑ‚ÑÑ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ GRDB-ÑÐ¿ÐµÑ†Ð¸Ñ„Ð¸Ñ‡Ð½Ñ‹Ðµ conformance'Ñ‹ (`FetchableRecord`, `PersistableRecord`)
-Ð¸ `DatabaseMigrator`.
+Что при этом **сохраняется без изменений**: `AyuGram/Database/Schema/schema.sql`
+(8 таблиц, 10 индексов), миграции и импортёр базы из Android — это чистый SQL,
+он не зависит от движка. Сущности остаются `Codable`-структурами с маппингом колонок
+через `CodingKeys`, поэтому автосверка `tools/verify_models.py` продолжает работать.
+Убираются только GRDB-специфичные conformance'ы (`FetchableRecord`, `PersistableRecord`)
+и `DatabaseMigrator`.
 
-## 9. Ð§Ñ‚Ð¾ Ð´Ð°Ð»Ð° Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð°Ñ†Ð¸Ñ AyuGram (Ð¸ Ñ‡Ñ‚Ð¾ Ð¾ÑÑ‚Ð°Ð»Ð¾ÑÑŒ Ð¿Ð¾Ð´Ñ‚Ð²ÐµÑ€Ð´Ð¸Ñ‚ÑŒ)
+## 9. Что дала документация AyuGram (и что осталось подтвердить)
 
-Ð˜ÑÑ‚Ð¾Ñ‡Ð½Ð¸Ðº: [docs.ayugram.one/android/saving](https://docs.ayugram.one/android/saving/).
+Источник: [docs.ayugram.one/android/saving](https://docs.ayugram.one/android/saving/).
 
-**ÐŸÐ¾Ð´Ñ‚Ð²ÐµÑ€Ð¶Ð´Ð°ÐµÑ‚ Ð½Ð°ÑˆÐµ Ñ€ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ð¾ Ñ…Ñ€Ð°Ð½Ð¸Ð»Ð¸Ñ‰Ñƒ.** AyuGram Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ Ð°Ñ€Ñ…Ð¸Ð² Ð² **ÑÐ¾Ð±ÑÑ‚Ð²ÐµÐ½Ð½Ð¾Ð¹
-Room-Ð±Ð°Ð·Ðµ**, Ð° Ð½Ðµ Ð² Ð±Ð°Ð·Ðµ Telegram: Â«we use **our own**, powered by Android RoomÂ»,
-Ñ„Ð°Ð¹Ð»Ñ‹ `/data/data/PACKAGE/databases/ayu-data*`. Ð­Ñ‚Ð¾ Ñ€Ð¾Ð²Ð½Ð¾ Ñ‚Ð¾, Ñ‡Ñ‚Ð¾ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾ Ð·Ð´ÐµÑÑŒ:
-Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ñ„Ð°Ð¹Ð» `ayugram.sqlite` Ð¸ ÑÐ²Ð¾Ñ ÑÑ…ÐµÐ¼Ð°. ÐŸÐ»ÑŽÑÑ‹, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð¿ÐµÑ€ÐµÑ‡Ð¸ÑÐ»ÑÐµÑ‚
-Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð°Ñ†Ð¸Ñ (Ð°Ñ€Ñ…Ð¸Ð² Ð½Ðµ Ð·Ð°Ð²Ð¸ÑÐ¸Ñ‚ Ð¾Ñ‚ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ð¹ Telegram, Ñ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑÑ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð¾ Ð¾Ñ‚ ÐºÑÑˆÐ°),
-Ð½Ð° iOS ÑÐ¾Ñ…Ñ€Ð°Ð½ÑÑŽÑ‚ÑÑ Ð¿Ð¾ Ñ‚Ð¾Ð¹ Ð¶Ðµ Ð¿Ñ€Ð¸Ñ‡Ð¸Ð½Ðµ.
+**Подтверждает наше решение по хранилищу.** AyuGram хранит архив в **собственной
+Room-базе**, а не в базе Telegram: «we use **our own**, powered by Android Room»,
+файлы `/data/data/PACKAGE/databases/ayu-data*`. Это ровно то, что реализовано здесь:
+отдельный файл `ayugram.sqlite` и своя схема. Плюсы, которые перечисляет
+документация (архив не зависит от обновлений Telegram, чистится отдельно от кэша),
+на iOS сохраняются по той же причине.
 
-**ÐŸÐ¾Ð²ÐµÐ´ÐµÐ½Ð¸Ðµ, ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ð½Ð°Ð´Ð¾ Ð²Ð¾ÑÐ¿Ñ€Ð¾Ð¸Ð·Ð²ÐµÑÑ‚Ð¸ Ð² UI:**
+**Поведение, которое надо воспроизвести в UI:**
 
-- Ð ÐµÐ¶Ð¸Ð¼ **Â«View DeletedÂ»** â€” Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ñ‡Ð°Ñ‚ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ñ ÑƒÐ´Ð°Ð»Ñ‘Ð½Ð½Ñ‹Ð¼Ð¸ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸ÑÐ¼Ð¸, Ñ Ð¿Ð¾Ð¸ÑÐºÐ¾Ð¼
-  Ð¿Ð¾ Ð½Ð¸Ð¼. Ð­Ñ‚Ð¾ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ ÑÐºÑ€Ð°Ð½, Ð° Ð½Ðµ Ñ„Ð¸Ð»ÑŒÑ‚Ñ€ Ð² Ð¾Ð±Ñ‹Ñ‡Ð½Ð¾Ð¼ Ñ‡Ð°Ñ‚Ðµ.
-- **Ð¡Ñ‚Ñ€Ð°Ñ‚ÐµÐ³Ð¸Ñ Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ¸ Ð¿Ñ€Ð¸ ÑÐºÑ€Ð¾Ð»Ð»Ðµ.** AyuGram Ð²ÐºÐ»Ð¸Ð½Ð¸Ð²Ð°ÐµÑ‚ÑÑ Ð² Ð±Ð°Ñ‚Ñ‡-Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÑƒ Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ð¸
-  (20â€“50 ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹), Ð±ÐµÑ€Ñ‘Ñ‚ id Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¸ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÐµÐ³Ð¾ Ð·Ð°Ð³Ñ€ÑƒÐ¶ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð¸ Ð¿Ð¾Ð´Ñ‚ÑÐ³Ð¸Ð²Ð°ÐµÑ‚
-  ÑƒÐ´Ð°Ð»Ñ‘Ð½Ð½Ñ‹Ðµ **Ð¼ÐµÐ¶Ð´Ñƒ Ð½Ð¸Ð¼Ð¸**. ÐžÑ‚ÑÑŽÐ´Ð° Ð·Ð°Ð¿Ñ€Ð¾Ñ
-  `deletedMessages(accountId:dialogId:limit:beforeMessageId:)` Ð¸
-  `archivedMessageIds(...)` Ð² `AyuArchiveStore`.
-- **Ð˜Ð·Ð²ÐµÑÑ‚Ð½Ð¾Ðµ Ð¾Ð³Ñ€Ð°Ð½Ð¸Ñ‡ÐµÐ½Ð¸Ðµ, ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ñ€Ð°Ð·Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸ÐºÐ¸ Ð½Ðµ ÑÐ¾Ð±Ð¸Ñ€Ð°ÑŽÑ‚ÑÑ Ñ‡Ð¸Ð½Ð¸Ñ‚ÑŒ:**
-  ÑƒÐ´Ð°Ð»Ñ‘Ð½Ð½Ñ‹Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ, Ð¿Ð¾Ð¿Ð°Ð²ÑˆÐ¸Ðµ *Ð¼ÐµÐ¶Ð´Ñƒ Ð±Ð°Ñ‚Ñ‡Ð°Ð¼Ð¸*, Ð½Ðµ Ð¿Ð¾Ð´Ð³Ñ€ÑƒÐ¶Ð°ÑŽÑ‚ÑÑ (Ð² Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð°Ñ†Ð¸Ð¸
-  ÑÑ‚Ð¾ Ð¿Ñ€Ð¸Ð·Ð½Ð°Ð½Ð¾: Â«It won't be changed in the near futureÂ»). ÐŸÑ€Ð¸ Ð¿Ð¾Ñ€Ñ‚Ðµ ÑÑ‚Ð¾ ÑÑ‚Ð¾Ð¸Ñ‚
-  Ð²Ð¾ÑÐ¿Ñ€Ð¾Ð¸Ð·Ð²ÐµÑÑ‚Ð¸ Ð¾ÑÐ¾Ð·Ð½Ð°Ð½Ð½Ð¾, Ð° Ð½Ðµ ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½Ð¾.
-- ÐÐ²Ñ‚Ð¾Ð·Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ð¼ÐµÐ´Ð¸Ð° **Ð´Ð¾ Ð¸ÑÑ‚ÐµÑ‡ÐµÐ½Ð¸Ñ** Ð½Ð° ÑÐµÑ€Ð²ÐµÑ€Ðµ, Ð¿Ð»ÑŽÑ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð°Ñ Ð¿Ð°Ð¿ÐºÐ°
-  `Saved Attachments` â€” Ñ‚Ð¾ ÐµÑÑ‚ÑŒ `mediaPath` Ð² ÑÐ½Ð°Ð¿ÑˆÐ¾Ñ‚Ðµ Ð´Ð¾Ð»Ð¶ÐµÐ½ ÑƒÐºÐ°Ð·Ñ‹Ð²Ð°Ñ‚ÑŒ Ð½Ð° ÐºÐ¾Ð¿Ð¸ÑŽ
-  Ð² ÐºÐ¾Ð½Ñ‚ÐµÐ¹Ð½ÐµÑ€Ðµ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ, Ð° Ð½Ðµ Ð½Ð° ÐºÑÑˆ Telegram.
-- Ð’ Ð´Ð¸Ð°Ð»Ð¾Ð³Ð°Ñ… Ñ Ð±Ð¾Ñ‚Ð°Ð¼Ð¸ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ Ð²Ñ‹ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾ (Ð±Ð¾Ñ‚Ñ‹ Ñ‡Ð°ÑÑ‚Ð¾ Ð¿Ñ€Ð°Ð²ÑÑ‚ Ð¸ ÑƒÐ´Ð°Ð»ÑÑŽÑ‚).
+- Режим **«View Deleted»** — отдельный чат только с удалёнными сообщениями, с поиском
+  по ним. Это отдельный экран, а не фильтр в обычном чате.
+- **Стратегия загрузки при скролле.** AyuGram вклинивается в батч-загрузку истории
+  (20–50 сообщений), берёт id первого и последнего загруженного и подтягивает
+  удалённые **между ними**. Отсюда запрос
+  `deletedMessages(accountId:dialogId:limit:beforeMessageId:)` и
+  `archivedMessageIds(...)` в `AyuArchiveStore`.
+- **Известное ограничение, которое разработчики не собираются чинить:**
+  удалённые сообщения, попавшие *между батчами*, не подгружаются (в документации
+  это признано: «It won't be changed in the near future»). При порте это стоит
+  воспроизвести осознанно, а не случайно.
+- Автозагрузка медиа **до истечения** на сервере, плюс отдельная папка
+  `Saved Attachments` — то есть `mediaPath` в снапшоте должен указывать на копию
+  в контейнере приложения, а не на кэш Telegram.
+- В диалогах с ботами сохранение по умолчанию выключено (боты часто правят и удаляют).
 
-**ÐŸÐ¾Ð´Ñ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¾ Ð¸ÑÑ…Ð¾Ð´Ð½Ð¸ÐºÐ°Ð¼Ð¸ (Ð±Ñ‹Ð»Ð¾ Ð´Ð¾Ð¿ÑƒÑ‰ÐµÐ½Ð¸ÐµÐ¼):** ÑÐµÐ¼Ð°Ð½Ñ‚Ð¸ÐºÐ° ÐºÐ¾Ð»Ð¾Ð½ÐºÐ¸ `userId` Ð² Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ð°Ñ… Spy.
-`messages.getMessageReadParticipants` Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð·Ð°Ð¿Ð¸ÑÐ¸ `readParticipantDate` Ð²Ð¸Ð´Ð°
-`(userId, date)` â€” Ñ‚Ð¾ ÐµÑÑ‚ÑŒ Â«ÐºÑ‚Ð¾ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð»Â» Ð¸ Â«ÐºÐ¾Ð³Ð´Ð°Â». Ð­Ñ‚Ð¾ Ñ€Ð¾Ð²Ð½Ð¾ ÐºÐ¾Ñ€Ñ‚ÐµÐ¶
-`SpyMessageRead(userId, dialogId, messageId, entityCreateDate)`: `userId` â€” **Ñ‡Ð¸Ñ‚Ð°Ñ‚ÐµÐ»ÑŒ**,
-Ð° Ð½Ðµ Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚, Ð¸ `entityCreateDate` â€” Ð´Ð°Ñ‚Ð° Ð¿Ñ€Ð¾Ñ‡Ñ‚ÐµÐ½Ð¸Ñ (Ñ‚Ð° ÑÐ°Ð¼Ð°Ñ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ°
-Â«Ð¡Ð¾Ñ…Ñ€Ð°Ð½ÑÑ‚ÑŒ Ð´Ð°Ñ‚Ñƒ Ñ‡Ñ‚ÐµÐ½Ð¸ÑÂ»). Ð’Ñ€ÐµÐ·ÐºÐ° ÑÐ´ÐµÐ»Ð°Ð½Ð° Ð² `MessageReadStats.swift`, Ð³Ð´Ðµ ÑÑ‚Ð¸ Ð´Ð°Ð½Ð½Ñ‹Ðµ
-Ð¸ Ð¿Ð¾ÑÐ²Ð»ÑÑŽÑ‚ÑÑ. Ð”Ð»Ñ Ð»Ð¸Ñ‡Ð½Ñ‹Ñ… Ñ‡Ð°Ñ‚Ð¾Ð² Ñ‡Ð¸Ñ‚Ð°Ñ‚ÐµÐ»ÑŒ Ð±ÐµÑ€Ñ‘Ñ‚ÑÑ Ð¸Ð· `getOutboxReadDate` (ÐµÐ´Ð¸Ð½ÑÑ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹
-Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ñ‹Ð¹ Ñ‡Ð¸Ñ‚Ð°Ñ‚ÐµÐ»ÑŒ â€” ÑÐ¾Ð±ÐµÑÐµÐ´Ð½Ð¸Ðº).
+**Подтверждено исходниками (было допущением):** семантика колонки `userId` в таблицах Spy.
+`messages.getMessageReadParticipants` возвращает записи `readParticipantDate` вида
+`(userId, date)` — то есть «кто прочитал» и «когда». Это ровно кортеж
+`SpyMessageRead(userId, dialogId, messageId, entityCreateDate)`: `userId` — **читатель**,
+а не аккаунт, и `entityCreateDate` — дата прочтения (та самая настройка
+«Сохранять дату чтения»). Врезка сделана в `MessageReadStats.swift`, где эти данные
+и появляются. Для личных чатов читатель берётся из `getOutboxReadDate` (единственный
+возможный читатель — собеседник).
 
-Ð§Ñ‚Ð¾ Ð¾ÑÑ‚Ð°Ð»Ð¾ÑÑŒ Ð½ÐµÐ¸Ð·Ð²ÐµÑÑ‚Ð½Ñ‹Ð¼ Ð¸ Ð¿Ð¾Ñ‚Ð¾Ð¼Ñƒ Ð·Ð°Ð¿Ð¸ÑÐ°Ð½Ð¾ ÑÐ²Ð½Ð¾: `updateReadMessagesContents` **Ð½Ðµ Ð½ÐµÑÑ‘Ñ‚
-Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ñ‡Ð¸Ñ‚Ð°Ñ‚ÐµÐ»Ñ**. Ð’ Ð»Ð¸Ñ‡Ð½Ð¾Ð¼ Ñ‡Ð°Ñ‚Ðµ Ð¾Ð½ Ð²ÑÑ‘ Ñ€Ð°Ð²Ð½Ð¾ Ð¾Ð´Ð½Ð¾Ð·Ð½Ð°Ñ‡ÐµÐ½, Ð° Ð² Ð³Ñ€ÑƒÐ¿Ð¿Ðµ Telegram ÐµÐ³Ð¾
-Ð½Ðµ ÑÐ¾Ð¾Ð±Ñ‰Ð°ÐµÑ‚ â€” Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ñ‚Ð°Ð¼ ÑÑ‚Ñ€Ð¾ÐºÐ° Ð¿Ð¸ÑˆÐµÑ‚ÑÑ Ñ Ñ‡Ð¸Ñ‚Ð°Ñ‚ÐµÐ»ÐµÐ¼ `0`, Ð° Ð½Ðµ Ñ Ð²Ñ‹Ð´ÑƒÐ¼Ð°Ð½Ð½Ñ‹Ð¼ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸ÐµÐ¼.
-ÐŸÑ€Ð¸Ð´ÑƒÐ¼Ð°Ñ‚ÑŒ Ñ‡Ð¸Ñ‚Ð°Ñ‚ÐµÐ»Ñ Ð·Ð½Ð°Ñ‡Ð¸Ð»Ð¾ Ð±Ñ‹ Ð¸ÑÐ¿Ð¾Ñ€Ñ‚Ð¸Ñ‚ÑŒ Ñ€Ð¾Ð²Ð½Ð¾ Ñ‚Ñƒ Ñ„Ð¸Ñ‡Ñƒ, Ñ€Ð°Ð´Ð¸ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¹ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ð° ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚.
+Что осталось неизвестным и потому записано явно: `updateReadMessagesContents` **не несёт
+идентификатор читателя**. В личном чате он всё равно однозначен, а в группе Telegram его
+не сообщает — поэтому там строка пишется с читателем `0`, а не с выдуманным значением.
+Придумать читателя значило бы испортить ровно ту фичу, ради которой таблица существует.
 
-## 10. ÐÐ½Ñ‚Ð¸-ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ: Ð²Ð¾Ñ€Ð¾Ð½ÐºÐ° Ð½Ð°Ð¹Ð´ÐµÐ½Ð°, Ð¸ Ð¾Ð´Ð½Ð° Ñ€Ð°Ð·Ð²Ð¸Ð»ÐºÐ°
+## 10. Анти-удаление: воронка найдена, и одна развилка
 
-### 10.1 Ð¢Ð¾Ñ‡ÐºÐ° Ð²Ñ€ÐµÐ·ÐºÐ¸
+### 10.1 Точка врезки
 
-**`_internal_deleteMessages`** â€” `submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessages.swift:25`.
-Ð§ÐµÑ€ÐµÐ· Ð½ÐµÑ‘ Ð¿Ñ€Ð¾Ñ…Ð¾Ð´ÑÑ‚ **Ð²ÑÐµ** Ð¿ÑƒÑ‚Ð¸ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ (Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐµÐ½Ð¾ grep'Ð¾Ð¼ Ð¿Ð¾ Ð²Ñ‹Ð·Ð¾Ð²Ð°Ð¼):
+**`_internal_deleteMessages`** — `submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessages.swift:25`.
+Через неё проходят **все** пути удаления (проверено grep'ом по вызовам):
 
-| Ð’Ñ‹Ð·Ñ‹Ð²Ð°ÑŽÑ‰Ð¸Ð¹ | Ð§Ñ‚Ð¾ ÑÑ‚Ð¾ |
+| Вызывающий | Что это |
 |---|---|
-| `TelegramEngineMessages.deleteMessages` | Ð¾Ð±Ñ‹Ñ‡Ð½Ð¾Ðµ ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ Ð¿Ð¾ Ð°Ð¿Ð´ÐµÐ¹Ñ‚Ñƒ |
-| `DeleteMessagesInteractively.swift` | Â«ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ Ñƒ ÑÐµÐ±Ñ / Ñƒ Ð²ÑÐµÑ…Â» |
-| `ManagedAutoremoveMessageOperations.swift` | Ð°Ð²Ñ‚Ð¾ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ (TTL) |
-| `HistoryViewStateValidation.swift` (2 Ð¼ÐµÑÑ‚Ð°) | Ñ‡Ð¸ÑÑ‚ÐºÐ° Ð¿Ñ€Ð¸ Ð²Ð°Ð»Ð¸Ð´Ð°Ñ†Ð¸Ð¸ Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ð¸ |
-| `AccountStateManagementUtils.swift` | Ð¿Ñ€Ð¸Ð¼ÐµÐ½ÐµÐ½Ð¸Ðµ Ð³Ñ€ÑƒÐ¿Ð¿ Ð°Ð¿Ð´ÐµÐ¹Ñ‚Ð¾Ð² |
-| `ProcessSecretChatIncomingDecryptedOperations.swift` | ÑÐµÐºÑ€ÐµÑ‚Ð½Ñ‹Ðµ Ñ‡Ð°Ñ‚Ñ‹ |
-| `ManagedSecretChatOutgoingOperations.swift` | ÑÐµÐºÑ€ÐµÑ‚Ð½Ñ‹Ðµ Ñ‡Ð°Ñ‚Ñ‹, Ð¸ÑÑ…Ð¾Ð´ÑÑ‰Ð¸Ðµ |
-| `EnqueueMessage.swift` | Ð¾Ñ‚ÐºÐ°Ñ‚ Ð½ÐµÑƒÐ´Ð°Ñ‡Ð½Ð¾Ð¹ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÐºÐ¸ |
+| `TelegramEngineMessages.deleteMessages` | обычное удаление по апдейту |
+| `DeleteMessagesInteractively.swift` | «удалить у себя / у всех» |
+| `ManagedAutoremoveMessageOperations.swift` | автоудаление (TTL) |
+| `HistoryViewStateValidation.swift` (2 места) | чистка при валидации истории |
+| `AccountStateManagementUtils.swift` | применение групп апдейтов |
+| `ProcessSecretChatIncomingDecryptedOperations.swift` | секретные чаты |
+| `ManagedSecretChatOutgoingOperations.swift` | секретные чаты, исходящие |
+| `EnqueueMessage.swift` | откат неудачной отправки |
 
-Ð¤ÑƒÐ½ÐºÑ†Ð¸Ñ ÑƒÐ¶Ðµ Ñ‡Ð¸Ñ‚Ð°ÐµÑ‚ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ (`transaction.getMessage(id)`, ÑÑ‚Ñ€Ð¾ÐºÐ¸ 30 Ð¸ 41) â€”
-Ð·Ð½Ð°Ñ‡Ð¸Ñ‚ ÑÐ½Ð°Ð¿ÑˆÐ¾Ñ‚ ÑÐ½Ð¸Ð¼Ð°ÐµÑ‚ÑÑ **Ð´Ð¾** ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ, Ñ‡Ñ‚Ð¾ Ð¸ Ð½ÑƒÐ¶Ð½Ð¾.
-`Transaction.getMessage(_:)` Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¹ (`submodules/Postbox/Sources/Postbox.swift:710`).
+Функция уже читает сообщения (`transaction.getMessage(id)`, строки 30 и 41) —
+значит снапшот снимается **до** удаления, что и нужно.
+`Transaction.getMessage(_:)` публичный (`submodules/Postbox/Sources/Postbox.swift:710`).
 
-Ð¡ÐµÑ€Ð¸Ð°Ð»Ð¸Ð·Ð°Ñ†Ð¸Ñ: `AdaptedPostboxEncoder` â€” Ð¿ÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¹, Ð¸Ð¼ Ð¿Ð¾Ð»ÑŒÐ·ÑƒÑŽÑ‚ÑÑ Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Postbox
-(`PeerChatInterfaceStateTable.swift:61` Ð¸ Ð´Ñ€.).
+Сериализация: `AdaptedPostboxEncoder` — публичный, им пользуются таблицы Postbox
+(`PeerChatInterfaceStateTable.swift:61` и др.).
 
-Ð¡Ð¾ÑÐµÐ´Ð½Ð¸Ð¹ `InternalAccountState.deleteMessages` (`State/ForumChannelState.swift:9`)
-Ð¾ÐºÐ°Ð·Ð°Ð»ÑÑ **Ð¼Ñ‘Ñ€Ñ‚Ð²Ñ‹Ð¼ ÐºÐ¾Ð´Ð¾Ð¼** â€” ÐµÐ³Ð¾ Ð½Ð¸ÐºÑ‚Ð¾ Ð½Ðµ Ð²Ñ‹Ð·Ñ‹Ð²Ð°ÐµÑ‚. Ð¥Ð¾Ñ€Ð¾ÑˆÐ¾, Ñ‡Ñ‚Ð¾ Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ð», Ð° Ð½Ðµ Ð¿Ð¾Ð²ÐµÑ€Ð¸Ð»
-Ð½Ð°Ð·Ð²Ð°Ð½Ð¸ÑŽ.
+Соседний `InternalAccountState.deleteMessages` (`State/ForumChannelState.swift:9`)
+оказался **мёртвым кодом** — его никто не вызывает. Хорошо, что проверил, а не поверил
+названию.
 
-### 10.2 Ð Ð°Ð·Ð²Ð¸Ð»ÐºÐ°: Ð¾Ñ‚ÐºÑƒÐ´Ð° Ð²Ð·ÑÑ‚ÑŒ Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚Ð°
+### 10.2 Развилка: откуда взять идентификатор аккаунта
 
-`Postbox.Transaction` **Ð½Ðµ Ð¿Ñ€ÐµÐ´Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚** account peer id: Ð² TelegramCore Ð¾Ð½ Ð²ÑÐµÐ³Ð´Ð°
-Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‘Ñ‚ÑÑ ÑÐ²Ð½Ñ‹Ð¼ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð¼. ÐŸÑ€Ð¾Ð²ÐµÑ€ÐµÐ½Ð¾ â€” Ð½Ð¸ `getAccountPeerId`, Ð½Ð¸ Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð²
-`Preferences` Ð½ÐµÑ‚. Ð Ð²Ð¾Ñ€Ð¾Ð½ÐºÐ° ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ñ Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚Ð° Ð½Ðµ Ð·Ð½Ð°ÐµÑ‚, Ñ‚Ð¾Ð³Ð´Ð° ÐºÐ°Ðº Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ñ‹ Ð°Ñ€Ñ…Ð¸Ð²Ð°
-Ñ‚Ñ€ÐµÐ±ÑƒÑŽÑ‚ `userId NOT NULL`.
+`Postbox.Transaction` **не предоставляет** account peer id: в TelegramCore он всегда
+передаётся явным параметром. Проверено — ни `getAccountPeerId`, ни хранения в
+`Preferences` нет. А воронка удаления аккаунта не знает, тогда как таблицы архива
+требуют `userId NOT NULL`.
 
-Ð’Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹:
+Варианты:
 
-- **(a)** Ð¿Ñ€Ð¾Ñ‚ÑÐ½ÑƒÑ‚ÑŒ `accountPeerId` Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð¼ Ñ‡ÐµÑ€ÐµÐ· `_internal_deleteMessages` Ð¸ Ð²ÑÐµ
-  9 Ð²Ñ‹Ð·Ð¾Ð²Ð¾Ð². Ð¯Ð²Ð½Ð¾ Ð¸ Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¾, Ð½Ð¾ ÑˆÐ¸Ñ€Ð¾ÐºÐ°Ñ Ð¿Ñ€Ð°Ð²ÐºÐ° Ñ‡ÑƒÐ¶Ð¸Ñ… Ñ„Ð°Ð¹Ð»Ð¾Ð².
-- **(b)** Ð¾Ð´Ð¸Ð½ ÑƒÐ·ÐºÐ¸Ð¹ Ñ…ÑƒÐº Ð² Ñ‚Ð¾Ñ‡ÐºÐµ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ñ Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚Ð° (`ManagedAccount`), ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ ÑÐ¾Ð¾Ð±Ñ‰Ð°ÐµÑ‚
-  Ñ€ÐµÐºÐ¾Ñ€Ð´ÐµÑ€Ñƒ Ñ‚ÐµÐºÑƒÑ‰Ð¸Ð¹ account id. Ð¢Ð¾Ð³Ð´Ð° Ð²Ð¾Ñ€Ð¾Ð½ÐºÐ° Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ñ Ð¾Ð´Ð½Ð¾ÑÑ‚Ñ€Ð¾Ñ‡Ð½Ð¾Ð¹ Ð²Ñ€ÐµÐ·ÐºÐ¾Ð¹.
-- **(c)** ÑÐ´ÐµÐ»Ð°Ñ‚ÑŒ Ð°Ñ€Ñ…Ð¸Ð² Ð¿Ð¾-Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚Ð½Ñ‹Ð¼ â€” `ayugram-<id>.sqlite`, Ñ€Ð¾Ð²Ð½Ð¾ ÐºÐ°Ðº `ayu-data*`
-  Ð² Android. Ð¢Ð¾Ð³Ð´Ð° `userId` Ð² Ñ‚Ð°Ð±Ð»Ð¸Ñ†Ð°Ñ… ÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑÑ ÑÐ¿Ñ€Ð°Ð²Ð¾Ñ‡Ð½Ñ‹Ð¼ Ð¿Ð¾Ð»ÐµÐ¼.
+- **(a)** протянуть `accountPeerId` параметром через `_internal_deleteMessages` и все
+  9 вызовов. Явно и локально, но широкая правка чужих файлов.
+- **(b)** один узкий хук в точке создания аккаунта (`ManagedAccount`), который сообщает
+  рекордеру текущий account id. Тогда воронка остаётся с однострочной врезкой.
+- **(c)** сделать архив по-аккаунтным — `ayugram-<id>.sqlite`, ровно как `ayu-data*`
+  в Android. Тогда `userId` в таблицах становится справочным полем.
 
-Ð¡ÐºÐ»Ð¾Ð½ÑÑŽÑÑŒ Ðº **(b) + (c)**: ÑƒÐ·ÐºÐ°Ñ Ð¿Ñ€Ð°Ð²ÐºÐ°, ÑÐ¾Ð²Ð¿Ð°Ð´ÐµÐ½Ð¸Ðµ Ñ Ð¼Ð¾Ð´ÐµÐ»ÑŒÑŽ Android, Ð¸ Ð²Ð¾Ñ€Ð¾Ð½ÐºÐ°
-Ð½Ðµ Ñ€Ð°Ð·Ñ€Ð°ÑÑ‚Ð°ÐµÑ‚ÑÑ. Ð ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€Ð¸Ð½Ð¸Ð¼Ð°ÐµÑ‚ÑÑ Ð² ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ¼ Ñ€Ð°ÑƒÐ½Ð´Ðµ â€” Ð´Ð¾ ÑÑ‚Ð¾Ð³Ð¾ Ñ€ÐµÐºÐ¾Ñ€Ð´ÐµÑ€ Ð½Ðµ Ð¿Ð¸ÑˆÐµÑ‚ÑÑ,
-Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð½Ðµ Ð·Ð°ÐºÐ»Ð°Ð´Ñ‹Ð²Ð°Ñ‚ÑŒ ÐºÐ¾Ð¼Ð¿Ñ€Ð¾Ð¼Ð¸ÑÑ Ð² ÐºÐ¾Ð´.
+Склоняюсь к **(b) + (c)**: узкая правка, совпадение с моделью Android, и воронка
+не разрастается. Решение принимается в следующем раунде — до этого рекордер не пишется,
+чтобы не закладывать компромисс в код.
 
-### 10.3 Ð Ð°ÑÑˆÐ¸Ñ€ÐµÐ½Ð¸Ðµ ÑÑ…ÐµÐ¼Ñ‹ (ÑÐ´ÐµÐ»Ð°Ð½Ð¾)
+### 10.3 Расширение схемы (сделано)
 
-Ð’ `DeletedMessage` Ð¸ `EditedMessage` Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð° ÐºÐ¾Ð»Ð¾Ð½ÐºÐ° **`messageSerialized BLOB`**.
+В `DeletedMessage` и `EditedMessage` добавлена колонка **`messageSerialized BLOB`**.
 
-ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð°: 35 ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº, Ð¸Ð·Ð²Ð»ÐµÑ‡Ñ‘Ð½Ð½Ñ‹Ñ… Ð¸Ð· APK, Ñ€Ð°ÑÑÑ‡Ð¸Ñ‚Ð°Ð½Ñ‹ Ð½Ð° ÑÐµÑ€Ð¸Ð°Ð»Ð¸Ð·Ð°Ñ†Ð¸ÑŽ `TLRPC` Ð² Android.
-Ð¡Ð¾Ð±Ñ€Ð°Ñ‚ÑŒ Ð¸Ð· Ð½Ð¸Ñ… `Message` Ð´Ð»Ñ Telegram-iOS Ð±ÐµÐ· Ð¿Ð¾Ñ‚ÐµÑ€ÑŒ Ð½ÐµÐ»ÑŒÐ·Ñ â€” Ð¿Ñ€Ð¾Ð¿Ð°Ð´ÑƒÑ‚ Ð¼ÐµÐ´Ð¸Ð°, reply,
-Ñ‚ÐµÐºÑÑ‚Ð¾Ð²Ñ‹Ðµ entities Ð¸ Ð°Ñ‚Ñ€Ð¸Ð±ÑƒÑ‚Ñ‹. ÐŸÐ¾ÑÑ‚Ð¾Ð¼Ñƒ Ñ€ÑÐ´Ð¾Ð¼ Ñ Android-ÐºÐ¾Ð»Ð¾Ð½ÐºÐ°Ð¼Ð¸ Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑÑ Ð²ÑÑ‘
-ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ñ†ÐµÐ»Ð¸ÐºÐ¾Ð¼; Android-ÐºÐ¾Ð»Ð¾Ð½ÐºÐ¸ Ð¾ÑÑ‚Ð°ÑŽÑ‚ÑÑ Ñ€Ð°Ð±Ð¾Ñ‡Ð¸Ð¼Ð¸ Ð´Ð»Ñ Ð¿Ð¾Ð¸ÑÐºÐ°, Ð³Ñ€ÑƒÐ¿Ð¿Ð¸Ñ€Ð¾Ð²ÐºÐ¸ Ð¸ Ð´Ð»Ñ
-Ð°Ñ€Ñ…Ð¸Ð²Ð¾Ð², Ð¸Ð¼Ð¿Ð¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… Ð¸Ð· Android (Ñ‚Ð°Ð¼ ÑÑ‚Ð° ÐºÐ¾Ð»Ð¾Ð½ÐºÐ° `NULL`).
+Причина: 35 колонок, извлечённых из APK, рассчитаны на сериализацию `TLRPC` в Android.
+Собрать из них `Message` для Telegram-iOS без потерь нельзя — пропадут медиа, reply,
+текстовые entities и атрибуты. Поэтому рядом с Android-колонками хранится всё
+сообщение целиком; Android-колонки остаются рабочими для поиска, группировки и для
+архивов, импортированных из Android (там эта колонка `NULL`).
 
-Ð˜Ð¼Ð¿Ð¾Ñ€Ñ‚Ñ‘Ñ€ Ð¸Ð· Android Ð´Ð¾Ð±Ð°Ð²Ð»ÑÐµÑ‚ ÐºÐ¾Ð»Ð¾Ð½ÐºÑƒ (`ALTER TABLE ... ADD COLUMN messageSerialized BLOB`)
-Ð¸ Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÑ‚ ÐµÑ‘ Ð¿ÑƒÑÑ‚Ð¾Ð¹. Ð¡Ð¿Ð¸ÑÐºÐ¸ ÐºÐ¾Ð»Ð¾Ð½Ð¾Ðº Ð¾Ð±ÐµÐ¸Ñ… Ñ‚Ð°Ð±Ð»Ð¸Ñ† Ð¾Ð±ÑÐ·Ð°Ð½Ñ‹ ÑÐ¾Ð²Ð¿Ð°Ð´Ð°Ñ‚ÑŒ â€” ÑÑ‚Ð¾ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÑ‚
-`tools/gen_swift_dao.py`, Ð¾Ð½ Ð¿Ð°Ð´Ð°ÐµÑ‚ Ð¿Ñ€Ð¸ Ñ€Ð°ÑÑ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ð¸.
+Импортёр из Android добавляет колонку (`ALTER TABLE ... ADD COLUMN messageSerialized BLOB`)
+и оставляет её пустой. Списки колонок обеих таблиц обязаны совпадать — это проверяет
+`tools/gen_swift_dao.py`, он падает при расхождении.
 
-## 11. Ð ÐµÐ¿Ð¾Ð·Ð¸Ñ‚Ð¾Ñ€Ð¸Ð¹, Ð²Ñ‹Ð±Ð¾Ñ€ Ð±Ð°Ð·Ñ‹ Ð¸ Ñ‡Ñ‚Ð¾ ÑƒÐ¶Ðµ Ð±Ñ‹Ð»Ð¾ ÑÐ´ÐµÐ»Ð°Ð½Ð¾ Ð´Ð¾ Ð½Ð°Ñ
+## 11. Репозиторий, выбор базы и что уже было сделано до нас
 
-**Ð ÐµÐ¿Ð¾Ð·Ð¸Ñ‚Ð¾Ñ€Ð¸Ð¹: `nekoasase/Ayugram-iOS`** (Ð¸Ð¼ÐµÐ½Ð½Ð¾ Ñ‚Ð°Ðº: Ð·Ð°Ð³Ð»Ð°Ð²Ð½Ñ‹Ðµ `A` Ð¸ `iOS`; Ð°Ð´Ñ€ÐµÑ
-Ñ Ð´ÐµÑ„Ð¸ÑÐ¾Ð¼ `-ayugram-ios` Ð´Ð°Ñ‘Ñ‚ 404). ÐŸÑƒÐ±Ð»Ð¸Ñ‡Ð½Ñ‹Ð¹. Ð’ Ð½Ñ‘Ð¼ ÑƒÐ¶Ðµ Ð»ÐµÐ¶Ð°Ð» Ñ„Ð¾Ñ€Ðº Telegram-iOS
-**11.15** â€” Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¹ Ð°Ð¿ÑÑ‚Ñ€Ð¸Ð¼Ð½Ñ‹Ð¹ ÐºÐ¾Ð¼Ð¼Ð¸Ñ‚ Â«Version 11.15Â» (Ð¸ÑŽÐ»ÑŒ 2024) Ð¿Ð»ÑŽÑ Ñ‚Ñ€Ð¸ ÐºÐ¾Ð¼Ð¼Ð¸Ñ‚Ð°
-Ð¾Ñ‚ Ð±Ð¾Ð»ÐµÐµ Ñ€Ð°Ð½Ð½ÐµÐ¹ Ð¿Ð¾Ð¿Ñ‹Ñ‚ÐºÐ¸:
+**Репозиторий: `nekoasase/Ayugram-iOS`** (именно так: заглавные `A` и `iOS`; адрес
+с дефисом `-ayugram-ios` даёт 404). Публичный. В нём уже лежал форк Telegram-iOS
+**11.15** — последний апстримный коммит «Version 11.15» (июль 2024) плюс три коммита
+от более ранней попытки:
 
 - `Add 'Hide typing in chat list' toggle (SGSimpleSettings integration)`
 - `Add sg_config to appstore configuration (Swiftgram build requirement)`
 - `Move BroadcastUpload provisioning profile into profiles/ dir`
 
-ÐšÐ°Ñ‚Ð°Ð»Ð¾Ð³Ð° `AyuGram/` Ð¸ workflow Ñ‚Ð°Ð¼ Ð½Ðµ Ð±Ñ‹Ð»Ð¾; ÑÑ‚Ð¾ Ñ‡ÑƒÐ¶Ð°Ñ (Ð¸Ð»Ð¸ Ð±Ð¾Ð»ÐµÐµ Ñ€Ð°Ð½Ð½ÑÑ) Ð»Ð¸Ð½Ð¸Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ñ‹.
+Каталога `AyuGram/` и workflow там не было; это чужая (или более ранняя) линия работы.
 
-**Ð ÐµÑˆÐµÐ½Ð¸Ðµ: Ð±Ð°Ð·Ð° â€” Ð½Ð°ÑˆÐ° 12.9.2 (Swiftgram master), Ð·Ð°Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð¾Ð¹ Ð²ÐµÑ‚ÐºÐ¾Ð¹ `ayugram-ios`.**
-Ð˜Ñ… `master` Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ð½ÐµÑ‚Ñ€Ð¾Ð½ÑƒÑ‚Ñ‹Ð¼, Ð¸ÑÑ‚Ð¾Ñ€Ð¸Ð¸ Ð½Ðµ ÑÐ²ÑÐ·Ð°Ð½Ñ‹ â€” ÑÑ‚Ð¾ Ð´Ð¾Ð¿ÑƒÑÑ‚Ð¸Ð¼Ð¾ Ð¸ Ð½ÐµÑ€Ð°Ð·Ñ€ÑƒÑˆÐ°ÑŽÑ‰Ðµ.
-ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð°: Ð²ÑÐµ 8 Ð¿Ð°Ñ‚Ñ‡ÐµÐ¹, ÑÑ…ÐµÐ¼Ð°, Ð³ÐµÐ½ÐµÑ€Ð°Ñ‚Ð¾Ñ€Ñ‹ Ð¸ CI Ð½Ð°Ð¿Ð¸ÑÐ°Ð½Ñ‹ Ð¸ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐµÐ½Ñ‹ Ð¿Ñ€Ð¾Ñ‚Ð¸Ð² 12.9.2
-(`versions.json` Ñ‚Ñ€ÐµÐ±ÑƒÐµÑ‚ Xcode 26.2 / macOS 26 / Bazel 8.4.2). ÐÐ° Ð±Ð°Ð·Ðµ 11.15 Ñ‡Ð°ÑÑ‚ÑŒ
-Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÐ¼Ñ‹Ñ… API Ð¼Ð¾Ð¶ÐµÑ‚ Ð¾Ñ‚ÑÑƒÑ‚ÑÑ‚Ð²Ð¾Ð²Ð°Ñ‚ÑŒ, Ð¸ Ð¿ÐµÑ€ÐµÐ½Ð¾Ñ Ð¿Ñ€ÐµÐ²Ñ€Ð°Ñ‚Ð¸Ð»ÑÑ Ð±Ñ‹ Ð² Ð¿ÐµÑ€ÐµÐ¿Ð¸ÑÑ‹Ð²Ð°Ð½Ð¸Ðµ Ð²ÑÐ»ÐµÐ¿ÑƒÑŽ.
+**Решение: база — наша 12.9.2 (Swiftgram master), заливаем отдельной веткой `ayugram-ios`.**
+Их `master` остаётся нетронутым, истории не связаны — это допустимо и неразрушающе.
+Причина: все 8 патчей, схема, генераторы и CI написаны и проверены против 12.9.2
+(`versions.json` требует Xcode 26.2 / macOS 26 / Bazel 8.4.2). На базе 11.15 часть
+используемых API может отсутствовать, и перенос превратился бы в переписывание вслепую.
 
-**ÐžÑ‚ÐºÑ€Ñ‹Ñ‚Ñ‹Ð¹ Ð²Ð¾Ð¿Ñ€Ð¾Ñ:** Ñ‚Ðµ Ñ‚Ñ€Ð¸ ÐºÐ¾Ð¼Ð¼Ð¸Ñ‚Ð° Ð´Ð¾ÑˆÐ»Ð¸ Ð´Ð¾ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð¿Ð¾Ð´Ð¿Ð¸ÑÐ¸ Ð¸ App Store
-(`sg_config`, provisioning profiles). Ð•ÑÐ»Ð¸ Apple Developer Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚ Ð¸ ÑÐµÑ€Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ñ‹
-ÑƒÐ¶Ðµ ÐµÑÑ‚ÑŒ â€” ÑÑ‚Ð¾ Ð¼ÐµÐ½ÑÐµÑ‚ Ð¿Ð»Ð°Ð½ Ð² Ð¿Ð¾Ð»ÑŒÐ·Ñƒ ÑÐ±Ð¾Ñ€ÐºÐ¸ Ð¿Ð¾Ð´ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð¾, Ð° Ð½Ðµ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð¿Ð¾Ð´ ÑÐ¸Ð¼ÑƒÐ»ÑÑ‚Ð¾Ñ€.
+**Открытый вопрос:** те три коммита дошли до настройки подписи и App Store
+(`sg_config`, provisioning profiles). Если Apple Developer аккаунт и сертификаты
+уже есть — это меняет план в пользу сборки под устройство, а не только под симулятор.
 
-**Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½Ð¾Ð³Ð¾ Ñ„Ð¾Ñ€ÐºÐ°:** `D:\ayugram-src\Telegram-iOS`, Ð²ÐµÑ‚ÐºÐ° `ayugram-ios`,
-16 ÐºÐ¾Ð¼Ð¼Ð¸Ñ‚Ð¾Ð², Ð´ÐµÑ€ÐµÐ²Ð¾ Ñ‡Ð¸ÑÑ‚Ð¾Ðµ, ~525 ÐœÐ‘, ÐºÐ»Ð¾Ð½ shallow (`--depth=1`) â€” Ð´Ð»Ñ Ð¿ÑƒÑˆÐ° Ð½Ð¾Ð²Ð¾Ð¹ Ð²ÐµÑ‚ÐºÐ¸
-ÑÑ‚Ð¾Ð³Ð¾ Ð´Ð¾ÑÑ‚Ð°Ñ‚Ð¾Ñ‡Ð½Ð¾.
+**Состояние локального форка:** `D:\ayugram-src\Telegram-iOS`, ветка `ayugram-ios`,
+16 коммитов, дерево чистое, ~525 МБ, клон shallow (`--depth=1`) — для пуша новой ветки
+этого достаточно.
 
-## 12. Adblock: Ñ‡Ñ‚Ð¾ Ñ€ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾ Ð¸ Ñ‡Ñ‚Ð¾ Ð¾Ñ‚Ð»Ð¾Ð¶ÐµÐ½Ð¾ Ð¾ÑÐ¾Ð·Ð½Ð°Ð½Ð½Ð¾
+## 12. Adblock: что реализовано и что отложено осознанно
 
-**Ð ÐµÐ°Ð»Ð¸Ð·Ð¾Ð²Ð°Ð½Ð¾:** Ð¾Ñ‚Ð±Ñ€Ð°ÑÑ‹Ð²Ð°Ð½Ð¸Ðµ ÑÐ¿Ð¾Ð½ÑÐ¾Ñ€ÑÐºÐ¸Ñ… ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Telegram Ð¿Ð¾Ð´Ð¼ÐµÑˆÐ¸Ð²Ð°ÐµÑ‚
-Ð² ÐºÐ°Ð½Ð°Ð»Ñ‹. Ð ÐµÑˆÐµÐ½Ð¸Ðµ Ð¿Ñ€Ð¸Ð½Ð¸Ð¼Ð°ÐµÑ‚ÑÑ **Ð´Ð¾** Ñ€Ð°Ð·Ð±Ð¾Ñ€Ð° Ð¸ ÐºÑÑˆÐ¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ñ, Ð² `AdMessages.swift`, â€”
-Ð·Ð°Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð°Ñ Ð·Ð°Ð¿Ð¸ÑÑŒ Ð½Ðµ Ð´Ð¾Ñ…Ð¾Ð´Ð¸Ñ‚ Ð´Ð¾ UI Ð¸ Ð½Ðµ Ð¿Ð¾Ð¿Ð°Ð´Ð°ÐµÑ‚ Ð² ÐºÑÑˆÐ¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ðµ ÑÐ¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ Ð¿Ð¸Ñ€Ð°.
+**Реализовано:** отбрасывание спонсорских сообщений, которые Telegram подмешивает
+в каналы. Решение принимается **до** разбора и кэширования, в `AdMessages.swift`, —
+заблокированная запись не доходит до UI и не попадает в кэшированное состояние пира.
 
-Ð›Ð¾Ð³Ð¸ÐºÐ° Ð²Ñ‹Ð½ÐµÑÐµÐ½Ð° Ð² `AyuAds/AyuAdPolicy.swift` Ð¸ Ð¿Ñ€Ð¸Ð½Ð¸Ð¼Ð°ÐµÑ‚ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸ÑŽ **Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸ÐµÐ¼**,
-Ð° Ð½Ðµ Ñ‡Ð¸Ñ‚Ð°ÐµÑ‚ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ ÑÐ°Ð¼Ð°: Ñ‚Ð°Ðº Ð¾Ð½Ð° Ð¾ÑÑ‚Ð°Ñ‘Ñ‚ÑÑ Ñ‡Ð¸ÑÑ‚Ð¾Ð¹ Ñ„ÑƒÐ½ÐºÑ†Ð¸ÐµÐ¹, ÐµÑ‘ Ð¼Ð¾Ð¶Ð½Ð¾ Ð¸ÑÐ¿Ð¾Ð»Ð½Ð¸Ñ‚ÑŒ
-Ð² Ñ‚ÐµÑÑ‚Ð°Ñ… Ð½Ð° Ð¼Ð°ÐºÐµ, Ð¸ Ð¾Ð½Ð° Ð½Ðµ Ð¼Ð¾Ð¶ÐµÑ‚ Ð½ÐµÐ·Ð°Ð¼ÐµÑ‚Ð½Ð¾ Ð¾Ð±Ñ€Ð°Ñ‚Ð¸Ñ‚ÑŒÑÑ Ðº Ð³Ð»Ð¾Ð±Ð°Ð»ÑŒÐ½Ð¾Ð¼Ñƒ ÑÐ¾ÑÑ‚Ð¾ÑÐ½Ð¸ÑŽ.
+Логика вынесена в `AyuAds/AyuAdPolicy.swift` и принимает конфигурацию **значением**,
+а не читает настройки сама: так она остаётся чистой функцией, её можно исполнить
+в тестах на маке, и она не может незаметно обратиться к глобальному состоянию.
 
-Ð”Ð²Ð° Ñ€ÐµÑˆÐµÐ½Ð¸Ñ, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð»ÐµÐ³ÐºÐ¾ ÑÐ´ÐµÐ»Ð°Ñ‚ÑŒ Ð½ÐµÐ¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾, Ð¸ Ð¾Ð±Ð° Ð¿Ð¾ÐºÑ€Ñ‹Ñ‚Ñ‹ Ñ‚ÐµÑÑ‚Ð°Ð¼Ð¸:
+Два решения, которые легко сделать неправильно, и оба покрыты тестами:
 
-- **Â«Ð ÐµÐºÐ¾Ð¼ÐµÐ½Ð´Ð¾Ð²Ð°Ð½Ð½Ð¾ÐµÂ» â‰  Â«ÑÐ¿Ð¾Ð½ÑÐ¾Ñ€ÑÐºÐ¾ÐµÂ».** Telegram Ð¿Ð¾Ð¼ÐµÑ‡Ð°ÐµÑ‚ ÑÐ²Ð¾Ð¸ Ð¿Ð¾Ð´ÑÐºÐ°Ð·ÐºÐ¸ Ñ‚ÐµÐ¼ Ð¶Ðµ
-  Ð°Ð¿Ð´ÐµÐ¹Ñ‚Ð¾Ð¼, Ð½Ð¾ Ð´Ñ€ÑƒÐ³Ð¸Ð¼ Ñ„Ð»Ð°Ð³Ð¾Ð¼. ÐŸÐ¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ Ð¾Ð½Ð¸ Ð¾ÑÑ‚Ð°ÑŽÑ‚ÑÑ; Ð¸ÑÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÐµÑ‚ÑÑ
-  *Ñ€Ð°Ð½ÑŒÑˆÐµ* Ð¾Ð±Ñ‰ÐµÐ³Ð¾ Ð¿Ñ€Ð°Ð²Ð¸Ð»Ð°, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Â«ÑÐºÑ€Ñ‹Ñ‚ÑŒ Ð²ÑÑ‘Â» Ð½Ðµ Ð¿Ñ€Ð¾Ð³Ð»Ð¾Ñ‚Ð¸Ð»Ð¾ ÐµÐ³Ð¾ Ð¼Ð¾Ð»Ñ‡Ð°.
-- **ÐŸÑƒÑÑ‚Ð¾Ð¹ ÑÐ¿Ð¸ÑÐ¾Ðº ÐºÐ»ÑŽÑ‡ÐµÐ²Ñ‹Ñ… ÑÐ»Ð¾Ð² Ð½Ðµ Ð¾Ð·Ð½Ð°Ñ‡Ð°ÐµÑ‚ Â«ÑÐºÑ€Ñ‹Ñ‚ÑŒ Ð²ÑÑ‘Â».** Ð˜Ð½Ð°Ñ‡Ðµ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸
-  Ð±ÐµÐ· Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸ Ð²Ñ‹Ñ‡Ð¸ÑÑ‚Ð¸Ð»Ð¾ Ð±Ñ‹ Ð²ÑÐµ ÑÐ¿Ð¾Ð½ÑÐ¾Ñ€ÑÐºÐ¸Ðµ Ð±Ð»Ð¾ÐºÐ¸, Ñ‡ÐµÐ³Ð¾ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ðµ Ð¿Ñ€Ð¾ÑÐ¸Ð».
+- **«Рекомендованное» ≠ «спонсорское».** Telegram помечает свои подсказки тем же
+  апдейтом, но другим флагом. По умолчанию они остаются; исключение проверяется
+  *раньше* общего правила, чтобы «скрыть всё» не проглотило его молча.
+- **Пустой список ключевых слов не означает «скрыть всё».** Иначе включение функции
+  без настройки вычистило бы все спонсорские блоки, чего пользователь не просил.
 
-Ð¡Ð¾Ð¿Ð¾ÑÑ‚Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ â€” Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¾Ð½ÐµÐ·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð°Ñ **Ð¿Ð¾Ð´ÑÑ‚Ñ€Ð¾ÐºÐ°**, Ð° Ð½Ðµ Ñ€ÐµÐ³ÑƒÐ»ÑÑ€Ð½Ð¾Ðµ Ð²Ñ‹Ñ€Ð°Ð¶ÐµÐ½Ð¸Ðµ:
-Ð² adblock-ÑÐ¿Ð¸ÑÐºÐ¸ Ð²ÑÑ‚Ð°Ð²Ð»ÑÑŽÑ‚ ÐºÐ»ÑŽÑ‡ÐµÐ²Ñ‹Ðµ ÑÐ»Ð¾Ð²Ð°, Ð¸ ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½Ð°Ñ ÑÐºÐ¾Ð±ÐºÐ° Ð² Ñ‚Ð°ÐºÐ¾Ð¼ ÑÐ»Ð¾Ð²Ðµ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ð°
-Ñ‚Ð¸Ñ…Ð¾ Ð¾Ñ‚ÐºÐ»ÑŽÑ‡Ð°Ñ‚ÑŒ Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²ÐºÑƒ. Ð”Ð»Ñ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð¾Ð² Ð² AyuGram ÐµÑÑ‚ÑŒ Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ðµ regex-Ñ„Ð¸Ð»ÑŒÑ‚Ñ€Ñ‹.
+Сопоставление — регистронезависимая **подстрока**, а не регулярное выражение:
+в adblock-списки вставляют ключевые слова, и случайная скобка в таком слове не должна
+тихо отключать блокировку. Для шаблонов в AyuGram есть отдельные regex-фильтры.
 
-**ÐžÑ‚Ð»Ð¾Ð¶ÐµÐ½Ð¾ Ð¾ÑÐ¾Ð·Ð½Ð°Ð½Ð½Ð¾:** Android-Ð²ÐµÑ€ÑÐ¸Ñ Ð´Ð¾Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÐµÐ»ÑŒÐ½Ð¾ Ñ‚ÑÐ½ÐµÑ‚ ABP-ÑÐ¾Ð²Ð¼ÐµÑÑ‚Ð¸Ð¼Ñ‹Ðµ ÑÐ¿Ð¸ÑÐºÐ¸
-Ñ„Ð¸Ð»ÑŒÑ‚Ñ€Ð¾Ð² (`libetgadblock.so`, `AdBlockClient`) Ð¸ Ð¿ÐµÑ€ÐµÐ¿Ð¸ÑÑ‹Ð²Ð°ÐµÑ‚ ÐºÐ¾ÑÐ¼ÐµÑ‚Ð¸ÐºÑƒ Ð² Ð²ÑÑ‚Ñ€Ð¾ÐµÐ½Ð½Ñ‹Ñ…
-Ð²ÐµÐ±-ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ð°Ñ…. Ð­Ñ‚Ð¾ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÐµÐ½Ð½Ð¾ Ð±Ð¾Ð»ÑŒÑˆÐ¸Ð¹ Ð¾Ð±ÑŠÑ‘Ð¼: Ð¿Ð°Ñ€ÑÐµÑ€ Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ð° ABP, Ð¿Ð¾Ð´Ð¿Ð¸ÑÐºÐ¸, Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ðµ
-ÑÐ¿Ð¸ÑÐºÐ¾Ð² Ð¸ `WKContentRuleList` Ð´Ð»Ñ Ð²ÐµÐ±Ð°. Ð”ÐµÐ»Ð°Ñ‚ÑŒ ÑÑ‚Ð¾ Â«Ð½Ð°Ð¿Ð¾Ð»Ð¾Ð²Ð¸Ð½ÑƒÂ» Ñ…ÑƒÐ¶Ðµ, Ñ‡ÐµÐ¼ Ð½Ðµ Ð´ÐµÐ»Ð°Ñ‚ÑŒ:
-Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ñ€ÐµÑˆÐ¸Ñ‚, Ñ‡Ñ‚Ð¾ Ð±Ð»Ð¾ÐºÐ¸Ñ€Ð¾Ð²ÐºÐ° Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚, Ð° Ð¾Ð½Ð° Ð±ÑƒÐ´ÐµÑ‚ Ð¿Ñ€Ð¾Ð¿ÑƒÑÐºÐ°Ñ‚ÑŒ Ð±Ð¾Ð»ÑŒÑˆÑƒÑŽ Ñ‡Ð°ÑÑ‚ÑŒ.
+**Отложено осознанно:** Android-версия дополнительно тянет ABP-совместимые списки
+фильтров (`libetgadblock.so`, `AdBlockClient`) и переписывает косметику в встроенных
+веб-страницах. Это существенно больший объём: парсер формата ABP, подписки, обновление
+списков и `WKContentRuleList` для веба. Делать это «наполовину» хуже, чем не делать:
+пользователь решит, что блокировка работает, а она будет пропускать большую часть.
 
-## 13. Ð˜Ñ‚Ð¾Ð³ Ð¿Ð¾ Ñ„Ð¸Ñ‡Ð°Ð¼
+## 13. Итог по фичам
 
-| Ð¤Ð¸Ñ‡Ð° | Ð¡Ð¾ÑÑ‚Ð¾ÑÐ½Ð¸Ðµ | Ð¢Ð¾Ñ‡ÐºÐ° Ð²Ñ€ÐµÐ·ÐºÐ¸ |
+| Фича | Состояние | Точка врезки |
 |---|---|---|
-| Ghost Mode | ÑÐ´ÐµÐ»Ð°Ð½Ð¾, 4 Ñ…ÑƒÐºÐ° | presence / read receipts / typing / stories |
-| ÐÐ½Ñ‚Ð¸-ÑƒÐ´Ð°Ð»ÐµÐ½Ð¸Ðµ | ÑÐ´ÐµÐ»Ð°Ð½Ð¾ | `_internal_deleteMessages` (Ð²Ð¾Ñ€Ð¾Ð½ÐºÐ°) |
-| Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ Ð¿Ñ€Ð°Ð²Ð¾Ðº | ÑÐ´ÐµÐ»Ð°Ð½Ð¾ | `.EditMessage` Ð¿Ñ€Ð¸ Ð¿Ñ€Ð¸Ð¼ÐµÐ½ÐµÐ½Ð¸Ð¸ Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸Ð¸ |
-| Spy: ÐºÑ‚Ð¾ Ð¿Ñ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ð» | ÑÐ´ÐµÐ»Ð°Ð½Ð¾ | `MessageReadStats.swift` |
-| Spy: Ñ‡Ñ‚ÐµÐ½Ð¸Ðµ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ð¼Ð¾Ð³Ð¾ | ÑÐ´ÐµÐ»Ð°Ð½Ð¾ | `.ReadMessageContents` |
-| Regex-Ñ„Ð¸Ð»ÑŒÑ‚Ñ€Ñ‹ | Ð´Ð²Ð¸Ð¶Ð¾Ðº Ð³Ð¾Ñ‚Ð¾Ð², Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ðµ Ðº UI â€” Ð½ÐµÑ‚ | `AyuFilters` |
-| Adblock (ÑÐ¿Ð¾Ð½ÑÐ¾Ñ€ÑÐºÐ¸Ðµ) | ÑÐ´ÐµÐ»Ð°Ð½Ð¾ | `AdMessages.swift` |
-| Adblock (ABP + Ð²ÐµÐ±) | Ð¾Ñ‚Ð»Ð¾Ð¶ÐµÐ½Ð¾ Ð¾ÑÐ¾Ð·Ð½Ð°Ð½Ð½Ð¾ | â€” |
-| Ð­ÐºÑ€Ð°Ð½ Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº | ÑÐ´ÐµÐ»Ð°Ð½Ð¾: ÑÐµÐºÑ†Ð¸Ñ AyuGram Ð² Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ°Ñ… Swiftgram | `Swiftgram/SGSettingsUI` |
+| Ghost Mode | сделано, 4 хука | presence / read receipts / typing / stories |
+| Анти-удаление | сделано | `_internal_deleteMessages` (воронка) |
+| История правок | сделано | `.EditMessage` при применении операции |
+| Spy: кто прочитал | сделано | `MessageReadStats.swift` |
+| Spy: чтение содержимого | сделано | `.ReadMessageContents` |
+| Regex-фильтры | движок готов, подключение к UI — нет | `AyuFilters` |
+| Adblock (спонсорские) | сделано | `AdMessages.swift` |
+| Adblock (ABP + веб) | отложено осознанно | — |
+| Экран настроек | сделано: секция AyuGram в настройках Swiftgram | `Swiftgram/SGSettingsUI` |
 
-ÐŸÐ°Ñ‚Ñ‡ÐµÐ¹ Ðº Ð°Ð¿ÑÑ‚Ñ€Ð¸Ð¼Ñƒ: **12** (10 Ð¿Ð¾ TelegramCore, 2 Ð¿Ð¾ ÑÐ»Ð¾ÑŽ Swiftgram â€” ÑÐ°Ð¼ ÑÐºÑ€Ð°Ð½ Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº
-Ð¸ ÐµÐ³Ð¾ Ð·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð¾ÑÑ‚Ð¸). ÐŸÑ€Ð¾Ð²ÐµÑ€Ð¾Ðº: **11 Ð½Ð°Ð±Ð¾Ñ€Ð¾Ð²**, Ð½Ð° Ð¼Ð°ÐºÐµ **160 ÑƒÑ‚Ð²ÐµÑ€Ð¶Ð´ÐµÐ½Ð¸Ð¹** Ð² 4 Ð½Ð°Ð±Ð¾Ñ€Ð°Ñ….
+Патчей к апстриму: **12** (10 по TelegramCore, 2 по слою Swiftgram — сам экран настроек
+и его зависимости). Проверок: **11 наборов**, на маке **160 утверждений** в 4 наборах.
 
-### ÐŸÑ€Ð¾ ÑÐºÑ€Ð°Ð½ Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº
+### Про экран настроек
 
-Ð¡Ð²Ð¾Ð¹ ÑÐºÑ€Ð°Ð½ Ð½Ðµ Ð¿Ð¸ÑÐ°Ð»ÑÑ Ð½Ð°Ð¼ÐµÑ€ÐµÐ½Ð½Ð¾: ÑÐµÐºÑ†Ð¸Ñ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð° **Ð²Ð½ÑƒÑ‚Ñ€ÑŒ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÑŽÑ‰ÐµÐ³Ð¾ ÑÐºÑ€Ð°Ð½Ð°
-Ð½Ð°ÑÑ‚Ñ€Ð¾ÐµÐº Swiftgram**, Ð¿Ð¾ ÐµÐ³Ð¾ Ð¶Ðµ Ð¾Ð±Ñ€Ð°Ð·Ñ†Ñƒ â€” Ñ‚Ðµ Ð¶Ðµ Ñ‚Ð¸Ð¿Ñ‹ ÑÑ‚Ñ€Ð¾Ðº, Ñ‚Ð¾Ñ‚ Ð¶Ðµ Ð¿Ð¾Ð¸ÑÐº, Ñ‚Ð¾Ñ‚ Ð¶Ðµ
-Ð¼ÐµÑ…Ð°Ð½Ð¸Ð·Ð¼ Ð¿ÐµÑ€ÐµÐ·Ð°Ð¿ÑƒÑÐºÐ°. ÐŸÑ€Ð¸Ñ‡Ð¸Ð½Ð° Ð¿Ñ€Ð¾ÑÑ‚Ð°Ñ: Ð±ÐµÐ· ÐºÐ¾Ð¼Ð¿Ð¸Ð»ÑÑ‚Ð¾Ñ€Ð° ÐºÐ°Ð¶Ð´Ñ‹Ð¹ Ð½Ð¾Ð²Ñ‹Ð¹ Ð½ÐµÐ·Ð½Ð°ÐºÐ¾Ð¼Ñ‹Ð¹ API
-ÑÑ‚Ð¾ Ñ€Ð¸ÑÐº, Ð° Ð·Ð´ÐµÑÑŒ Ð¿ÐµÑ€ÐµÐ¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ÑÑ ÑƒÐ¶Ðµ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÑŽÑ‰Ð°Ñ Ð¼ÐµÑ…Ð°Ð½Ð¸ÐºÐ°. AyuGram-Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡Ð°Ñ‚ÐµÐ»Ð¸
-Ñ…Ñ€Ð°Ð½ÑÑ‚ÑÑ Ð² `AyuSettings`, Ð° Ð½Ðµ Ð² `SGSimpleSettings`, Ð¿Ð¾ÑÑ‚Ð¾Ð¼Ñƒ Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸Ðº Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸Ñ
-Ð¼Ð°Ñ€ÑˆÑ€ÑƒÑ‚Ð¸Ð·Ð¸Ñ€ÑƒÐµÑ‚ Ð¸Ñ… Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ð¾Ð¹ Ð²ÐµÑ‚ÐºÐ¾Ð¹.
+Свой экран не писался намеренно: секция добавлена **внутрь существующего экрана
+настроек Swiftgram**, по его же образцу — те же типы строк, тот же поиск, тот же
+механизм перезапуска. Причина простая: без компилятора каждый новый незнакомый API
+это риск, а здесь переиспользуется уже работающая механика. AyuGram-переключатели
+хранятся в `AyuSettings`, а не в `SGSimpleSettings`, поэтому обработчик изменения
+маршрутизирует их отдельной веткой.
 
-Ð§Ñ‚Ð¾ ÑÑ‚Ð¾ Ð´Ð°Ñ‘Ñ‚: **Ñ„Ð¸Ñ‡Ð¸ ÑÑ‚Ð°Ð½Ð¾Ð²ÑÑ‚ÑÑ Ð´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŽ**. Ð”Ð¾ ÑÑ‚Ð¾Ð¹ Ð¿Ñ€Ð°Ð²ÐºÐ¸ Ð°Ñ€Ñ…Ð¸Ð²
-Ñ€Ð°Ð±Ð¾Ñ‚Ð°Ð» (ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¾ Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ), Ð½Ð¾ Ghost Mode, adblock Ð¸ shpiÐ¾Ð½
-Ð±Ñ‹Ð»Ð¸ Ð½ÐµÐ´Ð¾ÑÑ‚Ð¸Ð¶Ð¸Ð¼Ñ‹ â€” Ð¸Ñ… Ð½ÐµÑ‡ÐµÐ¼ Ð±Ñ‹Ð»Ð¾ Ð²ÐºÐ»ÑŽÑ‡Ð¸Ñ‚ÑŒ.
+Что это даёт: **фичи становятся доступны пользователю**. До этой правки архив
+работал (сохранение включено по умолчанию), но Ghost Mode, adblock и шпион
+были недостижимы — их нечем было включить.
 
 
 
