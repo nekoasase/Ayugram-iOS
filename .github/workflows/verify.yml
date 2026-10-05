@@ -1,4 +1,4 @@
-name: verify
+﻿name: verify
 
 # Fast, toolchain-free verification of the AyuGram patch layer.
 # The schema and entities are cross-checked against the schema extracted from
@@ -29,7 +29,7 @@ jobs:
           python-version: '3.12'
 
       - name: Run all checks
-        run: python tools/verify_all.py
+        run: python3 AyuGram/tools/verify_all.py
 
   # Keeps the port checklist honest: if the inventory script stops finding the
   # AyuGram classes in the APK, the feature map is stale.
@@ -43,6 +43,6 @@ jobs:
         with:
           python-version: '3.12'
       - name: Extract feature inventory
-        run: python tools/apk_ayu_inventory.py
+        run: python3 AyuGram/tools/apk_ayu_inventory.py
       - name: Extract schema
-        run: python tools/extract_schema.py
+        run: python3 AyuGram/tools/extract_schema.py

@@ -1,4 +1,4 @@
-name: build-ios
+﻿name: build-ios
 
 # Builds the AyuGram iOS client on top of the Swiftgram/Telegram-iOS base.
 #
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Verify patch layer (no toolchain needed)
-        run: python3 tools/verify_all.py
+        run: python3 AyuGram/tools/verify_all.py
 
       - name: Check required secrets
         env:

@@ -15,8 +15,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SCHEMA = ROOT / "AyuGram" / "Database" / "Schema" / "schema.sql"
-ENTITIES = ROOT / "AyuGram" / "Database" / "Entities"
+SCHEMA = ROOT / "Database" / "Schema" / "schema.sql"
+ENTITIES = ROOT / "Database" / "Entities"
 
 # Projections that are deliberately not tables (Room @Embedded/@Relation).
 NON_TABLE_TYPES = {"DeletedMessageFull"}

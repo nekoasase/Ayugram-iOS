@@ -12,8 +12,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SQL_PATH = ROOT / "AyuGram" / "Database" / "Schema" / "schema.sql"
-OUT_PATH = ROOT / "AyuGram" / "Database" / "Schema" / "AyuSchema.generated.swift"
+SQL_PATH = ROOT / "Database" / "Schema" / "schema.sql"
+OUT_PATH = ROOT / "Database" / "Schema" / "AyuSchema.generated.swift"
 
 HEADER = """// GENERATED FILE — DO NOT EDIT BY HAND.
 // Source: AyuGram/Database/Schema/schema.sql

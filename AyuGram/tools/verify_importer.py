@@ -22,8 +22,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SWIFT = ROOT / "AyuGram" / "Database" / "AyuDatabase.swift"
-SCHEMA = ROOT / "AyuGram" / "Database" / "Schema" / "schema.sql"
+SWIFT = ROOT / "Database" / "AyuDatabase.swift"
+SCHEMA = ROOT / "Database" / "Schema" / "schema.sql"
 
 failures = []
 
