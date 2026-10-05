@@ -1,6 +1,16 @@
-﻿name: build-ios
+name: build-ios
 
 # Builds the AyuGram iOS client on top of the Swiftgram/Telegram-iOS base.
+#
+# This is the primary build path, not a fallback: the project's own Mac mini is a
+# Late 2012 model (Macmini6,2) capped at macOS 10.15 Catalina, where the newest
+# possible Xcode is 12.4. Swiftgram master requires macOS 26 + Xcode 26.2 (see its
+# versions.json), so no local build is possible on that hardware.
+#
+# The runner image matters: it must ship the Xcode that versions.json asks for.
+# Default is macos-26; if that image is not available on the account, pass
+# macos-15 and the workflow will warn about the version mismatch and pass
+# --overrideXcodeVersion, which may or may not build.
 #
 # Requires repository secrets:
 #   TELEGRAM_API_ID      - from https://my.telegram.org/apps  (required)
@@ -21,21 +31,25 @@ on:
         description: Swiftgram/Telegram-iOS ref to build against
         default: master
         required: true
+      runner:
+        description: macOS runner image (must have the Xcode that versions.json requires)
+        default: macos-26
+        required: true
       configuration:
         description: Build configuration
-        default: release_arm64
+        default: release_sim_arm64
         type: choice
         options:
+          - release_sim_arm64
           - release_arm64
           - debug_arm64
-          - release_sim_arm64
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: ${{ inputs.runner }}
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
@@ -84,18 +98,30 @@ jobs:
           set -euo pipefail
           echo "base versions.json:"
           cat vendor/Telegram-iOS/versions.json
-          python3 - <<'PY'
-          import json, pathlib, re, subprocess, sys
+
+          # Make.py compares the installed Xcode against versions.json and refuses
+          # to build on a mismatch. That check is useful locally and unhelpful on a
+          # hosted runner, whose Xcode we cannot choose, so the flag is derived
+          # here rather than hard-coded.
+          OUTPUT=$(python3 - <<'PY'
+          import json, pathlib, re, subprocess
           base = json.loads(pathlib.Path("vendor/Telegram-iOS/versions.json").read_text())
-          required = base.get("xcode")
+          required = str(base.get("xcode") or "")
+          installed = "unknown"
           out = subprocess.run(["xcodebuild", "-version"], capture_output=True, text=True).stdout
           m = re.search(r"Xcode\s+(\S+)", out)
-          installed = m.group(1) if m else "unknown"
-          print(f"required Xcode {required}, runner has {installed}")
-          if required and installed != required:
-              print(f"::warning::Xcode mismatch: base wants {required}, runner has {installed}. "
-                    f"Pass --overrideXcodeVersion to Make.py if the build fails.")
+          if m:
+              installed = m.group(1)
+          print(f"versions.json requires Xcode {required}; this runner has {installed}")
+          print("OVERRIDE=" + ("--overrideXcodeVersion" if required and installed != required else ""))
           PY
+          )
+          echo "$OUTPUT"
+          OVERRIDE=$(printf '%s\n' "$OUTPUT" | sed -n 's/^OVERRIDE=//p' | tail -1)
+          if [ -n "$OVERRIDE" ]; then
+            echo "::warning::Xcode differs from versions.json; building with $OVERRIDE"
+          fi
+          echo "XCODE_OVERRIDE_FLAG=$OVERRIDE" >> "$GITHUB_ENV"
 
       - name: Write build configuration
         env:
@@ -126,7 +152,10 @@ jobs:
         working-directory: vendor/Telegram-iOS
         run: |
           set -euo pipefail
+          # --overrideXcodeVersion is a global option, so it goes before the
+          # subcommand (it is empty when the runner's Xcode already matches).
           python3 build-system/Make/Make.py \
+            ${XCODE_OVERRIDE_FLAG:-} \
             --cacheDir="$HOME/telegram-bazel-cache" \
             generateProject \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
@@ -137,6 +166,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 build-system/Make/Make.py \
+            ${XCODE_OVERRIDE_FLAG:-} \
             --cacheDir="$HOME/telegram-bazel-cache" \
             build \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \

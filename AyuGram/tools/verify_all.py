@@ -25,6 +25,8 @@ CHECKS = [
      ["tools/gen_swift_dao.py", "--check"]),
     ("AyuGram patch set is consistent and applied",
      ["tools/verify_patches.py"]),
+    ("CI workflows are valid and their inline scripts compile",
+     ["tools/verify_workflows.py"]),
 ]
 
 
