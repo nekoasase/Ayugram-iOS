@@ -1,0 +1,27 @@
+diff --git a/submodules/TelegramCore/BUILD b/submodules/TelegramCore/BUILD
+index d1b82ab5..04c8d279 100644
+--- a/submodules/TelegramCore/BUILD
++++ b/submodules/TelegramCore/BUILD
+@@ -10,6 +10,13 @@ sgdeps = [
+     "//Swiftgram/SGLogging:SGLogging",
+ ]
+ 
++# MARK: AyuGram
++# The AyuGram patch layer hooks Ghost Mode into this module, the same way the
++# Swiftgram markers above hook their own settings in.
++ayudeps = [
++    "//AyuGram/AyuSettings:AyuSettings",
++]
++
+ sgsrc = [
+     "//Swiftgram/SGIQTP:SGIQTP",
+ ]
+@@ -23,7 +30,7 @@ swift_library(
+     copts = [
+         "-warnings-as-errors",
+     ],
+-    deps = sgdeps + [
++    deps = sgdeps + ayudeps + [
+         "//submodules/TelegramApi:TelegramApi",
+         "//submodules/MtProtoKit:MtProtoKit",
+         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",

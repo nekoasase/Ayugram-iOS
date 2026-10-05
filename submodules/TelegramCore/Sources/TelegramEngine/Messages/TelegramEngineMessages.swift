@@ -1,5 +1,7 @@
 import SGGTranslate
 import SGSimpleSettings
+// MARK: AyuGram
+import AyuSettings
 import Foundation
 import SwiftSignalKit
 import Postbox
@@ -1634,6 +1636,13 @@ public extension TelegramEngine {
         public func markStoryAsSeen(peerId: EnginePeer.Id, id: Int32, asPinned: Bool) -> Signal<Never, NoError> {
             // MARK: Swiftgram
             if SGSimpleSettings.shared.isStealthModeEnabled {
+                return .never()
+            }
+            // MARK: AyuGram
+            // AyuGram carries its own story switch, so ghost mode suppresses
+            // story views even when Swiftgram's stealth mode is off. Either flag
+            // is enough — see AyuSettings.suppressesStoryViews.
+            if AyuSettings.shared.suppressesStoryViews {
                 return .never()
             }
             return _internal_markStoryAsSeen(account: self.account, peerId: peerId, id: id, asPinned: asPinned)

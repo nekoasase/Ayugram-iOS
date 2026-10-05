@@ -1,0 +1,25 @@
+diff --git a/submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift b/submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift
+index 7acc37a1..9cdb8df0 100644
+--- a/submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift
++++ b/submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift
+@@ -1,4 +1,6 @@
+ import Foundation
++// MARK: AyuGram
++import AyuSettings
+ import Postbox
+ import SwiftSignalKit
+ import TelegramApi
+@@ -176,6 +178,13 @@ private func requestActivity(postbox: Postbox, network: Network, accountPeerId:
+             }
+             
+             if let inputPeer = apiInputPeer(peer) {
++                // MARK: AyuGram
++                // Ghost mode: do not advertise typing. Returning .complete()
++                // rather than an error keeps the local activity pipeline intact —
++                // the draft and the UI still work, only the network call is gone.
++                if AyuSettings.shared.isGhostModeActive(dialogId: peerId.toInt64()) && AyuSettings.shared.ghostModeTyping {
++                    return .complete()
++                }
+                 var flags: Int32 = 0
+                 let topMessageId = threadId.flatMap { Int32(clamping: $0) }
+                 if topMessageId != nil {

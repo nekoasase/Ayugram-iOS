@@ -23,6 +23,8 @@ CHECKS = [
      ["tools/verify_models.py"]),
     ("generated row/SQL mapping matches schema and records",
      ["tools/gen_swift_dao.py", "--check"]),
+    ("AyuGram patch set is consistent and applied",
+     ["tools/verify_patches.py"]),
 ]
 
 

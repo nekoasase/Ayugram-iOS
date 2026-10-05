@@ -1,0 +1,26 @@
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
+index 5cbeb5eb..96ce60b3 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
+@@ -1,5 +1,7 @@
+ import SGGTranslate
+ import SGSimpleSettings
++// MARK: AyuGram
++import AyuSettings
+ import Foundation
+ import SwiftSignalKit
+ import Postbox
+@@ -1636,6 +1638,13 @@ public extension TelegramEngine {
+             if SGSimpleSettings.shared.isStealthModeEnabled {
+                 return .never()
+             }
++            // MARK: AyuGram
++            // AyuGram carries its own story switch, so ghost mode suppresses
++            // story views even when Swiftgram's stealth mode is off. Either flag
++            // is enough — see AyuSettings.suppressesStoryViews.
++            if AyuSettings.shared.suppressesStoryViews {
++                return .never()
++            }
+             return _internal_markStoryAsSeen(account: self.account, peerId: peerId, id: id, asPinned: asPinned)
+         }
+         

@@ -1,4 +1,6 @@
 import Foundation
+// MARK: AyuGram
+import AyuSettings
 import TelegramApi
 import Postbox
 import SwiftSignalKit
@@ -43,6 +45,18 @@ private final class AccountPresenceManagerImpl {
     }
     
     private func updatePresence(_ isOnline: Bool) {
+        // MARK: AyuGram
+        // Ghost mode: never report presence. Both the "online" and the "offline"
+        // update are suppressed — sending "offline" would still move the
+        // last-seen timestamp and leak activity. The 30-second keep-online timer
+        // is torn down as well, otherwise a pending tick would fire later and
+        // send the update anyway.
+        if AyuSettings.shared.isGhostModeActive && AyuSettings.shared.ghostModeSendOnline {
+            self.onlineTimer?.invalidate()
+            self.onlineTimer = nil
+            return
+        }
+
         let request: Signal<Api.Bool, MTRpcError>
         if isOnline {
             let timer = SignalKitTimer(timeout: 30.0, repeat: false, completion: { [weak self] in
