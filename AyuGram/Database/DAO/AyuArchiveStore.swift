@@ -270,6 +270,45 @@ public final class AyuArchiveStore {
         return true
     }
 
+    /// Whether this reader is already recorded as having read the *contents*.
+    public func hasContentReader(dialogId: Int64, messageId: Int32, readerId: Int64) throws -> Bool {
+        let rows = try self.sqlite.query(
+            """
+            SELECT 1 AS `present` FROM `SpyMessageContentsRead`
+            WHERE `userId` = ? AND `dialogId` = ? AND `messageId` = ?
+            LIMIT 1
+            """,
+            [.integer(readerId), .integer(dialogId), .integer(Int64(messageId))]
+        )
+        return !rows.isEmpty
+    }
+
+    /// Records that `readerId` read a message's contents. Returns false if known.
+    ///
+    /// Separate from ``recordRead`` because Telegram reports the two events
+    /// independently: a read mark and `updateReadMessagesContents` can arrive in
+    /// either order, and only one of them carries a reader.
+    @discardableResult
+    public func recordContentRead(
+        dialogId: Int64,
+        messageId: Int32,
+        readerId: Int64,
+        date: Int64
+    ) throws -> Bool {
+        if try self.hasContentReader(dialogId: dialogId, messageId: messageId, readerId: readerId) {
+            return false
+        }
+        try self.insert(
+            SpyMessageContentsRead(
+                userId: readerId,
+                dialogId: dialogId,
+                messageId: messageId,
+                entityCreateDate: date
+            )
+        )
+        return true
+    }
+
     public func pruneSpyRecords(olderThan date: Int64) throws -> Int32 {
         try self.sqlite.run(
             "DELETE FROM `SpyMessageRead` WHERE `entityCreateDate` < ?",

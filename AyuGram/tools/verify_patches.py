@@ -41,6 +41,7 @@ EXPECTED_TARGETS = {
     "submodules/TelegramCore/Sources/State/SynchronizePeerReadState.swift",
     "submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift",
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessages.swift",
+    "submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift",
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift",
 }
 

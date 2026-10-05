@@ -1,5 +1,5 @@
 diff --git a/submodules/TelegramCore/Sources/State/AccountStateManagementUtils.swift b/submodules/TelegramCore/Sources/State/AccountStateManagementUtils.swift
-index 58db6c71..36fbe51e 100644
+index 58db6c71..023d0bfd 100644
 --- a/submodules/TelegramCore/Sources/State/AccountStateManagementUtils.swift
 +++ b/submodules/TelegramCore/Sources/State/AccountStateManagementUtils.swift
 @@ -4,6 +4,8 @@ import SwiftSignalKit
@@ -26,3 +26,25 @@ index 58db6c71..36fbe51e 100644
                  var generatedEvent: (reactionAuthor: Peer, reaction: MessageReaction.Reaction, message: Message, timestamp: Int32)?
                  transaction.updateMessage(id, update: { previousMessage in
                      var updatedFlags = message.flags
+@@ -5075,6 +5085,21 @@ func replayFinalState(
+             case let .ReadMessageContents(peerIdAndMessageIds, date):
+                 let (peerId, _, messageIds) = peerIdAndMessageIds
+ 
++                // MARK: AyuGram
++                // "Message contents were read". Unlike the read participants call,
++                // this update carries no reader id, so the recorder stores the peer
++                // for one-to-one chats and an unknown reader for groups — see
++                // AyuArchiveRecorder.recordContentReads. The global-id branch below
++                // has no dialog at all and is therefore not recorded.
++                if let peerId = peerId {
++                    AyuArchiveRecorder.shared.recordContentReads(
++                        dialogId: peerId.toInt64(),
++                        peerIsPrivateChat: peerId.namespace == Namespaces.Peer.CloudUser,
++                        messageIds: messageIds,
++                        date: date ?? 0
++                    )
++                }
++
+                 if let peerId = peerId {
+                     for id in messageIds {
+                         markMessageContentAsConsumedRemotely(transaction: transaction, messageId: MessageId(peerId: peerId, namespace: Namespaces.Message.Cloud, id: id), consumeDate: date)

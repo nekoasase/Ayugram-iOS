@@ -1,6 +1,8 @@
 import Postbox
 import SwiftSignalKit
 import TelegramApi
+// MARK: AyuGram
+import AyuArchive
 
 public final class MessageReadStats {
     public let reactionCount: Int
@@ -39,6 +41,14 @@ func _internal_messageReadStats(account: Account, id: MessageId) -> Signal<Messa
                 switch result {
                 case let .outboxReadDate(outboxReadDateData):
                     let date = outboxReadDateData.date
+                    // MARK: AyuGram
+                    // One-to-one chat: the peer is the only possible reader, and
+                    // Telegram reports exactly when they read it.
+                    AyuArchiveRecorder.shared.recordReaders(
+                        dialogId: id.peerId.toInt64(),
+                        messageId: id.id,
+                        readers: [(userId: peer.id.toInt64(), date: date)]
+                    )
                     return MessageReadStats(reactionCount: 0, peers: [EnginePeer(peer)], readTimestamps: [peer.id: date])
                 }
             }
@@ -53,6 +63,16 @@ func _internal_messageReadStats(account: Account, id: MessageId) -> Signal<Messa
                         items.append((userId, date))
                     }
                 }
+                // MARK: AyuGram
+                // Groups and channels: this is the only place the client learns
+                // which members read a message, and the pair is exactly what the
+                // archive's SpyMessageRead table stores. The recorder ignores
+                // duplicates, because these stats are refetched on every open.
+                AyuArchiveRecorder.shared.recordReaders(
+                    dialogId: id.peerId.toInt64(),
+                    messageId: id.id,
+                    readers: items.map { (userId: $0.0, date: $0.1) }
+                )
                 return items
             }
             |> `catch` { _ -> Signal<[(Int64, Int32)]?, NoError> in

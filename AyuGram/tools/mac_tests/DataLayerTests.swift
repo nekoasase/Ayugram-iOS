@@ -323,6 +323,29 @@ do {
     ))
     let contentReaders = try store.contentReaderIds(dialogId: dialogId, messageId: 11)
     expectEqual("content readers are separate from read marks", contentReaders, [2002])
+
+    // The content-read path used by updateReadMessagesContents, which reports no
+    // reader: the store still has to deduplicate, because that update repeats.
+    let firstContent = try store.recordContentRead(
+        dialogId: dialogId, messageId: 12, readerId: 3003, date: 5
+    )
+    let duplicateContent = try store.recordContentRead(
+        dialogId: dialogId, messageId: 12, readerId: 3003, date: 6
+    )
+    expect("a content read is recorded", firstContent)
+    expect("a repeated content read is ignored", !duplicateContent)
+    expect("hasContentReader finds it",
+           try store.hasContentReader(dialogId: dialogId, messageId: 12, readerId: 3003))
+    expect("hasContentReader is specific to the reader",
+           try !store.hasContentReader(dialogId: dialogId, messageId: 12, readerId: 9999))
+    expect("hasContentReader is specific to the message",
+           try !store.hasContentReader(dialogId: dialogId, messageId: 13, readerId: 3003))
+
+    // The group case stores an unknown reader rather than inventing one.
+    try store.recordContentRead(dialogId: dialogId, messageId: 12, readerId: 0, date: 7)
+    let bothContentReaders = try store.contentReaderIds(dialogId: dialogId, messageId: 12)
+    expectEqual("an unattributed content read is kept separately",
+                bothContentReaders.sorted(), [0, 3003])
 } catch {
     expect("spy", false, "\(error)")
 }

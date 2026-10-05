@@ -163,6 +163,85 @@ public final class AyuArchiveRecorder {
         }
     }
 
+    /// Records who read a message.
+    ///
+    /// The shape is not a guess: `messages.getMessageReadParticipants` returns
+    /// `readParticipantDate` entries of `(userId, date)`, which is exactly the
+    /// `(userId, dialogId, messageId, entityCreateDate)` tuple of the
+    /// `SpyMessageRead` table. That is what settles the column's meaning — `userId`
+    /// holds the **reader**, not the account — and it is also the "save read date"
+    /// behaviour AyuGram's settings describe.
+    public func recordReaders(dialogId: Int64, messageId: Int32, readers: [(userId: Int64, date: Int32)]) {
+        guard self.settings.saveReadMarks, !readers.isEmpty else {
+            return
+        }
+
+        self.lock.lock()
+        let currentStore = self.store
+        self.lock.unlock()
+
+        guard let store = currentStore else {
+            return
+        }
+
+        self.writeQueue.async {
+            for reader in readers {
+                do {
+                    // Duplicates are expected: the read stats are refetched every
+                    // time the list is opened, and the same reader keeps appearing.
+                    try store.recordRead(
+                        dialogId: dialogId,
+                        messageId: messageId,
+                        readerId: reader.userId,
+                        date: Int64(reader.date)
+                    )
+                } catch {
+                    assertionFailure("AyuGram read-mark insert failed: \(error)")
+                }
+            }
+        }
+    }
+
+    /// Records that message contents were read.
+    ///
+    /// `updateReadMessagesContents` carries message ids and a date but **no reader
+    /// id**, unlike the participants call above. In a one-to-one chat the reader can
+    /// only be the peer, so that is what is stored; in a group the reader is simply
+    /// not reported by Telegram, and the row is written with reader `0` rather than
+    /// guessed at. Inventing a reader would corrupt the very feature this table
+    /// exists for.
+    public func recordContentReads(dialogId: Int64, peerIsPrivateChat: Bool, messageIds: [Int32], date: Int32) {
+        guard self.settings.saveContentsRead, !messageIds.isEmpty else {
+            return
+        }
+
+        self.lock.lock()
+        let currentStore = self.store
+        self.lock.unlock()
+
+        guard let store = currentStore else {
+            return
+        }
+
+        let readerId: Int64 = peerIsPrivateChat ? dialogId : 0
+        let timestamp = Int64(date)
+
+        self.writeQueue.async {
+            for messageId in messageIds {
+                do {
+                    try store.recordContentRead(
+                        dialogId: dialogId,
+                        messageId: messageId,
+                        readerId: readerId,
+                        date: timestamp
+                    )
+                } catch {
+                    assertionFailure("AyuGram content-read insert failed: \(error)")
+                }
+            }
+        }
+    }
+
     /// Converts a live `Message` into an archive row for a given table.
     ///
     /// Generic over the table kind, because deleted messages and edited revisions
