@@ -36,6 +36,7 @@ SETTINGS = ROOT / "AyuSettings" / "Sources" / "AyuSettings.swift"
 EXPECTED_TARGETS = {
     "submodules/TelegramCore/BUILD",
     "submodules/TelegramCore/Sources/Account/Account.swift",
+    "submodules/TelegramCore/Sources/State/AccountStateManagementUtils.swift",
     "submodules/TelegramCore/Sources/State/ManagedAccountPresence.swift",
     "submodules/TelegramCore/Sources/State/SynchronizePeerReadState.swift",
     "submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift",

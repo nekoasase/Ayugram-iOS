@@ -93,6 +93,7 @@ public final class AyuArchiveRecorder {
                 continue
             }
             records.append(AyuArchiveRecorder.snapshot(
+                AyuDeletedMessageTable.self,
                 message: message,
                 id: id,
                 accountId: accountId,
@@ -117,20 +118,67 @@ public final class AyuArchiveRecorder {
         }
     }
 
-    /// Converts a live `Message` into an archive row.
+    /// Snapshots the revision that an edit is about to replace.
     ///
-    /// Only fields whose Postbox API is stable are mapped. Anything not mapped
-    /// here is either unavailable on iOS or belongs to the deferred
-    /// `messageSerialized` payload, and is called out in the port map.
-    static func snapshot(
+    /// Must be called inside the same Postbox transaction that applies the edit:
+    /// at that point `transaction.getMessage` still returns the *previous*
+    /// revision, which is the whole point of the feature.
+    ///
+    /// Every edit operation appends a row. No deduplication is attempted, because
+    /// the obvious key — the message date — is identical for every revision of one
+    /// message, so using it would discard all but the first. If Telegram replays
+    /// an edit update, the archive gains a duplicate revision, which is cosmetic;
+    /// losing revisions would not be.
+    public func recordEdit(transaction: Transaction, id: MessageId) {
+        guard self.settings.saveEditedMessages else {
+            return
+        }
+
+        self.lock.lock()
+        let currentAccountId = self.accountId
+        let currentStore = self.store
+        self.lock.unlock()
+
+        guard let accountId = currentAccountId, let store = currentStore else {
+            return
+        }
+        guard let message = transaction.getMessage(id) else {
+            return
+        }
+
+        let record = AyuArchiveRecorder.snapshot(
+            AyuEditedMessageTable.self,
+            message: message,
+            id: id,
+            accountId: accountId,
+            createdAt: Int64(Date().timeIntervalSince1970 * 1000.0)
+        )
+
+        self.writeQueue.async {
+            do {
+                try store.insert(record)
+            } catch {
+                assertionFailure("AyuGram edited-revision insert failed: \(error)")
+            }
+        }
+    }
+
+    /// Converts a live `Message` into an archive row for a given table.
+    ///
+    /// Generic over the table kind, because deleted messages and edited revisions
+    /// share one record type but are stored in two tables. Only fields whose
+    /// Postbox API is stable are mapped; the rest belong to the deferred
+    /// `messageSerialized` payload and are called out in the port map.
+    static func snapshot<Table: AyuTableKind>(
+        _ table: Table.Type,
         message: Message,
         id: MessageId,
         accountId: Int64,
         createdAt: Int64
-    ) -> DeletedMessage {
+    ) -> AyuMessageRecord<Table> {
         let forwardInfo = message.forwardInfo
 
-        return DeletedMessage(
+        return AyuMessageRecord<Table>(
             userId: accountId,
             // `toInt64()` keeps channels negative, which is what the Android
             // queries and indexes expect.
