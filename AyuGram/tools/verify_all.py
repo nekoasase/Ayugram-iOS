@@ -33,6 +33,8 @@ CHECKS = [
      ["tools/audit_port_coverage.py"]),
     ("text files are clean UTF-8 without BOM",
      ["tools/verify_encoding.py"]),
+    ("every foreign API the patch layer calls exists as assumed",
+     ["tools/verify_api_usage.py"]),
     ("Swift sources parse with a real compiler (needs the Mac; skipped if absent)",
      ["tools/verify_swift_syntax.py"]),
     ("Ghost Mode behaviour tests run on the Mac (skipped if absent)",

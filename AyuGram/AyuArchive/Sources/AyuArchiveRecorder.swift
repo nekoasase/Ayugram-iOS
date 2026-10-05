@@ -267,9 +267,13 @@ public final class AyuArchiveRecorder {
             topicId: message.threadId ?? 0,
             messageId: id.id,
             date: message.timestamp,
-            flags: message.flags.rawValue,
+            // `MessageFlags.rawValue` is `UInt32` while the column is `Int32`;
+            // `bitPattern` reinterprets it rather than trapping on large values.
+            flags: Int32(bitPattern: message.flags.rawValue),
             fwdFlags: forwardInfo?.flags.rawValue ?? 0,
-            fwdFromId: forwardInfo?.authorId?.toInt64() ?? 0,
+            // `MessageForwardInfo` exposes the original author as `author`, not as
+            // an id — the store type has `authorId`, the runtime one does not.
+            fwdFromId: forwardInfo?.author?.id.toInt64() ?? 0,
             fwdName: forwardInfo?.authorSignature,
             fwdDate: forwardInfo?.date ?? 0,
             entityCreateDate: createdAt,
