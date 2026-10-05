@@ -59,6 +59,9 @@ public final class AyuSettings {
 
         // Ad blocking (Android: use_adblock, enableAdBlock)
         case adBlockEnabled
+        case adBlockHideAllSponsored
+        case adBlockHideRecommended
+        case adBlockKeywords
 
         // Attachments
         case attachmentsPath
@@ -108,6 +111,11 @@ public final class AyuSettings {
             Keys.regexFiltersApplyToChatList.rawValue: false,
 
             Keys.adBlockEnabled.rawValue: false,
+            Keys.adBlockHideAllSponsored.rawValue: true,
+            // "Recommended" entries are Telegram's own suggestions rather than
+            // paid placements, so they are kept unless explicitly turned off.
+            Keys.adBlockHideRecommended.rawValue: false,
+            Keys.adBlockKeywords.rawValue: [String](),
 
             Keys.attachmentsPath.rawValue: "AyuGram/Saved Attachments",
         ]
@@ -250,6 +258,24 @@ public final class AyuSettings {
     public var adBlockEnabled: Bool {
         get { self.defaults.bool(forKey: Keys.adBlockEnabled.rawValue) }
         set { self.defaults.set(newValue, forKey: Keys.adBlockEnabled.rawValue) }
+    }
+
+    /// Hide every sponsored message, regardless of its content.
+    public var adBlockHideAllSponsored: Bool {
+        get { self.defaults.bool(forKey: Keys.adBlockHideAllSponsored.rawValue) }
+        set { self.defaults.set(newValue, forKey: Keys.adBlockHideAllSponsored.rawValue) }
+    }
+
+    /// Also hide entries Telegram marks as "recommended" rather than sponsored.
+    public var adBlockHideRecommended: Bool {
+        get { self.defaults.bool(forKey: Keys.adBlockHideRecommended.rawValue) }
+        set { self.defaults.set(newValue, forKey: Keys.adBlockHideRecommended.rawValue) }
+    }
+
+    /// Extra keywords; a sponsored message is hidden when any of them appears.
+    public var adBlockKeywords: [String] {
+        get { self.defaults.stringArray(forKey: Keys.adBlockKeywords.rawValue) ?? [] }
+        set { self.defaults.set(newValue, forKey: Keys.adBlockKeywords.rawValue) }
     }
 
     // MARK: - Swiftgram interoperability

@@ -68,6 +68,12 @@ SUITES = [
         "uses_sqlite": False,
     },
     {
+        "name": "ads",
+        "sources": ["AyuAds/Sources/AyuAdPolicy.swift"],
+        "tests": ["AyuAdTests.swift"],
+        "uses_sqlite": False,
+    },
+    {
         "name": "data layer",
         "sources": DATA_LAYER_SOURCES,
         "tests": ["DataLayerTests.swift"],

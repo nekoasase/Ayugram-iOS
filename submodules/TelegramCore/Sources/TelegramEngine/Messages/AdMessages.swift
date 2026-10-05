@@ -2,6 +2,9 @@ import Foundation
 import Postbox
 import SwiftSignalKit
 import TelegramApi
+// MARK: AyuGram
+import AyuAds
+import AyuSettings
 
 private class AdMessagesHistoryContextImpl {
     final class CachedMessage: Equatable, Codable {
@@ -521,12 +524,35 @@ private class AdMessagesHistoryContextImpl {
                             switch message {
                             case let .sponsoredMessage(sponsoredMessageData):
                                 let (flags, randomId, url, title, message, entities, apiPhoto, media, color, buttonText, sponsorInfo, additionalInfo, minDisplayDuration, maxDisplayDuration) = (sponsoredMessageData.flags, sponsoredMessageData.randomId, sponsoredMessageData.url, sponsoredMessageData.title, sponsoredMessageData.message, sponsoredMessageData.entities, sponsoredMessageData.photo, sponsoredMessageData.media, sponsoredMessageData.color, sponsoredMessageData.buttonText, sponsoredMessageData.sponsorInfo, sponsoredMessageData.additionalInfo, sponsoredMessageData.minDisplayDuration, sponsoredMessageData.maxDisplayDuration)
+
+                                // MARK: AyuGram
+                                // Ad blocking is decided here, before anything is
+                                // parsed or cached, so a blocked ad never reaches the
+                                // UI and is never written into the peer's cached
+                                // state. `break` leaves the switch and continues the
+                                // loop, i.e. skips just this entry.
+                                let isRecommended = (flags & (1 << 5)) != 0
+                                if AyuAdPolicy.shouldHide(
+                                    title: title,
+                                    text: message,
+                                    url: url,
+                                    sponsorInfo: sponsorInfo,
+                                    isRecommended: isRecommended,
+                                    configuration: AyuAdPolicyConfiguration(
+                                        isEnabled: AyuSettings.shared.adBlockEnabled,
+                                        hideAllSponsored: AyuSettings.shared.adBlockHideAllSponsored,
+                                        hideRecommended: AyuSettings.shared.adBlockHideRecommended,
+                                        keywords: AyuSettings.shared.adBlockKeywords
+                                    )
+                                ) {
+                                    break
+                                }
+
                                 var parsedEntities: [MessageTextEntity] = []
                                 if let entities = entities {
                                     parsedEntities = messageTextEntitiesFromApiEntities(entities)
                                 }
                                 
-                                let isRecommended = (flags & (1 << 5)) != 0
                                 let canReport = (flags & (1 << 12)) != 0
                                 
                                 var nameColorIndex: Int32?

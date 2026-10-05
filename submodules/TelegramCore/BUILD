@@ -14,6 +14,7 @@ sgdeps = [
 # The AyuGram patch layer hooks Ghost Mode into this module, the same way the
 # Swiftgram markers above hook their own settings in.
 ayudeps = [
+    "//AyuGram/AyuAds:AyuAds",
     "//AyuGram/AyuArchive:AyuArchive",
     "//AyuGram/AyuSettings:AyuSettings",
 ]
