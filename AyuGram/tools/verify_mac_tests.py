@@ -62,6 +62,12 @@ SUITES = [
         "uses_sqlite": False,
     },
     {
+        "name": "filters",
+        "sources": ["AyuFilters/Sources/AyuFilterEngine.swift"],
+        "tests": ["AyuFilterTests.swift"],
+        "uses_sqlite": False,
+    },
+    {
         "name": "data layer",
         "sources": DATA_LAYER_SOURCES,
         "tests": ["DataLayerTests.swift"],
