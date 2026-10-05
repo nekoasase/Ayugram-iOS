@@ -18,14 +18,18 @@ name: build-ios
 # the workflow then detects the mismatch and adds --overrideXcodeVersion, which may
 # or may not build — a mismatched Xcode is a real risk, not a formality.
 #
-# Required repository secrets:
-#   TELEGRAM_API_ID      - from https://my.telegram.org/apps  (required)
-#   TELEGRAM_API_HASH    - from https://my.telegram.org/apps  (required)
-#   APPLE_TEAM_ID        - Apple Developer team id             (device builds only)
+# Two kinds of run, and they answer different questions:
 #
-# The default configuration is a simulator build, which needs no Apple signing at
-# all — enough to prove the tree compiles. A device IPA needs a distribution
-# certificate and provisioning profiles on top.
+#   * release_sim_arm64 (default) — a compile check. It needs no Apple signing at
+#     all, so it is the fastest way to learn whether the tree builds. It cannot be
+#     installed on a phone, and the project's own Mac mini cannot run a modern
+#     Simulator either (macOS 10.15 caps at Xcode 12.4).
+#   * release_arm64 — a device build, produced unsigned and packaged into an .ipa
+#     that a sideloading tool re-signs with your own Apple ID. See
+#     AyuGram/docs/SIDELOAD.md for what to do with it and what will not work.
+#
+# NOTE: the artifact paths below are best-effort and must be confirmed on the
+# first real run; Telegram-iOS's Make.py owns its output layout.
 
 on:
   workflow_dispatch:
@@ -207,12 +211,40 @@ jobs:
           set -euo pipefail
           find . -maxdepth 6 \( -name '*.app' -o -name '*.ipa' -o -name '*.xcarchive' \) -print || true
 
+      # A simulator build only proves the tree compiles — it cannot be installed
+      # anywhere. A device build produces an .app that is unsigned (the build runs
+      # with --disableProvisioningProfiles), so it is packaged into an .ipa that a
+      # sideloading tool re-signs with the user's own Apple ID. See
+      # AyuGram/docs/SIDELOAD.md.
+      - name: Package an installable IPA (device builds)
+        if: ${{ always() && !contains(inputs.configuration || 'release_sim_arm64', 'sim') }}
+        run: |
+          set -euo pipefail
+          APP=$(find . -maxdepth 6 -name '*.app' -type d | head -1 || true)
+          if [ -z "$APP" ]; then
+            echo "::warning::no .app was produced, so no IPA can be packaged (the build probably failed)"
+            exit 0
+          fi
+
+          echo "packaging: $APP"
+          echo "--- signature status (unsigned is expected) ---"
+          codesign -dv "$APP" 2>&1 | head -5 || true
+
+          rm -rf Payload ayugram.ipa
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          # An .ipa is a zip whose root contains Payload/<App>.app.
+          /usr/bin/zip -qry ayugram.ipa Payload
+          ls -lh ayugram.ipa
+          echo "IPA_PATH=$PWD/ayugram.ipa" >> "$GITHUB_ENV"
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ayugram-ios-${{ inputs.configuration || 'release_sim_arm64' }}-${{ github.run_number }}
           path: |
+            ayugram.ipa
             build/artifacts/**
             **/*.app
           if-no-files-found: warn
