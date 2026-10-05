@@ -1,38 +1,37 @@
 name: build-ios
 
-# Builds the AyuGram iOS client on top of the Swiftgram/Telegram-iOS base.
+# Builds the AyuGram iOS client from this repository.
 #
-# This is the primary build path, not a fallback: the project's own Mac mini is a
-# Late 2012 model (Macmini6,2) capped at macOS 10.15 Catalina, where the newest
-# possible Xcode is 12.4. Swiftgram master requires macOS 26 + Xcode 26.2 (see its
-# versions.json), so no local build is possible on that hardware.
+# This repository IS the fork: it contains the whole Swiftgram/Telegram-iOS tree
+# with the AyuGram patch layer in `AyuGram/` and the upstream edits applied (see
+# `AyuGram/patches/`). There is therefore nothing to clone — the build runs on the
+# checkout itself.
+#
+# This is the primary build path, not a fallback. The project's own Mac mini is a
+# Late 2012 model (Macmini6,2), confirmed by mDNS as `model=Macmini6,2 osxvers=19`,
+# i.e. macOS 10.15 Catalina. The newest Xcode that runs on Catalina is 12.4, while
+# this tree's versions.json requires macOS 26 + Xcode 26.2, so no local build is
+# possible on that hardware.
 #
 # The runner image matters: it must ship the Xcode that versions.json asks for.
-# Default is macos-26; if that image is not available on the account, pass
-# macos-15 and the workflow will warn about the version mismatch and pass
-# --overrideXcodeVersion, which may or may not build.
+# Default is macos-26. If that image is unavailable on your account, pass macos-15;
+# the workflow then detects the mismatch and adds --overrideXcodeVersion, which may
+# or may not build — a mismatched Xcode is a real risk, not a formality.
 #
-# Requires repository secrets:
+# Required repository secrets:
 #   TELEGRAM_API_ID      - from https://my.telegram.org/apps  (required)
 #   TELEGRAM_API_HASH    - from https://my.telegram.org/apps  (required)
-#   APPLE_TEAM_ID        - Apple Developer team id             (device builds)
+#   APPLE_TEAM_ID        - Apple Developer team id             (device builds only)
 #
-# Without Apple signing secrets this produces a simulator build, which is enough
-# to prove the tree compiles. A device IPA additionally needs a distribution
-# certificate and provisioning profiles (see the README's advanced guide).
-#
-# NOTE: the artifact paths below are best-effort and must be confirmed on the
-# first real run; Telegram-iOS's Make.py owns its output layout.
+# The default configuration is a simulator build, which needs no Apple signing at
+# all — enough to prove the tree compiles. A device IPA needs a distribution
+# certificate and provisioning profiles on top.
 
 on:
   workflow_dispatch:
     inputs:
-      base_ref:
-        description: Swiftgram/Telegram-iOS ref to build against
-        default: master
-        required: true
       runner:
-        description: macOS runner image (must have the Xcode that versions.json requires)
+        description: macOS runner image (must provide the Xcode required by versions.json)
         default: macos-26
         required: true
       configuration:
@@ -43,19 +42,29 @@ on:
           - release_sim_arm64
           - release_arm64
           - debug_arm64
+  push:
+    branches: [ayugram-ios]
+  pull_request:
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ inputs.runner || 'macos-26' }}
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
 
       - name: Verify patch layer (no toolchain needed)
         run: python3 AyuGram/tools/verify_all.py
+
+      - name: Report toolchain versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          python3 --version
+          cat versions.json
 
       - name: Check required secrets
         env:
@@ -74,38 +83,25 @@ jobs:
           fi
           exit $missing
 
-      - name: Report toolchain versions
-        run: |
-          sw_vers
-          xcodebuild -version
-          python3 --version
-
       - name: Cache Bazel
         uses: actions/cache@v4
         with:
           path: ~/telegram-bazel-cache
-          key: bazel-${{ runner.os }}-${{ inputs.base_ref }}-${{ hashFiles('versions.lock') }}
-          restore-keys: bazel-${{ runner.os }}-${{ inputs.base_ref }}-
+          key: bazel-${{ runner.os }}-${{ hashFiles('versions.json') }}-${{ github.sha }}
+          restore-keys: |
+            bazel-${{ runner.os }}-${{ hashFiles('versions.json') }}-
+            bazel-${{ runner.os }}-
 
-      - name: Fetch Telegram-iOS base
+      # Make.py compares the installed Xcode against versions.json and refuses to
+      # build on a mismatch. That check is right locally and unhelpful on a hosted
+      # runner, whose Xcode we cannot choose, so the flag is derived rather than
+      # hard-coded.
+      - name: Resolve Xcode override flag
         run: |
           set -euo pipefail
-          git clone --recursive -j8 --branch "${{ inputs.base_ref }}" \
-            https://github.com/Swiftgram/Telegram-iOS.git vendor/Telegram-iOS
-
-      - name: Check base toolchain requirements
-        run: |
-          set -euo pipefail
-          echo "base versions.json:"
-          cat vendor/Telegram-iOS/versions.json
-
-          # Make.py compares the installed Xcode against versions.json and refuses
-          # to build on a mismatch. That check is useful locally and unhelpful on a
-          # hosted runner, whose Xcode we cannot choose, so the flag is derived
-          # here rather than hard-coded.
           OUTPUT=$(python3 - <<'PY'
           import json, pathlib, re, subprocess
-          base = json.loads(pathlib.Path("vendor/Telegram-iOS/versions.json").read_text())
+          base = json.loads(pathlib.Path("versions.json").read_text())
           required = str(base.get("xcode") or "")
           installed = "unknown"
           out = subprocess.run(["xcodebuild", "-version"], capture_output=True, text=True).stdout
@@ -131,29 +127,29 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, os, pathlib, secrets
+          import json, os, pathlib, secrets, sys
           template = pathlib.Path(
-              "vendor/Telegram-iOS/build-system/template_minimal_development_configuration.json"
+              "build-system/template_minimal_development_configuration.json"
           )
           config = json.loads(template.read_text())
           config["api_id"] = os.environ["API_ID"]
           config["api_hash"] = os.environ["API_HASH"]
           config["bundle_id"] = f"org.{secrets.token_hex(8)}.AyuGram"
-          # Placeholder values in the template are not valid config.
           config["team_id"] = os.environ.get("TEAM_ID") or ""
-          out = pathlib.Path("build-config"); out.mkdir(exist_ok=True)
+
+          out = pathlib.Path("build-config")
+          out.mkdir(exist_ok=True)
           (out / "ci.json").write_text(json.dumps(config, indent=2))
-          redacted = dict(config, api_hash="***", api_id="***")
-          print("build configuration written:")
-          print(json.dumps(redacted, indent=2))
+
+          # Never echo the real credentials into a public build log.
+          redacted = dict(config, api_id="***", api_hash="***")
+          print(json.dumps(redacted, indent=2), file=sys.stderr)
           PY
 
       - name: Generate Xcode project
-        working-directory: vendor/Telegram-iOS
         run: |
           set -euo pipefail
-          # --overrideXcodeVersion is a global option, so it goes before the
-          # subcommand (it is empty when the runner's Xcode already matches).
+          # Global option, so it precedes the subcommand (empty when Xcode matches).
           python3 build-system/Make/Make.py \
             ${XCODE_OVERRIDE_FLAG:-} \
             --cacheDir="$HOME/telegram-bazel-cache" \
@@ -162,7 +158,6 @@ jobs:
             --disableProvisioningProfiles
 
       - name: Build
-        working-directory: vendor/Telegram-iOS
         run: |
           set -euo pipefail
           python3 build-system/Make/Make.py \
@@ -171,21 +166,22 @@ jobs:
             build \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
             --buildNumber="${{ github.run_number }}" \
-            --configuration="${{ inputs.configuration }}" \
+            --configuration="${{ inputs.configuration || 'release_sim_arm64' }}" \
             --disableProvisioningProfiles
 
       - name: Locate build products
+        if: always()
         run: |
           set -euo pipefail
-          find vendor/Telegram-iOS -maxdepth 6 \( -name '*.app' -o -name '*.ipa' -o -name '*.xcarchive' \) -print
+          find . -maxdepth 6 \( -name '*.app' -o -name '*.ipa' -o -name '*.xcarchive' \) -print || true
 
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ayugram-ios-${{ inputs.configuration }}-${{ github.run_number }}
+          name: ayugram-ios-${{ inputs.configuration || 'release_sim_arm64' }}-${{ github.run_number }}
           path: |
-            vendor/Telegram-iOS/build/artifacts/**
-            vendor/Telegram-iOS/**/*.app
+            build/artifacts/**
+            **/*.app
           if-no-files-found: warn
           retention-days: 14

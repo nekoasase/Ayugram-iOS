@@ -1,4 +1,4 @@
-﻿name: verify
+name: verify
 
 # Fast, toolchain-free verification of the AyuGram patch layer.
 # The schema and entities are cross-checked against the schema extracted from
@@ -6,7 +6,7 @@
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, ayugram-ios]
   pull_request:
   workflow_dispatch:
 
