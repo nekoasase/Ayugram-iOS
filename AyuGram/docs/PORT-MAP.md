@@ -314,4 +314,68 @@ Room-базе**, а не в базе Telegram: «we use **our own**, powered by 
 исходников пока не найдено (`AyuGram/AyuGram4A` — старая Java-линия, там таблиц Spy нет).
 Место, где это используется, помечено комментарием в `AyuArchiveStore`.
 
+## 10. Анти-удаление: воронка найдена, и одна развилка
+
+### 10.1 Точка врезки
+
+**`_internal_deleteMessages`** — `submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessages.swift:25`.
+Через неё проходят **все** пути удаления (проверено grep'ом по вызовам):
+
+| Вызывающий | Что это |
+|---|---|
+| `TelegramEngineMessages.deleteMessages` | обычное удаление по апдейту |
+| `DeleteMessagesInteractively.swift` | «удалить у себя / у всех» |
+| `ManagedAutoremoveMessageOperations.swift` | автоудаление (TTL) |
+| `HistoryViewStateValidation.swift` (2 места) | чистка при валидации истории |
+| `AccountStateManagementUtils.swift` | применение групп апдейтов |
+| `ProcessSecretChatIncomingDecryptedOperations.swift` | секретные чаты |
+| `ManagedSecretChatOutgoingOperations.swift` | секретные чаты, исходящие |
+| `EnqueueMessage.swift` | откат неудачной отправки |
+
+Функция уже читает сообщения (`transaction.getMessage(id)`, строки 30 и 41) —
+значит снапшот снимается **до** удаления, что и нужно.
+`Transaction.getMessage(_:)` публичный (`submodules/Postbox/Sources/Postbox.swift:710`).
+
+Сериализация: `AdaptedPostboxEncoder` — публичный, им пользуются таблицы Postbox
+(`PeerChatInterfaceStateTable.swift:61` и др.).
+
+Соседний `InternalAccountState.deleteMessages` (`State/ForumChannelState.swift:9`)
+оказался **мёртвым кодом** — его никто не вызывает. Хорошо, что проверил, а не поверил
+названию.
+
+### 10.2 Развилка: откуда взять идентификатор аккаунта
+
+`Postbox.Transaction` **не предоставляет** account peer id: в TelegramCore он всегда
+передаётся явным параметром. Проверено — ни `getAccountPeerId`, ни хранения в
+`Preferences` нет. А воронка удаления аккаунта не знает, тогда как таблицы архива
+требуют `userId NOT NULL`.
+
+Варианты:
+
+- **(a)** протянуть `accountPeerId` параметром через `_internal_deleteMessages` и все
+  9 вызовов. Явно и локально, но широкая правка чужих файлов.
+- **(b)** один узкий хук в точке создания аккаунта (`ManagedAccount`), который сообщает
+  рекордеру текущий account id. Тогда воронка остаётся с однострочной врезкой.
+- **(c)** сделать архив по-аккаунтным — `ayugram-<id>.sqlite`, ровно как `ayu-data*`
+  в Android. Тогда `userId` в таблицах становится справочным полем.
+
+Склоняюсь к **(b) + (c)**: узкая правка, совпадение с моделью Android, и воронка
+не разрастается. Решение принимается в следующем раунде — до этого рекордер не пишется,
+чтобы не закладывать компромисс в код.
+
+### 10.3 Расширение схемы (сделано)
+
+В `DeletedMessage` и `EditedMessage` добавлена колонка **`messageSerialized BLOB`**.
+
+Причина: 35 колонок, извлечённых из APK, рассчитаны на сериализацию `TLRPC` в Android.
+Собрать из них `Message` для Telegram-iOS без потерь нельзя — пропадут медиа, reply,
+текстовые entities и атрибуты. Поэтому рядом с Android-колонками хранится всё
+сообщение целиком; Android-колонки остаются рабочими для поиска, группировки и для
+архивов, импортированных из Android (там эта колонка `NULL`).
+
+Импортёр из Android добавляет колонку (`ALTER TABLE ... ADD COLUMN messageSerialized BLOB`)
+и оставляет её пустой. Списки колонок обеих таблиц обязаны совпадать — это проверяет
+`tools/gen_swift_dao.py`, он падает при расхождении.
+
+
 

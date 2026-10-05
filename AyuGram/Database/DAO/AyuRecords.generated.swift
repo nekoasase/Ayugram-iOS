@@ -48,6 +48,7 @@ extension AyuMessageRecord {
         self.thumbsSerialized = row["thumbsSerialized"]?.dataValue
         self.documentAttributesSerialized = row["documentAttributesSerialized"]?.dataValue
         self.mimeType = row["mimeType"]?.stringValue
+        self.messageSerialized = row["messageSerialized"]?.dataValue
     }
 
     /// Values in `Self.columnNames` order, for INSERT/UPDATE.
@@ -88,6 +89,7 @@ extension AyuMessageRecord {
             self.thumbsSerialized.map { .blob($0) } ?? .null,
             self.documentAttributesSerialized.map { .blob($0) } ?? .null,
             self.mimeType.map { .text($0) } ?? .null,
+            self.messageSerialized.map { .blob($0) } ?? .null,
         ]
     }
 }

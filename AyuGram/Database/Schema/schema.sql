@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS `DeletedMessage` (
     `documentSerialized`           BLOB,
     `thumbsSerialized`             BLOB,
     `documentAttributesSerialized` BLOB,
-    `mimeType`                     TEXT
+    `mimeType`                     TEXT,
+    `messageSerialized`            BLOB
 );
 CREATE INDEX IF NOT EXISTS `index_DeletedMessage_groupedId`
     ON `DeletedMessage` (`groupedId`);
@@ -124,7 +125,8 @@ CREATE TABLE IF NOT EXISTS `EditedMessage` (
     `documentSerialized`           BLOB,
     `thumbsSerialized`             BLOB,
     `documentAttributesSerialized` BLOB,
-    `mimeType`                     TEXT
+    `mimeType`                     TEXT,
+    `messageSerialized`            BLOB
 );
 CREATE INDEX IF NOT EXISTS `index_EditedMessage_userId_dialogId_messageId`
     ON `EditedMessage` (`userId`, `dialogId`, `messageId`);

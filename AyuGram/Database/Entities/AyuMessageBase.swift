@@ -75,6 +75,17 @@ public struct AyuMessageRecord<Table: AyuTableKind>: AyuTableRecord {
     public var documentAttributesSerialized: Data?
     public var mimeType: String?
 
+    /// The whole message, encoded with `AdaptedPostboxEncoder`.
+    ///
+    /// This column is an intentional deviation from the Android schema. The 35
+    /// columns above are shaped for Android's `TLRPC` serialisation and cannot
+    /// reconstruct a Telegram-iOS `Message` without loss — media, reply, text
+    /// entities and attributes would all be dropped. Storing the encoded message
+    /// alongside keeps the archive complete, while the Android columns remain the
+    /// ones used for search, grouping and for archives imported from Android
+    /// (which have this column NULL).
+    public var messageSerialized: Data?
+
     public enum CodingKeys: String, CodingKey, CaseIterable {
         case fakeId = "fakeId"
         case userId = "userId"
@@ -111,6 +122,7 @@ public struct AyuMessageRecord<Table: AyuTableKind>: AyuTableRecord {
         case thumbsSerialized = "thumbsSerialized"
         case documentAttributesSerialized = "documentAttributesSerialized"
         case mimeType = "mimeType"
+        case messageSerialized = "messageSerialized"
     }
 
     public init(
@@ -148,7 +160,8 @@ public struct AyuMessageRecord<Table: AyuTableKind>: AyuTableRecord {
         documentSerialized: Data? = nil,
         thumbsSerialized: Data? = nil,
         documentAttributesSerialized: Data? = nil,
-        mimeType: String? = nil
+        mimeType: String? = nil,
+        messageSerialized: Data? = nil
     ) {
         self.fakeId = fakeId
         self.userId = userId
@@ -185,6 +198,7 @@ public struct AyuMessageRecord<Table: AyuTableKind>: AyuTableRecord {
         self.thumbsSerialized = thumbsSerialized
         self.documentAttributesSerialized = documentAttributesSerialized
         self.mimeType = mimeType
+        self.messageSerialized = messageSerialized
     }
 }
 

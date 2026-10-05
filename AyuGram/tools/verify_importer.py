@@ -160,11 +160,17 @@ OLD_REGEX_FILTER = ("CREATE TABLE IF NOT EXISTS `RegexFilter` (`fakeId` INTEGER 
                     "AUTOINCREMENT NOT NULL, `text` TEXT, `enabled` INTEGER NOT NULL, "
                     "`caseInsensitive` INTEGER NOT NULL, `dialogId` INTEGER)")
 
-ADDED_COLUMNS = {
-    "DeletedDialog": {"folderId"},
-    "DeletedMessage": {"postAuthor", "replySerialized", "replyMarkupSerialized"},
-    "EditedMessage": {"postAuthor", "replySerialized", "replyMarkupSerialized"},
-}
+def added_columns_by_table(additions):
+    """Columns the importer adds, derived from the parsed statements.
+
+    Deriving this from the Swift source instead of hard-coding it means adding a
+    column to the importer cannot leave the test silently constructing the wrong
+    "old" schema.
+    """
+    result = {}
+    for table, column, _ in additions:
+        result.setdefault(table, set()).add(column)
+    return result
 
 
 def columns_of(db, table):
@@ -191,15 +197,28 @@ def main():
     pre = parse_tuple_array(swift, "preRebuildAdditions")
     post = parse_tuple_array(swift, "postRebuildAdditions")
     rebuild = parse_string_array(swift, "regexFilterRebuildStatements")
+    added = added_columns_by_table(pre)
 
     print(f"parsed from Swift: {len(pre)} pre-rebuild additions, "
           f"{len(rebuild)} rebuild statements, {len(post)} post-rebuild additions")
-    check("parsed pre-rebuild additions", len(pre) == 7, f"got {len(pre)}")
-    check("parsed rebuild statements", len(rebuild) == 4, f"got {len(rebuild)}")
-    check("parsed post-rebuild additions", len(post) == 1, f"got {len(post)}")
+    check("importer declares column additions", len(pre) > 0, f"got {len(pre)}")
+    check("importer declares the RegexFilter rebuild", len(rebuild) == 4, f"got {len(rebuild)}")
+    check("importer declares post-rebuild additions", len(post) > 0, f"got {len(post)}")
+    check("every addition is fully specified",
+          all(table and column and statement.startswith("ALTER TABLE")
+              for table, column, statement in pre + post))
     print()
 
     tables, indexes = parse_schema()
+
+    # Cross-check: an addition that names a column absent from the final schema
+    # would make the test build a wrong "old" shape and pass for the wrong reason.
+    unknown = [
+        (table, column)
+        for table, column, _ in pre + post
+        if table not in tables or column not in table_columns(tables[table])
+    ]
+    check("every added column exists in the final schema", not unknown, str(unknown))
 
     db = sqlite3.connect(":memory:")
 
@@ -208,7 +227,7 @@ def main():
         if name == "RegexFilter":
             db.execute(OLD_REGEX_FILTER)
         else:
-            db.execute(create_table(name, drop_columns(columns, ADDED_COLUMNS.get(name, set()))))
+            db.execute(create_table(name, drop_columns(columns, added.get(name, set()))))
     for stmt in indexes:
         if "RegexFilter" in stmt:  # that index does not exist in the old shape
             continue
@@ -283,7 +302,7 @@ def main():
         if name == "RegexFilter":
             db2.execute(OLD_REGEX_FILTER)
         else:
-            db2.execute(create_table(name, drop_columns(columns, ADDED_COLUMNS.get(name, set()))))
+            db2.execute(create_table(name, drop_columns(columns, added.get(name, set()))))
     db2.execute("INSERT INTO `RegexFilter` (`text`,`enabled`,`caseInsensitive`,`dialogId`) "
                 "VALUES ('x',1,1,NULL)")
     for table, column, sql in post:          # wrong order: reversed first

@@ -120,6 +120,13 @@ public enum AyuAndroidImporter {
          "ALTER TABLE `EditedMessage` ADD COLUMN `replySerialized` BLOB DEFAULT NULL"),
         ("EditedMessage", "replyMarkupSerialized",
          "ALTER TABLE `EditedMessage` ADD COLUMN `replyMarkupSerialized` BLOB DEFAULT NULL"),
+        // iOS-only column: see the note on `AyuMessageRecord.messageSerialized`.
+        // An archive produced by Android AyuGram has no such column, so it is
+        // added on import and stays NULL for those rows.
+        ("DeletedMessage", "messageSerialized",
+         "ALTER TABLE `DeletedMessage` ADD COLUMN `messageSerialized` BLOB DEFAULT NULL"),
+        ("EditedMessage", "messageSerialized",
+         "ALTER TABLE `EditedMessage` ADD COLUMN `messageSerialized` BLOB DEFAULT NULL"),
     ]
 
     /// The table rebuild Room performed for `RegexFilter`.
