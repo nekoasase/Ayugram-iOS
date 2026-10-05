@@ -29,6 +29,8 @@ CHECKS = [
      ["tools/verify_workflows.py"]),
     ("module BUILD files resolve every dependency label",
      ["tools/verify_bazel.py"]),
+    ("every APK inventory group is accounted for",
+     ["tools/audit_port_coverage.py"]),
     ("Swift sources parse with a real compiler (needs the Mac; skipped if absent)",
      ["tools/verify_swift_syntax.py"]),
     ("Ghost Mode behaviour tests run on the Mac (skipped if absent)",
