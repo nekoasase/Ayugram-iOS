@@ -1,5 +1,4 @@
 import Foundation
-import GRDB
 
 /// A dialog (chat) that was removed from the user's list, kept so it can be
 /// restored and inspected.
@@ -7,21 +6,23 @@ import GRDB
 /// Mirrors `com.radolyn.ayugram.database.entities.DeletedDialog`.
 /// `folderId` is nullable: it was added later by an Android migration
 /// (`ALTER TABLE DeletedDialog ADD COLUMN folderId INTEGER DEFAULT NULL`).
-struct DeletedDialog: Codable, FetchableRecord, PersistableRecord {
-    static let databaseTableName = "DeletedDialog"
+public struct DeletedDialog: AyuTableRecord {
+    public static let databaseTableName = "DeletedDialog"
+
+    public static var columnNames: [String] { CodingKeys.allCases.map(\.rawValue) }
 
     /// `nil` on insert lets SQLite assign the rowid.
-    var fakeId: Int64?
-    var userId: Int64
-    var dialogId: Int64
-    var peerId: Int64
-    var folderId: Int32?
-    var topMessage: Int32
-    var lastMessageDate: Int32
-    var flags: Int32
-    var entityCreateDate: Int64
+    public var fakeId: Int64?
+    public var userId: Int64
+    public var dialogId: Int64
+    public var peerId: Int64
+    public var folderId: Int32?
+    public var topMessage: Int32
+    public var lastMessageDate: Int32
+    public var flags: Int32
+    public var entityCreateDate: Int64
 
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey, CaseIterable {
         case fakeId = "fakeId"
         case userId = "userId"
         case dialogId = "dialogId"
@@ -31,5 +32,27 @@ struct DeletedDialog: Codable, FetchableRecord, PersistableRecord {
         case lastMessageDate = "lastMessageDate"
         case flags = "flags"
         case entityCreateDate = "entityCreateDate"
+    }
+
+    public init(
+        fakeId: Int64? = nil,
+        userId: Int64,
+        dialogId: Int64,
+        peerId: Int64,
+        folderId: Int32? = nil,
+        topMessage: Int32,
+        lastMessageDate: Int32,
+        flags: Int32 = 0,
+        entityCreateDate: Int64
+    ) {
+        self.fakeId = fakeId
+        self.userId = userId
+        self.dialogId = dialogId
+        self.peerId = peerId
+        self.folderId = folderId
+        self.topMessage = topMessage
+        self.lastMessageDate = lastMessageDate
+        self.flags = flags
+        self.entityCreateDate = entityCreateDate
     }
 }

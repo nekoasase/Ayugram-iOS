@@ -88,7 +88,8 @@ TYPEALIAS_RE = re.compile(r"typealias\s+([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"
 CASE_RE = re.compile(r'case\s+([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"([^"]+)"')
 
 
-CODING_KEYS_RE = re.compile(r"\s*enum\s+CodingKeys\b")
+CODING_KEYS_RE = re.compile(r"\s*(?:public\s+|internal\s+|private\s+|fileprivate\s+|final\s+)*"
+                            r"enum\s+CodingKeys\b")
 
 
 def parse_swift(path):

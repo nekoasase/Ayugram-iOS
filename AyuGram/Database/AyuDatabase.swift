@@ -1,61 +1,50 @@
 import Foundation
-import GRDB
 
 /// AyuGram patch-layer database.
 ///
 /// Mirrors `com.radolyn.ayugram.database.AyuDatabase` (Room) from the Android
-/// original. Room tracked schema versions 23…32; on iOS a fresh installation
-/// starts directly at the final v32 shape, and databases exported from Android
-/// are upgraded separately (see `AyuAndroidImporter`).
+/// original, and deliberately reuses Room's version numbering: a fresh install
+/// is stamped with `PRAGMA user_version = 32`, which is exactly the version
+/// AyuGram for Android reached. That makes an archive exported from Android
+/// importable — its `user_version` tells us which upgrade steps are still owed.
 ///
-/// Schema source of truth: `AyuGram/Database/Schema/schema.sql`,
-/// generated into `AyuSchema.generated.swift`.
-final class AyuDatabase {
-    static let shared = AyuDatabase()
+/// Storage is the in-tree `sqlcipher` through `AyuSqlite`. GRDB was rejected:
+/// it is not vendored in this repository, and the alternative Postbox store is
+/// key-value based, which cannot express the relational schema recovered from
+/// the APK (`schema.sql`, verified by `tools/verify_schema.py`).
+public final class AyuDatabase {
+    /// Shared instance used by the app.
+    public static let shared = AyuDatabase()
 
     /// Name of the database file inside the app container.
-    static let fileName = "ayugram.sqlite"
+    public static let fileName = "ayugram.sqlite"
 
-    let writer: any DatabaseWriter
+    /// Schema version, matching AyuGram for Android's final Room version.
+    public static let schemaVersion: Int32 = 32
+
+    public let sqlite: AyuSqlite
 
     /// Opens (creating if needed) the archive database at `path`.
-    ///
-    /// A corrupt archive must never take the client down, so on failure this
-    /// falls back to an in-memory database and the app keeps running.
-    init(path: String = AyuDatabase.defaultPath) {
-        let writer = Self.openWriter(path: path)
-        self.writer = writer
+    public init(path: String = AyuDatabase.defaultPath) {
+        self.sqlite = AyuSqlite(path: path) ?? AyuSqlite(path: ":memory:")!
         do {
-            try Self.migrator.migrate(writer)
+            try self.migrate()
         } catch {
             assertionFailure("AyuDatabase migration failed: \(error)")
         }
     }
 
-    /// In-memory instance for tests and SwiftUI previews.
-    init(inMemory: Bool) {
-        let writer = try! DatabaseQueue()
-        self.writer = writer
-        try! Self.migrator.migrate(writer)
-    }
-
-    private static func openWriter(path: String) -> any DatabaseWriter {
-        var configuration = Configuration()
-        configuration.prepareDatabase { db in
-            // WAL matches the Android original and keeps large archive writes
-            // off the reader's critical path.
-            try db.execute(sql: "PRAGMA journal_mode = WAL")
-            try db.execute(sql: "PRAGMA foreign_keys = ON")
-        }
+    /// In-memory instance for tests and previews.
+    public init(inMemory: Bool) {
+        self.sqlite = AyuSqlite(path: ":memory:")!
         do {
-            return try DatabasePool(path: path, configuration: configuration)
+            try self.migrate()
         } catch {
-            assertionFailure("AyuDatabase could not open \(path): \(error)")
-            return try! DatabaseQueue()
+            assertionFailure("AyuDatabase migration failed: \(error)")
         }
     }
 
-    static var defaultPath: String {
+    public static var defaultPath: String {
         let base = FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         try? FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
@@ -64,21 +53,38 @@ final class AyuDatabase {
 
     // MARK: - Migrations
 
-    static var migrator: DatabaseMigrator {
-        var migrator = DatabaseMigrator()
+    /// `PRAGMA user_version`, the same slot Room uses to record its schema version.
+    public var userVersion: Int32 {
+        get {
+            let rows = (try? self.sqlite.query("PRAGMA user_version")) ?? []
+            return rows.first?["user_version"]?.int32Value ?? 0
+        }
+        set {
+            try? self.sqlite.execute("PRAGMA user_version = \(newValue)")
+        }
+    }
 
-        // Match Room's discipline: never silently wipe user data on a schema
-        // mismatch. A broken archive is reported, not destroyed.
-        migrator.eraseDatabaseOnSchemaChange = false
+    private func migrate() throws {
+        let version = self.userVersion
 
-        // v1 == AyuGram Android schema version 32.
-        migrator.registerMigration("v1_ayuInitial") { db in
-            for statement in AyuSchema.createStatements {
-                try db.execute(sql: statement)
+        if version == 0 {
+            // Fresh installation: create the final (v32-equivalent) schema.
+            try self.sqlite.transaction { connection in
+                for statement in AyuSchema.createStatements {
+                    try connection.execute(statement)
+                }
             }
+            self.userVersion = Self.schemaVersion
+            return
         }
 
-        return migrator
+        if version < Self.schemaVersion {
+            // An archive produced by AyuGram for Android at an older Room version.
+            try self.sqlite.transaction { connection in
+                try AyuAndroidImporter.upgrade(connection)
+            }
+            self.userVersion = Self.schemaVersion
+        }
     }
 }
 
@@ -97,7 +103,7 @@ final class AyuDatabase {
 /// `reversed`, so the only consistent history is: **rebuild first, then add
 /// `reversed`**. Applying the two in the other order silently drops the flag
 /// (this exact bug was caught by `tools/verify_importer.py`).
-enum AyuAndroidImporter {
+public enum AyuAndroidImporter {
     /// `ALTER TABLE ... ADD COLUMN` applied before the RegexFilter rebuild.
     static let preRebuildAdditions: [(table: String, column: String, statement: String)] = [
         ("DeletedDialog", "folderId",
@@ -135,9 +141,15 @@ enum AyuAndroidImporter {
          "ALTER TABLE `RegexFilter` ADD COLUMN `reversed` INTEGER NOT NULL DEFAULT false"),
     ]
 
-    /// True when `db` still carries the pre-rebuild `RegexFilter` shape.
-    static func needsRegexFilterRebuild(_ db: Database) throws -> Bool {
-        let columns = try db.columns(in: "RegexFilter").map(\.name)
+    /// Column names currently present in `table`.
+    static func columns(of table: String, in connection: AyuSqlite) throws -> Set<String> {
+        let rows = try connection.query("PRAGMA table_info(`\(table)`)")
+        return Set(rows.compactMap { $0["name"]?.stringValue })
+    }
+
+    /// True when `connection` still carries the pre-rebuild `RegexFilter` shape.
+    static func needsRegexFilterRebuild(_ connection: AyuSqlite) throws -> Bool {
+        let columns = try self.columns(of: "RegexFilter", in: connection)
         return columns.contains("fakeId") && !columns.contains("id")
     }
 
@@ -145,21 +157,21 @@ enum AyuAndroidImporter {
     ///
     /// Every step is guarded, so the upgrade is safe to re-run and safe on a
     /// database that is already partly migrated.
-    static func upgrade(_ db: Database) throws {
+    public static func upgrade(_ connection: AyuSqlite) throws {
         func apply(_ additions: [(table: String, column: String, statement: String)]) throws {
             for addition in additions {
-                let existing = try db.columns(in: addition.table).map(\.name)
+                let existing = try self.columns(of: addition.table, in: connection)
                 if !existing.contains(addition.column) {
-                    try db.execute(sql: addition.statement)
+                    try connection.execute(addition.statement)
                 }
             }
         }
 
         try apply(preRebuildAdditions)
 
-        if try needsRegexFilterRebuild(db) {
+        if try self.needsRegexFilterRebuild(connection) {
             for statement in regexFilterRebuildStatements {
-                try db.execute(sql: statement)
+                try connection.execute(statement)
             }
         }
 

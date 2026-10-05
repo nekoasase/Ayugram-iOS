@@ -1,5 +1,4 @@
 import Foundation
-import GRDB
 
 // MARK: - Spy: who read what
 //
@@ -13,44 +12,58 @@ import GRDB
 //     -> the message was read              -> SpyMessageRead
 //
 // Both tables share the same shape, so they are expressed as one generic record
-// bound to a table.
-
-/// Which spy table a record lives in.
-protocol AyuSpyTableKind: TableRecord {
-    static var databaseTableName: String { get }
-}
+// bound to a table, mirroring the shared-entity approach used for snapshots.
 
 /// Message was read.
-enum AyuSpyMessageReadTable: AyuSpyTableKind {
-    static let databaseTableName = "SpyMessageRead"
+public enum AyuSpyMessageReadTable: AyuTableKind {
+    public static let databaseTableName = "SpyMessageRead"
 }
 
 /// Message contents were read.
-enum AyuSpyMessageContentsReadTable: AyuSpyTableKind {
-    static let databaseTableName = "SpyMessageContentsRead"
+public enum AyuSpyMessageContentsReadTable: AyuTableKind {
+    public static let databaseTableName = "SpyMessageContentsRead"
 }
 
 /// One "user X read message Y in dialog Z" observation.
-struct AyuSpyRecord<Table: AyuSpyTableKind>: Codable, FetchableRecord, PersistableRecord {
-    static var databaseTableName: String { Table.databaseTableName }
+public struct AyuSpyRecord<Table: AyuTableKind>: AyuTableRecord {
+    public static var databaseTableName: String { Table.databaseTableName }
+
+    public static var columnNames: [String] { CodingKeys.allCases.map(\.rawValue) }
 
     /// `nil` on insert lets SQLite assign the rowid.
-    var fakeId: Int64?
-    var userId: Int64
+    public var fakeId: Int64?
+    public var userId: Int64
     /// Negative for channels/supergroups (`-100…`), hence 64-bit.
-    var dialogId: Int64
-    var messageId: Int32
+    public var dialogId: Int64
+    public var messageId: Int32
     /// When this observation was recorded (unix millis).
-    var entityCreateDate: Int64
+    public var entityCreateDate: Int64
 
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey, CaseIterable {
         case fakeId = "fakeId"
         case userId = "userId"
         case dialogId = "dialogId"
         case messageId = "messageId"
         case entityCreateDate = "entityCreateDate"
     }
+
+    public init(
+        fakeId: Int64? = nil,
+        userId: Int64,
+        dialogId: Int64,
+        messageId: Int32,
+        entityCreateDate: Int64
+    ) {
+        self.fakeId = fakeId
+        self.userId = userId
+        self.dialogId = dialogId
+        self.messageId = messageId
+        self.entityCreateDate = entityCreateDate
+    }
 }
 
-typealias SpyMessageRead = AyuSpyRecord<AyuSpyMessageReadTable>
-typealias SpyMessageContentsRead = AyuSpyRecord<AyuSpyMessageContentsReadTable>
+/// Message was read, keyed to the table `SpyMessageRead`.
+public typealias SpyMessageRead = AyuSpyRecord<AyuSpyMessageReadTable>
+
+/// Message contents were read, keyed to the table `SpyMessageContentsRead`.
+public typealias SpyMessageContentsRead = AyuSpyRecord<AyuSpyMessageContentsReadTable>
