@@ -1,0 +1,48 @@
+name: verify
+
+# Fast, toolchain-free verification of the AyuGram patch layer.
+# The schema and entities are cross-checked against the schema extracted from
+# the Android APK, so drift between SQL and Swift is caught without Xcode.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: data layer (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run all checks
+        run: python tools/verify_all.py
+
+  # Keeps the port checklist honest: if the inventory script stops finding the
+  # AyuGram classes in the APK, the feature map is stale.
+  inventory:
+    name: APK inventory
+    runs-on: ubuntu-latest
+    if: ${{ vars.AYUGRAM_APK_AVAILABLE == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract feature inventory
+        run: python tools/apk_ayu_inventory.py
+      - name: Extract schema
+        run: python tools/extract_schema.py

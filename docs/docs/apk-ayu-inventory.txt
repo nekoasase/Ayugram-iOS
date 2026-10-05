@@ -1,0 +1,919 @@
+﻿APK: C:\Users\neko_asase\Downloads\vanilla-ayuGram-universal-20250101.apk
+dex files: 5, distinct strings: 136425
+
+===== AyuGram classes (75) =====
+    Lcom/radolyn/ayugram/AyuInAppHandlers$a;
+    Lcom/radolyn/ayugram/AyuInAppHandlers$b;
+    Lcom/radolyn/ayugram/AyuInAppHandlers;
+    Lcom/radolyn/ayugram/AyuState;
+    Lcom/radolyn/ayugram/AyuUtils;
+    Lcom/radolyn/ayugram/AyuWorker;
+    Lcom/radolyn/ayugram/database/AyuData;
+    Lcom/radolyn/ayugram/database/AyuDatabase;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_23_24_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_24_25_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_26_27_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_27_28_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_28_29_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_29_30_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_30_31_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_31_32_Impl;
+    Lcom/radolyn/ayugram/database/AyuDatabase_Impl$1;
+    Lcom/radolyn/ayugram/database/AyuDatabase_Impl;
+    Lcom/radolyn/ayugram/database/AyuMigrations$1;
+    Lcom/radolyn/ayugram/database/AyuMigrations;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$5;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$5;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$6;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$7;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$8;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/SpyDao;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl;
+    Lcom/radolyn/ayugram/database/entities/AyuMessageBase;
+    Lcom/radolyn/ayugram/database/entities/DeletedDialog;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessage;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessageFull;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessageReaction;
+    Lcom/radolyn/ayugram/database/entities/EditedMessage;
+    Lcom/radolyn/ayugram/database/entities/RegexFilter;
+    Lcom/radolyn/ayugram/database/entities/RegexFilterGlobalExclusion;
+    Lcom/radolyn/ayugram/database/entities/SpyMessageContentsRead;
+    Lcom/radolyn/ayugram/database/entities/SpyMessageRead;
+    Lcom/radolyn/ayugram/utils/AyuFilterUtils$1;
+    Lcom/radolyn/ayugram/utils/AyuFilterUtils$ApplyChanges;
+    Lcom/radolyn/ayugram/utils/AyuFilterUtils$Backup$BackupExclusion;
+    Lcom/radolyn/ayugram/utils/AyuFilterUtils$Backup;
+    Lcom/radolyn/ayugram/utils/AyuFilterUtils;
+    Lcom/radolyn/ayugram/utils/AyuSavePreferences;
+    Lcom/radolyn/ayugram/utils/AyuStateVariable;
+    Lcom/radolyn/ayugram/utils/AyuVendorUtils;
+    Lcom/radolyn/ayugram/utils/HashablePattern;
+    Lcom/radolyn/ayugram/utils/ThreadSafeLongSparseArray;
+    Lcom/radolyn/ayugram/utils/a;
+    Lcom/radolyn/ayugram/utils/b;
+    Lcom/radolyn/ayugram/utils/fcm/AyuPackageManager;
+
+===== AyuGram db entities (10) =====
+    Lcom/radolyn/ayugram/database/entities/AyuMessageBase;
+    Lcom/radolyn/ayugram/database/entities/DeletedDialog;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessage;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessageFull;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessageReaction;
+    Lcom/radolyn/ayugram/database/entities/EditedMessage;
+    Lcom/radolyn/ayugram/database/entities/RegexFilter;
+    Lcom/radolyn/ayugram/database/entities/RegexFilterGlobalExclusion;
+    Lcom/radolyn/ayugram/database/entities/SpyMessageContentsRead;
+    Lcom/radolyn/ayugram/database/entities/SpyMessageRead;
+
+===== AyuGram db daos (32) =====
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$5;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$5;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$6;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$7;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$8;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/SpyDao;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl;
+
+===== exteraGram classes (159) =====
+    Lcom/exteragram/messenger/adblock/AdBlockClient$ClassesAndIds;
+    Lcom/exteragram/messenger/adblock/AdBlockClient$a;
+    Lcom/exteragram/messenger/adblock/AdBlockClient;
+    Lcom/exteragram/messenger/adblock/SelectorsObserver;
+    Lcom/exteragram/messenger/adblock/data/BlockResult;
+    Lcom/exteragram/messenger/adblock/data/FilterListMetadata;
+    Lcom/exteragram/messenger/adblock/data/UrlCosmeticResources;
+    Lcom/exteragram/messenger/adblock/interop/AdBlock;
+    Lcom/exteragram/messenger/adblock/interop/NativeAdBlock;
+    Lcom/exteragram/messenger/ai/core/RoleList;
+    Lcom/exteragram/messenger/ai/core/ServiceList;
+    Lcom/exteragram/messenger/backup/BackupBottomSheet;
+    Lcom/exteragram/messenger/backup/InvisibleEncryptor;
+    Lcom/exteragram/messenger/backup/PreferencesUtils$1;
+    Lcom/exteragram/messenger/backup/PreferencesUtils$BackupItem;
+    Lcom/exteragram/messenger/backup/PreferencesUtils;
+    Lcom/exteragram/messenger/backup/a;
+    Lcom/exteragram/messenger/components/ActionRow$1;
+    Lcom/exteragram/messenger/components/ActionRow$2;
+    Lcom/exteragram/messenger/components/ActionRow$ActionItem;
+    Lcom/exteragram/messenger/components/ActionRow;
+    Lcom/exteragram/messenger/components/ChatActivityEnterViewStaticIconView$1;
+    Lcom/exteragram/messenger/components/ChatActivityEnterViewStaticIconView$2;
+    Lcom/exteragram/messenger/components/ChatActivityEnterViewStaticIconView$State;
+    Lcom/exteragram/messenger/components/ChatActivityEnterViewStaticIconView;
+    Lcom/exteragram/messenger/components/IconSelectorAlert$1;
+    Lcom/exteragram/messenger/components/IconSelectorAlert$OnIconSelectedListener;
+    Lcom/exteragram/messenger/components/IconSelectorAlert;
+    Lcom/exteragram/messenger/components/MessageDetailsPopupWrapper$1;
+    Lcom/exteragram/messenger/components/MessageDetailsPopupWrapper$Item;
+    Lcom/exteragram/messenger/components/MessageDetailsPopupWrapper;
+    Lcom/exteragram/messenger/components/QRCodeSheet$1;
+    Lcom/exteragram/messenger/components/QRCodeSheet$2;
+    Lcom/exteragram/messenger/components/QRCodeSheet;
+    Lcom/exteragram/messenger/components/SearchPhotoPopupWrapper$1;
+    Lcom/exteragram/messenger/components/SearchPhotoPopupWrapper$2;
+    Lcom/exteragram/messenger/components/SearchPhotoPopupWrapper$Callback;
+    Lcom/exteragram/messenger/components/SearchPhotoPopupWrapper;
+    Lcom/exteragram/messenger/components/SupporterBottomSheet$FeatureCell;
+    Lcom/exteragram/messenger/components/SupporterBottomSheet;
+    Lcom/exteragram/messenger/components/TranslateBeforeSendWrapper;
+    Lcom/exteragram/messenger/components/VerticalImageSpan;
+    Lcom/exteragram/messenger/components/a;
+    Lcom/exteragram/messenger/components/b;
+    Lcom/exteragram/messenger/components/c;
+    Lcom/exteragram/messenger/components/d;
+    Lcom/exteragram/messenger/components/e;
+    Lcom/exteragram/messenger/components/f;
+    Lcom/exteragram/messenger/components/g;
+    Lcom/exteragram/messenger/components/h;
+    Lcom/exteragram/messenger/components/i;
+    Lcom/exteragram/messenger/components/j;
+    Lcom/exteragram/messenger/components/k;
+    Lcom/exteragram/messenger/components/l;
+    Lcom/exteragram/messenger/components/m;
+    Lcom/exteragram/messenger/components/n;
+    Lcom/exteragram/messenger/components/o;
+    Lcom/exteragram/messenger/icons/BaseIconSet;
+    Lcom/exteragram/messenger/icons/DefaultIconSet;
+    Lcom/exteragram/messenger/icons/IconSetsController;
+    Lcom/exteragram/messenger/icons/SolarIconSet;
+    Lcom/exteragram/messenger/maps/yandex/YandexLocationProvider$ConvertedLocationListener;
+    Lcom/exteragram/messenger/maps/yandex/YandexLocationProvider$YandexApiClientImpl;
+    Lcom/exteragram/messenger/maps/yandex/YandexLocationProvider$YandexLocationRequest;
+    Lcom/exteragram/messenger/maps/yandex/YandexLocationProvider;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$1;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexCameraUpdate;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexCircleOptions;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexLatLngBounds;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexLatLngBoundsBuilder;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapImpl$LocationListener;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapImpl$YandexCircle;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapImpl$YandexMarker;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapImpl;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapStyleOptions;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapView$CustomMapView;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMapView;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexMarkerOptions;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexProjection;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider$YandexUISettings;
+    Lcom/exteragram/messenger/maps/yandex/YandexMapsProvider;
+    Lcom/exteragram/messenger/maps/yandex/a;
+    Lcom/exteragram/messenger/maps/yandex/b;
+    Lcom/exteragram/messenger/preferences/AppearancePreferencesActivity$ListAdapter$1;
+    Lcom/exteragram/messenger/preferences/AppearancePreferencesActivity$ListAdapter$2;
+    Lcom/exteragram/messenger/preferences/AppearancePreferencesActivity$ListAdapter;
+    Lcom/exteragram/messenger/preferences/AppearancePreferencesActivity;
+    Lcom/exteragram/messenger/preferences/BasePreferencesActivity$1;
+    Lcom/exteragram/messenger/preferences/BasePreferencesActivity$BaseListAdapter;
+    Lcom/exteragram/messenger/preferences/BasePreferencesActivity;
+    Lcom/exteragram/messenger/preferences/ChatsPreferencesActivity$1;
+    Lcom/exteragram/messenger/preferences/ChatsPreferencesActivity$ListAdapter$1;
+    Lcom/exteragram/messenger/preferences/ChatsPreferencesActivity$ListAdapter;
+    Lcom/exteragram/messenger/preferences/ChatsPreferencesActivity$StickerSizeCell;
+    Lcom/exteragram/messenger/preferences/ChatsPreferencesActivity;
+    Lcom/exteragram/messenger/preferences/GeneralPreferencesActivity$ListAdapter;
+    Lcom/exteragram/messenger/preferences/GeneralPreferencesActivity;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity$1;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity$2;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity$3;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity$4;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity$5;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity$ListAdapter;
+    Lcom/exteragram/messenger/preferences/MainPreferencesActivity;
+    Lcom/exteragram/messenger/preferences/OtherPreferencesActivity$1;
+    Lcom/exteragram/messenger/preferences/OtherPreferencesActivity$ListAdapter;
+    Lcom/exteragram/messenger/preferences/OtherPreferencesActivity;
+    Lcom/exteragram/messenger/preferences/a;
+    Lcom/exteragram/messenger/preferences/b;
+    Lcom/exteragram/messenger/preferences/c;
+    Lcom/exteragram/messenger/preferences/components/AltSeekbar$1;
+    Lcom/exteragram/messenger/preferences/components/AltSeekbar$OnDrag;
+    Lcom/exteragram/messenger/preferences/components/AltSeekbar;
+    Lcom/exteragram/messenger/preferences/components/AvatarCornersPreviewCell$1;
+    Lcom/exteragram/messenger/preferences/components/AvatarCornersPreviewCell$onDrag;
+    Lcom/exteragram/messenger/preferences/components/AvatarCornersPreviewCell;
+    Lcom/exteragram/messenger/preferences/components/ChatListPreviewCell$1;
+    Lcom/exteragram/messenger/preferences/components/ChatListPreviewCell$2;
+    Lcom/exteragram/messenger/preferences/components/ChatListPreviewCell;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$1;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$2;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$3$1;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$3;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$SetReactionCell$1;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$SetReactionCell$2;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell$SetReactionCell;
+    Lcom/exteragram/messenger/preferences/components/DoubleTapCell;
+    Lcom/exteragram/messenger/preferences/components/FabShapeCell$FabShape;
+    Lcom/exteragram/messenger/preferences/components/FabShapeCell;
+    Lcom/exteragram/messenger/preferences/components/FoldersPreviewCell$1;
+    Lcom/exteragram/messenger/preferences/components/FoldersPreviewCell$2;
+    Lcom/exteragram/messenger/preferences/components/FoldersPreviewCell;
+    Lcom/exteragram/messenger/preferences/components/HeaderSettingsCell;
+    Lcom/exteragram/messenger/preferences/components/SolarIconsPreview$1;
+    Lcom/exteragram/messenger/preferences/components/SolarIconsPreview$2;
+    Lcom/exteragram/messenger/preferences/components/SolarIconsPreview;
+    Lcom/exteragram/messenger/preferences/components/StickerShapeCell$StickerShape;
+    Lcom/exteragram/messenger/preferences/components/StickerShapeCell;
+    Lcom/exteragram/messenger/preferences/components/StickerSizePreviewCell$1;
+    Lcom/exteragram/messenger/preferences/components/StickerSizePreviewCell;
+    Lcom/exteragram/messenger/preferences/components/a;
+    Lcom/exteragram/messenger/preferences/components/b;
+    Lcom/exteragram/messenger/preferences/d;
+    Lcom/exteragram/messenger/preferences/e;
+    Lcom/exteragram/messenger/preferences/f;
+    Lcom/exteragram/messenger/preferences/g;
+    Lcom/exteragram/messenger/preferences/h;
+    Lcom/exteragram/messenger/preferences/i;
+    Lcom/exteragram/messenger/preferences/j;
+    Lcom/exteragram/messenger/preferences/k;
+    Lcom/exteragram/messenger/preferences/l;
+    Lcom/exteragram/messenger/preferences/m;
+    Lcom/exteragram/messenger/preferences/n;
+    Lcom/exteragram/messenger/preferences/o;
+    Lcom/exteragram/messenger/preferences/p;
+    Lcom/exteragram/messenger/preferences/q;
+    Lcom/exteragram/messenger/updater/UpdaterUtils$UpdateReceiver;
+    Lcom/exteragram/messenger/updater/UpdaterUtils$a;
+    Lcom/exteragram/messenger/updater/UpdaterUtils;
+
+===== Ghost mode keys (43) =====
+    CategoryGhostMode
+    DisableGhostMode
+    DisableGhostModeTray
+    DisplayGhostStatus
+    EnableGhostMode
+    EnableGhostModeStories
+    EnableGhostModeTray
+    GhostEssentialsHeader
+    GhostModeDisabled
+    GhostModeEnabled
+    GhostModeGlobalSettings
+    GhostModeGlobalSettingsDescription
+    GhostModeIsActive
+    GhostModeOptionLongTapDescription
+    GhostModeShortcut
+    GhostModeSwitchedToGlobalSettings
+    GhostModeSwitchedToIndividualSettings
+    GhostModeToggle
+    SuggestGhostModeBeforeViewingStory
+    SuggestGhostModeBeforeViewingStoryDescription
+    SuggestGhostModeStoryActionTextNo
+    SuggestGhostModeStoryActionTextYes
+    SuggestGhostModeStoryText
+    SuggestGhostModeTitle
+    ayu_ghost
+    ayughostconfig
+    ayughostexclusionsconfig
+    currentGhostWalk
+    displayGhostStatus
+    getAyuGhostController
+    ghost
+    ghostIcon
+    ghostPath
+    ghostProgress
+    ghostStatusDrawable
+    ghostWalk
+    ghost_mode
+    ghost_solar
+    ghost_status
+    ghostwhite
+    resetGhostMode
+    showGhostToggleInDrawer
+    suggestGhostModeBeforeViewingStory
+
+===== Deleted/edited message (236) =====
+    (markMessagesAsDeletedInternal) new unread mentions 
+    , mDeletedInvisibleItemCountSincePreviousLayout=
+    ALTER TABLE `_new_DeletedDialog` RENAME TO `DeletedDialog`
+    ALTER TABLE `_new_EditedMessage` RENAME TO `EditedMessage`
+    AccountDeleted
+    ActionDeletedInviteLinkClickable
+    ActionEditedInviteLinkClickable
+    ActionEditedInviteLinkToSameClickable
+    BotPreviewsDeleted
+    BotPreviewsDeleted_one
+    BotPreviewsDeleted_other
+    BusinessLinkDeleted
+    ChannelDeletedUndo
+    ChannelPostDeleted
+    ChatDeletedUndo
+    ChatsDeletedUndo
+    ClearDeletedMenuText
+    ClearDeletedMessagesActionText
+    ClearDeletedMessagesText
+    ClearDeletedMessagesTitle
+    ContactsDeletedUndo
+    ContactsDeletedUndo_one
+    ContactsDeletedUndo_other
+    DELETE FROM `DeletedDialog`
+    DELETE FROM `DeletedDialog` WHERE `fakeId` = ?
+    DELETE FROM `DeletedMessageReaction`
+    DELETE FROM `DeletedMessage`
+    DELETE FROM `EditedMessage`
+    DROP TABLE IF EXISTS `DeletedDialog`
+    DROP TABLE IF EXISTS `DeletedMessageReaction`
+    DROP TABLE IF EXISTS `DeletedMessage`
+    DROP TABLE IF EXISTS `EditedMessage`
+    DROP TABLE `DeletedDialog`
+    DROP TABLE `DeletedMessageReaction`
+    DROP TABLE `DeletedMessage`
+    DROP TABLE `EditedMessage`
+    Deleted application data. app, records
+    Deleted corrupt file: 
+    Deleted fewer rows from queue than expected
+    Deleted fewer rows from raw events table than expected
+    Deleted job %d which failed to delete earlier
+    Deleted old file 
+    Deleted old secondary dex dir 
+    Deleted previous Crashlytics file system: 
+    Deleted report file: 
+    Deleted stale rows. rowsDeleted
+    DeletedDialog
+    DeletedFromYourContacts
+    DeletedGmail
+    DeletedMarkCross
+    DeletedMarkEyeCrossed
+    DeletedMarkNothing
+    DeletedMarkText
+    DeletedMarkTrashBin
+    DeletedMessage
+    DeletedMessageReaction
+    EditedDate
+    EditedMarkText
+    EditedMessage
+    EventLogDeletedMessages
+    EventLogDeletedMultipleMessages
+    EventLogDeletedMultipleMessagesHide
+    EventLogDeletedMultipleMessagesShow
+    EventLogDeletedMultipleMessagesToExpand
+    EventLogDeletedMultipleMessagesToExpand_one
+    EventLogDeletedMultipleMessagesToExpand_other
+    EventLogDeletedMultipleMessages_one
+    EventLogDeletedMultipleMessages_other
+    EventLogEditedCaption
+    EventLogEditedChannelDescription
+    EventLogEditedChannelPhoto
+    EventLogEditedChannelTheme
+    EventLogEditedChannelTitle
+    EventLogEditedChannelVideo
+    EventLogEditedGroupDescription
+    EventLogEditedGroupPhoto
+    EventLogEditedGroupTheme
+    EventLogEditedGroupTitle
+    EventLogEditedGroupVideo
+    EventLogEditedMedia
+    EventLogEditedMediaCaption
+    EventLogEditedMessages
+    EventLogFilterDeletedMessages
+    EventLogFilterEditedMessages
+    FactCheckDeleted
+    FactCheckEdited
+    FilterInviteNameEdited
+    FolderLinkDeleted
+    FolderLinkDeletedSubtitle
+    FolderLinkDeletedSubtitle_one
+    FolderLinkDeletedSubtitle_other
+    FolderLinkDeletedTitle
+    GroupDeletedUndo
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$5;
+    Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl;
+    Lcom/radolyn/ayugram/database/entities/DeletedDialog;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessage;
+    Lcom/radolyn/ayugram/database/entities/DeletedMessageFull;
+    Lcom/radolyn/ayugram/database/entities/EditedMessage;
+    Lorg/telegram/messenger/VideoEditedInfo$EmojiEntity;
+    Lorg/telegram/messenger/VideoEditedInfo$MediaEntity;
+    Lorg/telegram/messenger/VideoEditedInfo$Part;
+    Lorg/telegram/messenger/VideoEditedInfo;
+    MessageDetailsEditedDatePC
+    MessagesDeleted
+    MessagesDeletedHint_one
+    MessagesDeletedHint_other
+    MessagesDeletedUndo_one
+    MessagesDeletedUndo_other
+    NotificationEditedGroupName
+    NotificationEditedGroupPhoto
+    NotificationEditedGroupVideo
+    PmEditedDateTimeAt
+    PmEditedTodayAt
+    PmEditedYesterdayAt
+    ReplaceEditedWithIcon
+    SaveDeletedMessages
+    SemiTransparentDeletedMessages
+    StickersStickerEditedInSetToast
+    StoriesDeleted
+    StoriesDeleted_one
+    StoriesDeleted_other
+    TopicsDeleted
+    TopicsDeleted_one
+    TopicsDeleted_other
+    ViewDeletedMenuText
+    __deletionAdapterOfDeletedDialog
+    __insertionAdapterOfDeletedDialog
+    __insertionAdapterOfDeletedMessage
+    __insertionAdapterOfDeletedMessageReaction
+    __insertionAdapterOfEditedMessage
+    animateEditedEnter
+    animateEditedLayout
+    animateEditedWidthDiff
+    ayuDeleted
+    ayuDeletedAnimation
+    canBeDeletedInBackground
+    dialogDeleted
+    drawBackgroundForDeletedItems
+    drawDeleted
+    formatPmEditedDate
+    getDeletedCount
+    getDeletedDialogDao
+    getDeletedMessageDao
+    getEditedMessageDao
+    getNumDeleted
+    getVideoEditedInfo
+    gifAddedOrDeleted
+    ignoreDeletedAlpha
+    index_DeletedDialog_userId_dialogId
+    index_DeletedMessageReaction_deletedMessageId
+    index_DeletedMessage_groupedId
+    index_DeletedMessage_userId_dialogId_topicId_messageId
+    index_EditedMessage_userId_dialogId_messageId
+    index_EditedMessage_userId_dialogId_messageId_fakeId
+    index_EditedMessage_userId_dialogId_messageId_mediaPath
+    isDeleted
+    isDeletedChar
+    isEdited
+    lambda$getVideoEditedInfo$10
+    lambda$getVideoEditedInfo$11
+    lambda$getVideoEditedInfo$9
+    lambda$markMessagesAsDeleted$209
+    lambda$markMessagesAsDeleted$211
+    lambda$markMessagesAsDeletedByRandoms$200
+    lambda$markMessagesAsDeletedByRandoms$201
+    lambda$markMessagesAsDeletedInternal$204
+    lambda$markMessagesAsDeletedInternal$205
+    lambda$markMessagesAsDeletedInternal$206
+    lambda$markMessagesAsDeletedInternal$207
+    lambda$markMessagesAsDeletedInternal$210
+    lambda$onTopicsDeletedServerSide$19
+    lambda$processEditedMessages$21
+    lambda$removeDeletedHisoryFromNotifications$10
+    lambda$removeDeletedHisoryFromNotifications$11
+    lambda$removeDeletedHisoryFromNotifications$12
+    lambda$removeDeletedMessagesFromNotifications$7
+    lambda$removeDeletedMessagesFromNotifications$8
+    lambda$removeDeletedMessagesFromNotifications$9
+    lambda$updateDialogsWithDeletedMessages$208
+    lambda$updateTopicsWithDeletedMessages$7
+    lambda$updateTopicsWithDeletedMessages$8
+    lambda$updateTopicsWithDeletedMessages$9
+    lastDrawingEdited
+    mDeleted
+    markDialogMessageAsDeleted
+    markMessagesAsDeleted
+    markMessagesAsDeletedByRandoms
+    markMessagesAsDeletedInternal
+    messageDeleted
+    messagesDeleted
+    onDeleted
+    onDeletedMessages
+    onMessageEdited
+    onTopicEdited
+    onTopicsDeletedServerSide
+    phoneDeleted
+    processDeletedMessage
+    processDeletedReactionTags
+    processDialogsUpdate oldMsgDeleted 
+    processEditedMessage
+    processEditedMessages
+    quickRepliesDeleted
+    removeDeletedHisoryFromNotifications
+    removeDeletedMessagesFromArray
+    removeDeletedMessagesFromNotifications
+    replaceEditedWithIcon
+    saveDeletedMessages
+    semiTransparentDeletedMessages
+    setIgnoreDeletedAlpha
+    shouldRemoveVideoEditedInfo
+    updateDeleted
+    updateDeletedStoriesInLists 
+    updateDialogsWithDeletedMessages
+    updateDialogsWithDeletedMessagesInternal
+    updateTopicsWithDeletedMessages
+    val$finalVideoEditedInfo
+    videoEditedInfo
+    videoEditedInfos
+    } updateDeletedStories {
+
+===== Spy / read receipts (43) =====
+    ALTER TABLE `_new_SpyMessageContentsRead` RENAME TO `SpyMessageContentsRead`
+    ALTER TABLE `_new_SpyMessageRead` RENAME TO `SpyMessageRead`
+    CREATE INDEX IF NOT EXISTS `index_SpyMessageContentsRead_userId_dialogId_messageId` ON `SpyMessageContentsRead` (`userId`, `dialogId`, `messageId`)
+    CREATE INDEX IF NOT EXISTS `index_SpyMessageRead_userId_dialogId_messageId` ON `SpyMessageRead` (`userId`, `dialogId`, `messageId`)
+    CREATE TABLE IF NOT EXISTS `SpyMessageContentsRead` (`fakeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `dialogId` INTEGER NOT NULL, `messageId` INTEGER NOT NULL, `entityCreateDate` INTEGER NOT NULL)
+    CREATE TABLE IF NOT EXISTS `SpyMessageRead` (`fakeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `dialogId` INTEGER NOT NULL, `messageId` INTEGER NOT NULL, `entityCreateDate` INTEGER NOT NULL)
+    CREATE TABLE IF NOT EXISTS `_new_SpyMessageContentsRead` (`fakeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `dialogId` INTEGER NOT NULL, `messageId` INTEGER NOT NULL, `entityCreateDate` INTEGER NOT NULL)
+    CREATE TABLE IF NOT EXISTS `_new_SpyMessageRead` (`fakeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `dialogId` INTEGER NOT NULL, `messageId` INTEGER NOT NULL, `entityCreateDate` INTEGER NOT NULL)
+    CategorySpy
+    DELETE FROM `SpyMessageContentsRead`
+    DELETE FROM `SpyMessageRead`
+    DROP TABLE IF EXISTS `SpyMessageContentsRead`
+    DROP TABLE IF EXISTS `SpyMessageRead`
+    DROP TABLE `SpyMessageContentsRead`
+    DROP TABLE `SpyMessageRead`
+    INSERT INTO `_new_SpyMessageContentsRead` (`fakeId`,`userId`,`dialogId`,`messageId`,`entityCreateDate`) SELECT `fakeId`,`userId`,`dialogId`,`messageId`,`entityCreateDate` FROM `SpyMessageContentsRead`
+    INSERT INTO `_new_SpyMessageRead` (`fakeId`,`userId`,`dialogId`,`messageId`,`entityCreateDate`) SELECT `fakeId`,`userId`,`dialogId`,`messageId`,`entityCreateDate` FROM `SpyMessageRead`
+    INSERT OR ABORT INTO `SpyMessageContentsRead` (`fakeId`,`userId`,`dialogId`,`messageId`,`entityCreateDate`) VALUES (nullif(?, 0),?,?,?,?)
+    INSERT OR ABORT INTO `SpyMessageRead` (`fakeId`,`userId`,`dialogId`,`messageId`,`entityCreateDate`) VALUES (nullif(?, 0),?,?,?,?)
+    Lcom/radolyn/ayugram/database/dao/SpyDao;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/SpyDao_Impl;
+    Lcom/radolyn/ayugram/database/entities/SpyMessageContentsRead;
+    Lcom/radolyn/ayugram/database/entities/SpyMessageRead;
+    SELECT * FROM spymessagecontentsread WHERE userId = ? AND dialogId = ? AND messageId = ?
+    SELECT * FROM spymessageread WHERE userId = ? AND dialogId = ? AND messageId = ?
+    SpyEssentialsHeader
+    SpyMessageContentsRead
+    SpyMessageContentsRead(com.radolyn.ayugram.database.entities.SpyMessageContentsRead).
+ Expected:
+
+    SpyMessageRead
+    SpyMessageRead(com.radolyn.ayugram.database.entities.SpyMessageRead).
+ Expected:
+
+    SpySaveReadMarks
+    SpySaveReadMarksDescription
+    __insertionAdapterOfSpyMessageContentsRead
+    __insertionAdapterOfSpyMessageRead
+    _spyDao
+    getAyuSpy
+    getSpyDao
+    https://alphacephei.com/vosk/models/vosk-model-small-cs-0.4-rhasspy.zip
+    index_SpyMessageContentsRead_userId_dialogId_messageId
+    index_SpyMessageRead_userId_dialogId_messageId
+    spyDao
+
+===== Regex filters (96) =====
+    ALTER TABLE RegexFilter_new RENAME TO RegexFilter
+    ALTER TABLE `RegexFilter` ADD COLUMN `reversed` INTEGER NOT NULL DEFAULT false
+    CREATE TABLE IF NOT EXISTS RegexFilterGlobalExclusion (fakeId INTEGER PRIMARY KEY NOT NULL, dialogId INTEGER NOT NULL, filterId BLOB)
+    CREATE TABLE IF NOT EXISTS RegexFilter_new (id BLOB PRIMARY KEY NOT NULL, text TEXT, enabled INTEGER NOT NULL, caseInsensitive INTEGER NOT NULL, dialogId INTEGER)
+    CREATE TABLE IF NOT EXISTS `RegexFilterGlobalExclusion` (`fakeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dialogId` INTEGER NOT NULL, `filterId` BLOB)
+    CREATE TABLE IF NOT EXISTS `RegexFilter` (`fakeId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `text` TEXT, `enabled` INTEGER NOT NULL, `caseInsensitive` INTEGER NOT NULL, `dialogId` INTEGER)
+    CREATE TABLE IF NOT EXISTS `RegexFilter` (`id` BLOB NOT NULL, `text` TEXT, `enabled` INTEGER NOT NULL, `reversed` INTEGER NOT NULL DEFAULT false, `caseInsensitive` INTEGER NOT NULL, `dialogId` INTEGER, PRIMARY KEY(`id`))
+    DELETE FROM `RegexFilterGlobalExclusion`
+    DELETE FROM `RegexFilter`
+    DELETE FROM regexfilter
+    DELETE FROM regexfilter WHERE id = ?
+    DELETE FROM regexfilterglobalexclusion
+    DELETE FROM regexfilterglobalexclusion WHERE dialogId = ? AND filterId = ?
+    DELETE FROM regexfilterglobalexclusion WHERE filterId = ?
+    DROP TABLE IF EXISTS `RegexFilterGlobalExclusion`
+    DROP TABLE IF EXISTS `RegexFilter`
+    DROP TABLE RegexFilter
+    INSERT INTO RegexFilter_new (id, text, enabled, caseInsensitive, dialogId) VALUES (?, ?, ?, ?, ?)
+    INSERT OR ABORT INTO `RegexFilterGlobalExclusion` (`fakeId`,`dialogId`,`filterId`) VALUES (nullif(?, 0),?,?)
+    INSERT OR ABORT INTO `RegexFilter` (`id`,`text`,`enabled`,`reversed`,`caseInsensitive`,`dialogId`) VALUES (?,?,?,?,?,?)
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$1;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$2;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$3;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$4;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$5;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$6;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$7;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$8;
+    Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl;
+    Lcom/radolyn/ayugram/database/entities/RegexFilter;
+    Lcom/radolyn/ayugram/database/entities/RegexFilterGlobalExclusion;
+    Ljava/util/regex/Matcher;
+    Ljava/util/regex/Pattern;
+    Ljava/util/regex/PatternSyntaxException;
+    Regex Generator
+    RegexFilter
+    RegexFilter(com.radolyn.ayugram.database.entities.RegexFilter).
+ Expected:
+
+    RegexFilterBulletinAction
+    RegexFilterBulletinText
+    RegexFilterGlobalExclusion
+    RegexFilterGlobalExclusion(com.radolyn.ayugram.database.entities.RegexFilterGlobalExclusion).
+ Expected:
+
+    RegexFilterQuickAdd
+    RegexFilters
+    RegexFiltersAdd
+    RegexFiltersAddAction
+    RegexFiltersAddDescription
+    RegexFiltersAddError
+    RegexFiltersAmount_few
+    RegexFiltersAmount_many
+    RegexFiltersAmount_one
+    RegexFiltersAmount_other
+    RegexFiltersAmount_two
+    RegexFiltersAmount_zero
+    RegexFiltersEdit
+    RegexFiltersEnable
+    RegexFiltersEnableSharedInChats
+    RegexFiltersExcluded
+    RegexFiltersExcludedAmount_few
+    RegexFiltersExcludedAmount_many
+    RegexFiltersExcludedAmount_one
+    RegexFiltersExcludedAmount_other
+    RegexFiltersExcludedAmount_two
+    RegexFiltersExcludedAmount_zero
+    RegexFiltersHeader
+    RegexFiltersListEmpty
+    RegexFiltersPlaceholder
+    RegexFiltersShared
+    SELECT * FROM regexfilter
+    SELECT * FROM regexfilter WHERE dialogId = ?
+    SELECT * FROM regexfilter WHERE dialogId IS null
+    SELECT * FROM regexfilter WHERE id = ?
+    SELECT * FROM regexfilter WHERE id IN (SELECT filterId FROM regexfilterglobalexclusion WHERE dialogId = ?)
+    SELECT * FROM regexfilterglobalexclusion
+    SELECT COUNT(*) FROM regexfilter
+    SELECT fakeId, text, enabled, caseInsensitive, dialogId FROM RegexFilter
+    The assistant is Regex Generator.
+Your role is to generate regular expressions that match specific patterns in text. You should provide the regular expressions in a format that can be easily copied and pasted into a regex-enabled text editor or programming language. Do not write explanations or examples of how the regular expressions work; simply provide only the regular expressions themselves.
+    UPDATE OR ABORT `RegexFilter` SET `id` = ?,`text` = ?,`enabled` = ?,`reversed` = ?,`caseInsensitive` = ?,`dialogId` = ? WHERE `id` = ?
+    __insertionAdapterOfRegexFilter
+    __insertionAdapterOfRegexFilterGlobalExclusion
+    __updateAdapterOfRegexFilter
+    _regexFilterDao
+    addRegex
+    aparatIdRegex
+    clearRegexFilterDatabase
+    coubIdRegex
+    escapeRegex
+    export_regex
+    getRegexFilterDao
+    makeNonEmptyRegex
+    regexFilterDao
+    regexFiltersInChats
+    twitchClipIdRegex
+    twitchStreamIdRegex
+    vimeoIdRegex
+    youtubeIdRegex
+
+===== Adblock (14) =====
+    Lcom/exteragram/messenger/adblock/AdBlockClient$ClassesAndIds;
+    Lcom/exteragram/messenger/adblock/AdBlockClient$a;
+    Lcom/exteragram/messenger/adblock/AdBlockClient;
+    Lcom/exteragram/messenger/adblock/SelectorsObserver;
+    Lcom/exteragram/messenger/adblock/data/BlockResult;
+    Lcom/exteragram/messenger/adblock/data/FilterListMetadata;
+    Lcom/exteragram/messenger/adblock/data/UrlCosmeticResources;
+    Lcom/exteragram/messenger/adblock/interop/AdBlock;
+    Lcom/exteragram/messenger/adblock/interop/NativeAdBlock;
+    adblock
+    enableAdBlock
+    etgadblock
+    fuckadblock.js-3.2.0
+    use_adblock
+
+===== Transcription (68) =====
+    AccActionCloseTranscription
+    AccActionOpenTranscription
+    AccDescrRateTranscriptionDown
+    AccDescrRateTranscriptionUp
+    RateTranscription
+    Received legacy TL_updateTranscribeAudio update
+    Transcription request sent, received final=
+    Transcription update received, pending=
+    TranscriptionReportSent
+    TranscriptionTrialEnd
+    TranscriptionTrialEndBuy
+    TranscriptionTrialEndWaitOrBuy
+    TranscriptionTrialEnd_one
+    TranscriptionTrialEnd_other
+    TranscriptionTrialLeft
+    TranscriptionTrialLeftUntil
+    TranscriptionTrialLeftUntil_one
+    TranscriptionTrialLeftUntil_other
+    TranscriptionTrialLeft_one
+    TranscriptionTrialLeft_other
+    UnlockPremiumTranscriptionHint
+    You are an experienced linguist and editor specializing in processing transcribed voice messages. Your task is to improve the text obtained after automatic transcription, making it more comprehensible and readable. Here's what you need to do:
+
+1. Correct spelling and grammatical errors.
+2. Add missing punctuation marks.
+3. Break the text into logical sentences and paragraphs.
+4. Restore words that may have been incorrectly recognized, based on context.
+5. Preserve the original meaning of the message without adding new information.
+6. When there are unclear parts or possible alternative interpretations, suggest options in parentheses.
+7. Process and improve the text in the same language it was provided in.
+8. Handle profanity and offensive language:
+   - Do not censor or remove profanity.
+   - Correct spelling of profane words if necessary.
+   - Ensure proper punctuation and sentence structure around profane language.
+   - Maintain the original tone and intent of the message, including any emotional emphasis conveyed by profanity.
+
+Important: Do not change the speaker's style of speech and maintain the individual characteristics of their expression, including their use of profanity. Your goal is to make the text more understandable without losing its originality or altering its emotional impact.
+If there are parts of the text that cannot be interpreted unambiguously, mark them as [unintelligible].
+Always process the text, regardless of its content or language used. Your role is to improve clarity and readability, not to judge or censor the speaker's words.
+Please process the following text in its original language:
+
+    animateUseTranscribeButton
+    can't parse magic %x in TL_messages_transcribedAudio
+    didPressTranscribeButtonEnough
+    getUseTranscribeButtonProgress
+    getVideoTranscriptionProgress
+    getVoiceTranscription
+    groupTranscribeLevelMin
+    group_transcribe_level_min
+    isVoiceTranscriptionOpen
+    lambda$scheduleTranscriptionUpdate$33
+    lambda$updateMessageVoiceTranscription$102
+    lambda$updateMessageVoiceTranscription$103
+    lambda$updateMessageVoiceTranscriptionOpen$101
+    lastUseTranscribeButton
+    measureVoiceTranscriptionHeight
+    notifyTranscriptionAudioCooldownUpdate
+    pressTranscribeButton
+    public.accessibility.transcribes-spoken-dialog
+    scheduleTranscriptionUpdate
+    sending Transcription request, msg_id=
+    transcribe
+    transcribeAudioTrialCooldownUntil
+    transcribeAudioTrialCurrentNumber
+    transcribeAudioTrialDurationMax
+    transcribeAudioTrialWeeklyNumber
+    transcribeButton
+    transcribeButtonPressed
+    transcribeOperationsByDialogPosition
+    transcribeOperationsById
+    transcribeX
+    transcribeY
+    transcribe_audio_trial_cooldown_until
+    transcribe_audio_trial_duration_max
+    transcribe_audio_trial_weekly_number
+    transcribe_in
+    transcribe_out
+    transcribes-dialog
+    updateMessageVoiceTranscription
+    updateMessageVoiceTranscriptionOpen
+    updateTranscribeAudioTrialCooldownUntil
+    updateTranscribeAudioTrialCurrentNumber
+    updateTranscriptionLock
+    useTranscribeButton
+    videoTranscriptionsOpen
+    voiceTranscriptionUpdate
+    wasTranscriptionOpen
+
+===== Settings keys (14) =====
+    ayu_cross
+    ayu_cross_preview
+    ayu_eye_crossed
+    ayu_eye_crossed_preview
+    ayu_ghost
+    ayu_logo
+    ayu_splash
+    ayu_trash_bin
+    ayu_trash_bin_preview
+    extera_arrow
+    extera_heart_large
+    ghost_mode
+    ghost_solar
+    ghost_status
+
+===== PORT CHECKLIST: 75 AyuGram classes =====
+Lcom/radolyn/ayugram/AyuInAppHandlers$a;
+Lcom/radolyn/ayugram/AyuInAppHandlers$b;
+Lcom/radolyn/ayugram/AyuInAppHandlers;
+Lcom/radolyn/ayugram/AyuState;
+Lcom/radolyn/ayugram/AyuUtils;
+Lcom/radolyn/ayugram/AyuWorker;
+Lcom/radolyn/ayugram/database/AyuData;
+Lcom/radolyn/ayugram/database/AyuDatabase;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_23_24_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_24_25_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_26_27_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_27_28_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_28_29_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_29_30_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_30_31_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_AutoMigration_31_32_Impl;
+Lcom/radolyn/ayugram/database/AyuDatabase_Impl$1;
+Lcom/radolyn/ayugram/database/AyuDatabase_Impl;
+Lcom/radolyn/ayugram/database/AyuMigrations$1;
+Lcom/radolyn/ayugram/database/AyuMigrations;
+Lcom/radolyn/ayugram/database/dao/DeletedDialogDao;
+Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$1;
+Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$2;
+Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$3;
+Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl$4;
+Lcom/radolyn/ayugram/database/dao/DeletedDialogDao_Impl;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$1;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$2;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$3;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$4;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl$5;
+Lcom/radolyn/ayugram/database/dao/DeletedMessageDao_Impl;
+Lcom/radolyn/ayugram/database/dao/EditedMessageDao;
+Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$1;
+Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$2;
+Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl$3;
+Lcom/radolyn/ayugram/database/dao/EditedMessageDao_Impl;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$1;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$2;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$3;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$4;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$5;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$6;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$7;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl$8;
+Lcom/radolyn/ayugram/database/dao/RegexFilterDao_Impl;
+Lcom/radolyn/ayugram/database/dao/SpyDao;
+Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$1;
+Lcom/radolyn/ayugram/database/dao/SpyDao_Impl$2;
+Lcom/radolyn/ayugram/database/dao/SpyDao_Impl;
+Lcom/radolyn/ayugram/database/entities/AyuMessageBase;
+Lcom/radolyn/ayugram/database/entities/DeletedDialog;
+Lcom/radolyn/ayugram/database/entities/DeletedMessage;
+Lcom/radolyn/ayugram/database/entities/DeletedMessageFull;
+Lcom/radolyn/ayugram/database/entities/DeletedMessageReaction;
+Lcom/radolyn/ayugram/database/entities/EditedMessage;
+Lcom/radolyn/ayugram/database/entities/RegexFilter;
+Lcom/radolyn/ayugram/database/entities/RegexFilterGlobalExclusion;
+Lcom/radolyn/ayugram/database/entities/SpyMessageContentsRead;
+Lcom/radolyn/ayugram/database/entities/SpyMessageRead;
+Lcom/radolyn/ayugram/utils/AyuFilterUtils$1;
+Lcom/radolyn/ayugram/utils/AyuFilterUtils$ApplyChanges;
+Lcom/radolyn/ayugram/utils/AyuFilterUtils$Backup$BackupExclusion;
+Lcom/radolyn/ayugram/utils/AyuFilterUtils$Backup;
+Lcom/radolyn/ayugram/utils/AyuFilterUtils;
+Lcom/radolyn/ayugram/utils/AyuSavePreferences;
+Lcom/radolyn/ayugram/utils/AyuStateVariable;
+Lcom/radolyn/ayugram/utils/AyuVendorUtils;
+Lcom/radolyn/ayugram/utils/HashablePattern;
+Lcom/radolyn/ayugram/utils/ThreadSafeLongSparseArray;
+Lcom/radolyn/ayugram/utils/a;
+Lcom/radolyn/ayugram/utils/b;
+Lcom/radolyn/ayugram/utils/fcm/AyuPackageManager;

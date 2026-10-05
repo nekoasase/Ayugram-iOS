@@ -1,0 +1,161 @@
+name: build-ios
+
+# Builds the AyuGram iOS client on top of the Swiftgram/Telegram-iOS base.
+#
+# Requires repository secrets:
+#   TELEGRAM_API_ID      - from https://my.telegram.org/apps  (required)
+#   TELEGRAM_API_HASH    - from https://my.telegram.org/apps  (required)
+#   APPLE_TEAM_ID        - Apple Developer team id             (device builds)
+#
+# Without Apple signing secrets this produces a simulator build, which is enough
+# to prove the tree compiles. A device IPA additionally needs a distribution
+# certificate and provisioning profiles (see the README's advanced guide).
+#
+# NOTE: the artifact paths below are best-effort and must be confirmed on the
+# first real run; Telegram-iOS's Make.py owns its output layout.
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_ref:
+        description: Swiftgram/Telegram-iOS ref to build against
+        default: master
+        required: true
+      configuration:
+        description: Build configuration
+        default: release_arm64
+        type: choice
+        options:
+          - release_arm64
+          - debug_arm64
+          - release_sim_arm64
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify patch layer (no toolchain needed)
+        run: python3 tools/verify_all.py
+
+      - name: Check required secrets
+        env:
+          API_ID: ${{ secrets.TELEGRAM_API_ID }}
+          API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
+        run: |
+          set -euo pipefail
+          missing=0
+          if [ -z "${API_ID:-}" ]; then
+            echo "::error::TELEGRAM_API_ID secret is not set. Get one at https://my.telegram.org/apps"
+            missing=1
+          fi
+          if [ -z "${API_HASH:-}" ]; then
+            echo "::error::TELEGRAM_API_HASH secret is not set. Get one at https://my.telegram.org/apps"
+            missing=1
+          fi
+          exit $missing
+
+      - name: Report toolchain versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          python3 --version
+
+      - name: Cache Bazel
+        uses: actions/cache@v4
+        with:
+          path: ~/telegram-bazel-cache
+          key: bazel-${{ runner.os }}-${{ inputs.base_ref }}-${{ hashFiles('versions.lock') }}
+          restore-keys: bazel-${{ runner.os }}-${{ inputs.base_ref }}-
+
+      - name: Fetch Telegram-iOS base
+        run: |
+          set -euo pipefail
+          git clone --recursive -j8 --branch "${{ inputs.base_ref }}" \
+            https://github.com/Swiftgram/Telegram-iOS.git vendor/Telegram-iOS
+
+      - name: Check base toolchain requirements
+        run: |
+          set -euo pipefail
+          echo "base versions.json:"
+          cat vendor/Telegram-iOS/versions.json
+          python3 - <<'PY'
+          import json, pathlib, re, subprocess, sys
+          base = json.loads(pathlib.Path("vendor/Telegram-iOS/versions.json").read_text())
+          required = base.get("xcode")
+          out = subprocess.run(["xcodebuild", "-version"], capture_output=True, text=True).stdout
+          m = re.search(r"Xcode\s+(\S+)", out)
+          installed = m.group(1) if m else "unknown"
+          print(f"required Xcode {required}, runner has {installed}")
+          if required and installed != required:
+              print(f"::warning::Xcode mismatch: base wants {required}, runner has {installed}. "
+                    f"Pass --overrideXcodeVersion to Make.py if the build fails.")
+          PY
+
+      - name: Write build configuration
+        env:
+          API_ID: ${{ secrets.TELEGRAM_API_ID }}
+          API_HASH: ${{ secrets.TELEGRAM_API_HASH }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, secrets
+          template = pathlib.Path(
+              "vendor/Telegram-iOS/build-system/template_minimal_development_configuration.json"
+          )
+          config = json.loads(template.read_text())
+          config["api_id"] = os.environ["API_ID"]
+          config["api_hash"] = os.environ["API_HASH"]
+          config["bundle_id"] = f"org.{secrets.token_hex(8)}.AyuGram"
+          # Placeholder values in the template are not valid config.
+          config["team_id"] = os.environ.get("TEAM_ID") or ""
+          out = pathlib.Path("build-config"); out.mkdir(exist_ok=True)
+          (out / "ci.json").write_text(json.dumps(config, indent=2))
+          redacted = dict(config, api_hash="***", api_id="***")
+          print("build configuration written:")
+          print(json.dumps(redacted, indent=2))
+          PY
+
+      - name: Generate Xcode project
+        working-directory: vendor/Telegram-iOS
+        run: |
+          set -euo pipefail
+          python3 build-system/Make/Make.py \
+            --cacheDir="$HOME/telegram-bazel-cache" \
+            generateProject \
+            --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
+            --disableProvisioningProfiles
+
+      - name: Build
+        working-directory: vendor/Telegram-iOS
+        run: |
+          set -euo pipefail
+          python3 build-system/Make/Make.py \
+            --cacheDir="$HOME/telegram-bazel-cache" \
+            build \
+            --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
+            --buildNumber="${{ github.run_number }}" \
+            --configuration="${{ inputs.configuration }}" \
+            --disableProvisioningProfiles
+
+      - name: Locate build products
+        run: |
+          set -euo pipefail
+          find vendor/Telegram-iOS -maxdepth 6 \( -name '*.app' -o -name '*.ipa' -o -name '*.xcarchive' \) -print
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ayugram-ios-${{ inputs.configuration }}-${{ github.run_number }}
+          path: |
+            vendor/Telegram-iOS/build/artifacts/**
+            vendor/Telegram-iOS/**/*.app
+          if-no-files-found: warn
+          retention-days: 14
