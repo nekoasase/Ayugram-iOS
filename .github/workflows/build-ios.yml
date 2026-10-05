@@ -42,6 +42,16 @@ on:
           - release_sim_arm64
           - release_arm64
           - debug_arm64
+      credentials:
+        description: >-
+          required = fail unless real api_id/api_hash secrets exist;
+          placeholder = build with dummy credentials to prove the tree compiles
+          (the resulting app cannot connect to Telegram)
+        default: required
+        type: choice
+        options:
+          - required
+          - placeholder
   push:
     branches: [ayugram-ios]
   pull_request:
@@ -74,14 +84,24 @@ jobs:
           set -euo pipefail
           missing=0
           if [ -z "${API_ID:-}" ]; then
-            echo "::error::TELEGRAM_API_ID secret is not set. Get one at https://my.telegram.org/apps"
+            echo "::warning::TELEGRAM_API_ID is not set. Get one at https://my.telegram.org/apps"
             missing=1
           fi
           if [ -z "${API_HASH:-}" ]; then
-            echo "::error::TELEGRAM_API_HASH secret is not set. Get one at https://my.telegram.org/apps"
+            echo "::warning::TELEGRAM_API_HASH is not set. Get one at https://my.telegram.org/apps"
             missing=1
           fi
-          exit $missing
+          if [ "$missing" = "1" ]; then
+            if [ "${{ inputs.credentials }}" = "placeholder" ]; then
+              # A compile-only run: the point is to prove the tree builds, and
+              # api_id is baked into the build configuration, so a dummy value is
+              # enough. The result must not be shipped — it cannot log in.
+              echo "::warning::building with PLACEHOLDER credentials; the app will not connect to Telegram"
+              exit 0
+            fi
+            echo "::error::Set the secrets, or re-run with credentials=placeholder for a compile-only build."
+            exit 1
+          fi
 
       - name: Cache Bazel
         uses: actions/cache@v4
@@ -132,8 +152,19 @@ jobs:
               "build-system/template_minimal_development_configuration.json"
           )
           config = json.loads(template.read_text())
-          config["api_id"] = os.environ["API_ID"]
-          config["api_hash"] = os.environ["API_HASH"]
+
+          # A compile-only run has no secrets; api_id is a plain value in the build
+          # configuration, so a placeholder is enough to compile. Such a build can
+          # never authenticate, and the workflow says so out loud.
+          api_id = os.environ.get("API_ID") or ""
+          api_hash = os.environ.get("API_HASH") or ""
+          placeholder = not api_id or not api_hash
+          if placeholder:
+              api_id = api_id or "1"
+              api_hash = api_hash or "0" * 32
+
+          config["api_id"] = api_id
+          config["api_hash"] = api_hash
           config["bundle_id"] = f"org.{secrets.token_hex(8)}.AyuGram"
           config["team_id"] = os.environ.get("TEAM_ID") or ""
 
@@ -144,6 +175,7 @@ jobs:
           # Never echo the real credentials into a public build log.
           redacted = dict(config, api_id="***", api_hash="***")
           print(json.dumps(redacted, indent=2), file=sys.stderr)
+          print(f"placeholder credentials: {placeholder}", file=sys.stderr)
           PY
 
       - name: Generate Xcode project
