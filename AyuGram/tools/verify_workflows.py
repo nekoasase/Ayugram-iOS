@@ -20,7 +20,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-WORKFLOWS = ROOT / ".github" / "workflows"
+# The workflows live next to the patch layer in the authoring workspace, but at
+# the repository root in the fork (where the patch layer sits in AyuGram/). Both
+# layouts are valid, so both are searched instead of assuming one.
+WORKFLOW_DIRS = [ROOT / ".github" / "workflows", ROOT.parent / ".github" / "workflows"]
 
 failures = []
 
@@ -92,7 +95,13 @@ def main():
         print("RESULT: skipped")
         return 0
 
-    files = sorted(WORKFLOWS.glob("*.yml"))
+    files = []
+    for directory in WORKFLOW_DIRS:
+        if directory.is_dir():
+            files = sorted(directory.glob("*.yml"))
+            if files:
+                print(f"workflow directory: {directory}")
+                break
     check("workflow files found", bool(files), f"{len(files)} files")
     if not files:
         return 1
