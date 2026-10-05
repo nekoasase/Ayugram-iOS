@@ -23,6 +23,16 @@ public protocol AyuTableRecord: Codable {
     static var databaseTableName: String { get }
     /// Columns in declaration order, used to build INSERT statements.
     static var columnNames: [String] { get }
+
+    /// Builds a record from one row, keyed by column name.
+    ///
+    /// Implemented by `Database/DAO/AyuRecords.generated.swift`, which is
+    /// generated from `schema.sql` and the entities so the 35-column shared
+    /// record cannot drift.
+    init(row: [String: AyuSqliteValue])
+
+    /// Values in `columnNames` order, for INSERT/UPDATE.
+    var sqlValues: [AyuSqliteValue] { get }
 }
 
 extension AyuTableRecord {
@@ -34,5 +44,17 @@ extension AyuTableRecord {
     /// Placeholder list matching ``sqlColumnList``.
     public static var sqlPlaceholders: String {
         return Array(repeating: "?", count: self.columnNames.count).joined(separator: ", ")
+    }
+
+    /// `INSERT` for this record. Column order comes from ``columnNames``, which
+    /// is `CodingKeys` order and is checked against the schema.
+    public static var sqlInsert: String {
+        return "INSERT INTO `\(self.databaseTableName)` (\(self.sqlColumnList)) "
+            + "VALUES (\(self.sqlPlaceholders))"
+    }
+
+    /// `SELECT *` for this record's table.
+    public static var sqlSelectAll: String {
+        return "SELECT * FROM `\(self.databaseTableName)`"
     }
 }

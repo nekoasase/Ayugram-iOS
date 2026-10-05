@@ -19,8 +19,10 @@ CHECKS = [
      ["tools/gen_swift_schema.py", "--check"]),
     ("Android database importer reaches the final schema",
      ["tools/verify_importer.py"]),
-    ("GRDB entities match the verified schema",
+    ("records match the verified schema",
      ["tools/verify_models.py"]),
+    ("generated row/SQL mapping matches schema and records",
+     ["tools/gen_swift_dao.py", "--check"]),
 ]
 
 
