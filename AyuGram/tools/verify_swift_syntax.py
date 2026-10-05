@@ -21,6 +21,7 @@ Configuration:
 Run:  python tools/verify_swift_syntax.py
 """
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -30,9 +31,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+PATCH_DIR = ROOT / "patches"
+
+# The upstream tree is written for Swift 5.7+, and uses the shorthand
+# `if let x {` in hundreds of places. The Mac's parser predates it, so those
+# errors are expected — and each one is confirmed against its source line before
+# being tolerated, so a genuine "missing initializer" cannot hide among them.
+SHORTHAND_MESSAGE = "variable binding in a condition requires an initializer"
+SHORTHAND_RE = re.compile(r"\blet\s+[A-Za-z_][A-Za-z0-9_]*\s*(\{|,|else)")
+ERROR_RE = re.compile(r"^(?P<file>[^:]+):(?P<line>\d+):(?P<col>\d+): error: (?P<message>.*)$")
+
 # Module trees that contain handwritten Swift. All of them are checked, including
 # the generated ones, because a generator bug is just as fatal as a typo.
-SOURCE_DIRS = ["Database", "AyuSettings", "AyuArchive"]
+SOURCE_DIRS = ["Database", "AyuSettings", "AyuArchive", "AyuFilters", "AyuAds"]
 
 # Files that depend on nothing else in the project, so they can be type-checked
 # without stubbing Postbox or sqlcipher. This mirrors the build, which compiles
@@ -170,8 +181,128 @@ def main():
                 return 1
             print(f"[PASS] {len(strict_files)} self-contained file(s) type-check with "
                   f"-warnings-as-errors: {', '.join(strict_files)}")
+
+        # --- the files our patches touch -----------------------------------
+        # A patch can break syntax in ways nothing else here would notice: the patch
+        # set is checked for *consistency*, never compiled. These files live in the
+        # upstream tree and import modules that cannot be built on macOS 10.15, but
+        # `-parse` stops before name binding, so it works on them anyway.
+        if not check_patched_files(target):
+            print("RESULT: 1 FAILED")
+            return 1
+
         print("RESULT: syntax verified")
         return 0
+
+
+def find_checkout():
+    """The Telegram-iOS checkout the patch set applies to."""
+    candidates = []
+    if os.environ.get("AYUGRAM_REPO"):
+        candidates.append(Path(os.environ["AYUGRAM_REPO"]))
+    candidates += [ROOT.parent / "Telegram-iOS", Path(r"D:\ayugram-src\Telegram-iOS")]
+    for candidate in candidates:
+        if (candidate / ".git").exists() and (candidate / "submodules" / "TelegramCore").exists():
+            return candidate
+    return None
+
+
+def patched_swift_files():
+    """Swift files the patch set modifies, taken from the patches themselves."""
+    paths = []
+    for patch in sorted(PATCH_DIR.glob("*.patch")):
+        for line in patch.read_text(encoding="utf-8").splitlines():
+            if line.startswith("+++ b/"):
+                path = line[len("+++ b/"):].strip()
+                if path.endswith(".swift"):
+                    paths.append(path)
+    return sorted(set(paths))
+
+
+def check_patched_files(target):
+    """Parse the upstream files our patches touch.
+
+    A patch can break syntax in a way nothing else here would notice: the patch set
+    is only ever checked for consistency, never compiled. These files import modules
+    that cannot be built on macOS 10.15, but `-parse` stops before name binding, so
+    it works on them regardless.
+    """
+    paths = patched_swift_files()
+    print()
+    print(f"patched upstream files: {len(paths)} Swift file(s) referenced by the patch set")
+    if not paths:
+        print("[SKIP] the patch set references no Swift files")
+        return True
+
+    checkout = find_checkout()
+    if checkout is None:
+        print("[SKIP] no Telegram-iOS checkout found; patched files not parsed")
+        print("       (set AYUGRAM_REPO to enable it)")
+        return True
+
+    remote = f"{REMOTE_DIR}-patched"
+
+    with tempfile.TemporaryDirectory(prefix="ayugram-patched-") as temp:
+        stage = Path(temp)
+        staged = {}
+        for index, relative in enumerate(paths):
+            source = checkout / relative
+            if not source.exists():
+                print(f"[FAIL] patched file missing from the checkout: {relative}")
+                return False
+            # Flat staging with an index prefix: two patched files could share a
+            # basename, and errors have to be mapped back to the right file.
+            name = f"{index:02d}_{source.name}"
+            shutil.copy2(source, stage / name)
+            staged[name] = source
+
+        subprocess.run(ssh_base() + [target, f"rm -rf {remote} && mkdir -p {remote}"],
+                       capture_output=True, text=True)
+        copy = subprocess.run(
+            ["scp", "-i", key_path(), "-o", "BatchMode=yes",
+             "-o", "StrictHostKeyChecking=accept-new",
+             *[str(p) for p in sorted(stage.iterdir())], f"{target}:{remote}/"],
+            capture_output=True, text=True,
+        )
+        if copy.returncode != 0:
+            print(f"[FAIL] scp of patched files failed: {copy.stderr.strip()[:200]}")
+            return False
+
+        result = subprocess.run(
+            ssh_base() + [target, f"cd {remote} && swiftc -parse *.swift 2>&1; echo \"PARSE_EXIT=$?\""],
+            capture_output=True, text=True,
+        )
+        output = (result.stdout or "") + (result.stderr or "")
+
+    tolerated = 0
+    real = []
+    for line in output.splitlines():
+        match = ERROR_RE.match(line.strip())
+        if not match:
+            continue
+        message = match.group("message")
+        source = staged.get(Path(match.group("file")).name)
+        if message == SHORTHAND_MESSAGE and source is not None:
+            try:
+                offending = source.read_text(encoding="utf-8").splitlines()[int(match.group("line")) - 1]
+            except (OSError, IndexError):
+                offending = ""
+            # Only tolerate it when the source line really is the newer shorthand.
+            if SHORTHAND_RE.search(offending):
+                tolerated += 1
+                continue
+        real.append((Path(match.group("file")).name, message))
+
+    if tolerated:
+        print(f"[PASS] {tolerated} error(s) are Swift 5.7 shorthand bindings that the "
+              f"macOS 10.15 parser predates, each confirmed against its source line")
+    if real:
+        print(f"[FAIL] {len(real)} real syntax error(s) in patched files")
+        for name, message in real:
+            print(f"   {name}: {message}")
+        return False
+    print(f"[PASS] all {len(paths)} patched file(s) parse cleanly")
+    return True
 
 
 if __name__ == "__main__":
