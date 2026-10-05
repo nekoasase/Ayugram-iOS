@@ -54,7 +54,7 @@ public final class AyuArchiveStore {
             WHERE `userId` = ? AND `dialogId` = ?
             """
         var arguments: [AyuSqliteValue] = [.integer(accountId), .integer(dialogId)]
-        if let beforeMessageId {
+        if let beforeMessageId = beforeMessageId {
             sql += " AND `messageId` < ?"
             arguments.append(.integer(Int64(beforeMessageId)))
         }

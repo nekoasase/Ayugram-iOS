@@ -27,6 +27,10 @@ CHECKS = [
      ["tools/verify_patches.py"]),
     ("CI workflows are valid and their inline scripts compile",
      ["tools/verify_workflows.py"]),
+    ("Swift sources parse with a real compiler (needs the Mac; skipped if absent)",
+     ["tools/verify_swift_syntax.py"]),
+    ("Ghost Mode behaviour tests run on the Mac (skipped if absent)",
+     ["tools/verify_mac_tests.py"]),
 ]
 
 

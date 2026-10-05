@@ -80,7 +80,9 @@ public final class AyuSettings {
     }
 
     private func registerDefaults() {
-        var values: [String: Any] = [
+        // `let`, not `var`: every module in this tree builds with
+        // -warnings-as-errors, so a never-mutated `var` would fail the build.
+        let values: [String: Any] = [
             Keys.ghostModeEnabled.rawValue: false,
             Keys.ghostModeStories.rawValue: false,
             Keys.ghostModeSendOnline.rawValue: true,

@@ -76,11 +76,11 @@ public final class AyuArchiveRecorder {
         }
 
         self.lock.lock()
-        let accountId = self.accountId
-        let store = self.store
+        let currentAccountId = self.accountId
+        let currentStore = self.store
         self.lock.unlock()
 
-        guard let accountId, let store else {
+        guard let accountId = currentAccountId, let store = currentStore else {
             return
         }
 

@@ -70,7 +70,7 @@ public struct AyuSqliteError: Error, CustomStringConvertible {
     }
 
     public var description: String {
-        if let sql {
+        if let sql = sql {
             return "AyuSqliteError: \(self.message) [sql: \(sql)]"
         }
         return "AyuSqliteError: \(self.message)"
@@ -177,7 +177,7 @@ public final class AyuSqlite {
         var handle: OpaquePointer?
         let flags = SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX
         guard sqlite3_open_v2(path, &handle, flags, nil) == SQLITE_OK else {
-            if let handle {
+            if let handle = handle {
                 sqlite3_close(handle)
             }
             return nil
