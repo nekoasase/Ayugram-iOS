@@ -31,8 +31,12 @@ function Fail($msg) { Write-Host "ERROR: $msg" -ForegroundColor Red; exit 1 }
 
 # 1. Authentication -----------------------------------------------------------
 Say 'Checking GitHub CLI authentication'
-$auth = gh auth status 2>&1 | Out-String
-if ($LASTEXITCODE -ne 0 -or $auth -match 'invalid' -or $auth -match 'Failed to log in') {
+$previousPreference = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+$auth = (& gh auth status 2>&1 | Out-String)
+$authCode = $LASTEXITCODE
+$ErrorActionPreference = $previousPreference
+if ($authCode -ne 0 -or $auth -match 'invalid' -or $auth -match 'Failed to log in') {
     Fail @"
 GitHub CLI is not authenticated. Run once (opens a browser):
 
