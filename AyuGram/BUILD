@@ -13,6 +13,8 @@
 #   //AyuGram/AyuSettings:AyuSettings - feature flags, including Ghost Mode policy
 #   //AyuGram/AyuArchive:AyuArchive   - anti-delete and edited-history recorder
 #   //AyuGram/AyuFilters:AyuFilters   - regex filter matching
+#   //AyuGram/AyuFilterBridge:AyuFilterBridge - filter-table lookup for the UI and chat hook
+#   //AyuGram/AyuGramUI:AyuGramUI     - screens: archive, readers, filters, import
 #
 # The schema was recovered from vanilla-ayuGram-universal-20250101.apk; see
 # AyuGram/docs/PORT-MAP.md for the feature map and the source-verified hook

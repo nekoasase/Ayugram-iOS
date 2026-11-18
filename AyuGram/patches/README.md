@@ -32,6 +32,10 @@ Revert with `apply-patches.sh -R .`.
 | `0003-ghost-mode-read-receipts` | `.../State/SynchronizePeerReadState.swift` | suppresses `messages.readHistory` and `channels.readHistory`; the dialog is still marked read **locally** |
 | `0004-ghost-mode-typing` | `.../State/ManagedLocalInputActivities.swift` | suppresses `messages.setTyping` |
 | `0005-ghost-mode-stories` | `.../TelegramEngine/Messages/TelegramEngineMessages.swift` | suppresses story views via AyuGram's own switch, independent of Swiftgram's stealth mode |
+| `0013-settings-ui-screens` | `Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift` | adds the Deleted Messages / Regex Filters / Import Archive rows that push the screens from `AyuGram/AyuGramUI` |
+| `0014-settings-ui-deps` | `Swiftgram/SGSettingsUI/BUILD` | adds the `AyuGramUI` dependency |
+| `0015-chat-history-filter` | `submodules/TelegramUI/Sources/ChatHistoryEntriesForView.swift` | drops messages matching the user's regex filters before a `ChatMessageItem` is built |
+| `0016-chat-history-deps` | `submodules/TelegramUI/BUILD` | adds the `AyuFilterBridge` dependency |
 
 Every hunk is marked `// MARK: AyuGram` (or `# MARK: AyuGram` in Bazel files),
 matching the existing `// MARK: Swiftgram` convention, so `git log -p -S"AyuGram"`

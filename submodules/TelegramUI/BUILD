@@ -79,6 +79,9 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = sgdeps + [
+        # MARK: AyuGram
+        # Regex filters are applied while building chat history entries.
+        "//AyuGram/AyuFilterBridge:AyuFilterBridge",
         "//third-party/recaptcha:RecaptchaEnterprise",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/SSignalKit/SSignalKit:SSignalKit",

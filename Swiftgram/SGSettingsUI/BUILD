@@ -17,8 +17,10 @@ swift_library(
     ],
     deps = [
         # MARK: AyuGram
-        # The AyuGram section of this screen reads and writes AyuSettings.
+        # The AyuGram section of this screen reads and writes AyuSettings and
+        # pushes the archive / filter screens from AyuGramUI.
         "//AyuGram/AyuSettings:AyuSettings",
+        "//AyuGram/AyuGramUI:AyuGramUI",
         "//Swiftgram/SGItemListUI:SGItemListUI",
         "//Swiftgram/SGLogging:SGLogging",
         "//Swiftgram/SGSimpleSettings:SGSimpleSettings",

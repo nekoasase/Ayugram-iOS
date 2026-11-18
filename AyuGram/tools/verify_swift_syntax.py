@@ -43,7 +43,7 @@ ERROR_RE = re.compile(r"^(?P<file>[^:]+):(?P<line>\d+):(?P<col>\d+): error: (?P<
 
 # Module trees that contain handwritten Swift. All of them are checked, including
 # the generated ones, because a generator bug is just as fatal as a typo.
-SOURCE_DIRS = ["Database", "AyuSettings", "AyuArchive", "AyuFilters", "AyuAds"]
+SOURCE_DIRS = ["Database", "AyuSettings", "AyuArchive", "AyuFilters", "AyuAds", "AyuFilterBridge", "AyuGramUI"]
 
 # Files that depend on nothing else in the project, so they can be type-checked
 # without stubbing Postbox or sqlcipher. This mirrors the build, which compiles

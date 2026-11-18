@@ -1,0 +1,14 @@
+diff --git a/submodules/TelegramUI/BUILD b/submodules/TelegramUI/BUILD
+index 23dc192c..3b595716 100644
+--- a/submodules/TelegramUI/BUILD
++++ b/submodules/TelegramUI/BUILD
+@@ -79,6 +79,9 @@ swift_library(
+         "-warnings-as-errors",
+     ],
+     deps = sgdeps + [
++        # MARK: AyuGram
++        # Regex filters are applied while building chat history entries.
++        "//AyuGram/AyuFilterBridge:AyuFilterBridge",
+         "//third-party/recaptcha:RecaptchaEnterprise",
+         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+         "//submodules/SSignalKit/SSignalKit:SSignalKit",

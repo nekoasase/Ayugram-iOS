@@ -5,6 +5,7 @@ import SGStrings
 import SGAPIToken
 // MARK: AyuGram
 import AyuSettings
+import AyuGramUI
 
 import SGItemListUI
 import Foundation
@@ -140,6 +141,10 @@ private enum SGSliderSetting: String {
 private enum SGDisclosureLink: String {
     case contentSettings
     case languageSettings
+    // MARK: AyuGram
+    case ayuDeletedMessages
+    case ayuFilters
+    case ayuImportArchive
 }
 
 private struct PeerNameColorScreenState: Equatable {
@@ -358,6 +363,12 @@ private func SGControllerEntries(presentationData: PresentationData, callListSet
     entries.append(.notice(id: id.count, section: .ayugram, text: "Records who read a message and when. Telegram does not report the reader for read contents in groups, so those are stored without one."))
     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuAdBlockSponsored, value: AyuSettings.shared.adBlockEnabled, text: "Block Sponsored Messages", enabled: true))
     entries.append(.notice(id: id.count, section: .ayugram, text: "Hides sponsored posts in channels. Filter lists and web content blocking are not implemented."))
+
+    // MARK: AyuGram
+    // The screens that make the collected data usable.
+    entries.append(.disclosure(id: id.count, section: .ayugram, link: .ayuDeletedMessages, text: "Deleted Messages"))
+    entries.append(.disclosure(id: id.count, section: .ayugram, link: .ayuFilters, text: "Regex Filters"))
+    entries.append(.disclosure(id: id.count, section: .ayugram, link: .ayuImportArchive, text: "Import Android Archive"))
     
     return filterSGItemListUIEntrires(entries: entries, by: state.searchQuery)
 }
@@ -739,6 +750,13 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
                     }
                     strongContext.sharedContext.applicationBindings.openUrl(url)
                 })
+            // MARK: AyuGram
+            case .ayuDeletedMessages:
+                pushControllerImpl?(ayuDeletedMessagesController(context: context))
+            case .ayuFilters:
+                pushControllerImpl?(ayuFiltersController(context: context))
+            case .ayuImportArchive:
+                pushControllerImpl?(ayuArchiveImportController(context: context))
         }
     }, searchInput: { searchQuery in
         updateState { state in

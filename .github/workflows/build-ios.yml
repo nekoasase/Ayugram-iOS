@@ -68,7 +68,13 @@ jobs:
     runs-on: ${{ inputs.runner || 'macos-26' }}
     timeout-minutes: 360
     steps:
+      # MARK: AyuGram
+      # MODULE.bazel uses local_path_override() for rules_apple / rules_swift /
+      # apple_support / rules_xcodeproj, which live in submodules. Without a
+      # recursive checkout Bazel fails before compiling a single source file.
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Verify patch layer (no toolchain needed)
         run: python3 AyuGram/tools/verify_all.py

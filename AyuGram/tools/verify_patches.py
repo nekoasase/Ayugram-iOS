@@ -46,6 +46,9 @@ EXPECTED_TARGETS = {
     "submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift",
     "Swiftgram/SGSettingsUI/BUILD",
     "Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift",
+    # MARK: AyuGram - UI screens and the chat-history filter hook.
+    "submodules/TelegramUI/BUILD",
+    "submodules/TelegramUI/Sources/ChatHistoryEntriesForView.swift",
 }
 
 TARGET_RE = re.compile(r"^\+\+\+ b/(.+)$", re.MULTILINE)

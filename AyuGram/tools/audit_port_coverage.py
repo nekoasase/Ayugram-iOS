@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 INVENTORY = ROOT / "docs" / "apk-ayu-inventory.txt"
 PATCH_DIR = ROOT / "patches"
 
-SOURCE_DIRS = ["Database", "AyuSettings", "AyuArchive", "AyuFilters", "AyuAds"]
+SOURCE_DIRS = ["Database", "AyuSettings", "AyuArchive", "AyuFilters", "AyuAds", "AyuFilterBridge", "AyuGramUI"]
 
 # Inventory group header, e.g. "===== Ghost mode keys (43) =====". The trailing
 # count is optional: the checklist section has none.
@@ -60,9 +60,9 @@ FEATURES = [
     },
     {
         "group": "Regex filters",
-        "status": "partial",
-        "markers": ["AyuFilterEngine", "isReversed", "isFiltered"],
-        "note": "engine done and executed in tests; not yet applied to the chat view",
+        "status": "implemented",
+        "markers": ["AyuFilterEngine", "isReversed", "isFiltered", "AyuFilterBridge", "ayuFiltersController"],
+        "note": "engine, management UI and chat-history hook are all present; per-dialog scope and exclusions are handled by the bridge",
     },
     {
         "group": "Adblock",
@@ -89,7 +89,8 @@ FEATURES = [
         # being checked, and a mention of its name in a comment would not prove it.
         "markers": ['module_name = "AyuArchive"', 'module_name = "AyuSettings"',
                     'module_name = "AyuFilters"', 'module_name = "AyuAds"',
-                    'module_name = "AyuDatabase"'],
+                    'module_name = "AyuDatabase"', 'module_name = "AyuFilterBridge"',
+                    'module_name = "AyuGramUI"'],
         "note": "the patch layer itself; see the port checklist below for the per-class mapping",
     },
     {

@@ -12,6 +12,8 @@ import TextFormat
 import Markdown
 import Display
 import TelegramStringFormatting
+// MARK: AyuGram
+import AyuFilterBridge
 
 struct ChatHistoryEntriesForViewState {
     private var messageStableIdToLocalId: [UInt32: Int64] = [:]
@@ -151,6 +153,18 @@ func chatHistoryEntriesForView(
         }
         
         if pendingRemovedMessages.contains(message.id) {
+            continue
+        }
+        
+        // MARK: AyuGram
+        // Regex filters: hide a message before a ChatMessageItem is built.
+        // The bridge caches the filter tables, so this is a pure in-memory check
+        // on the render path; it also re-reads the DB when the account changes.
+        if AyuFilterBridge.shared.isFiltered(
+            message.text,
+            dialogId: message.id.peerId.toInt64(),
+            accountId: context.account.peerId.toInt64()
+        ) {
             continue
         }
         
