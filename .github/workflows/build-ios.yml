@@ -254,21 +254,26 @@ jobs:
         if: ${{ always() && !contains(inputs.configuration || 'release_sim_arm64', 'sim') }}
         run: |
           set -euo pipefail
-          APP=$(find . -maxdepth 6 -name '*.app' -type d | head -1 || true)
-          if [ -z "$APP" ]; then
-            echo "::warning::no .app was produced, so no IPA can be packaged (the build probably failed)"
-            exit 0
+          # MARK: AyuGram
+          # bazel-bin is a symlink, so a plain `find` misses the IPA Bazel
+          # already produced. Prefer that file; only build one from a .app if
+          # the build configuration did not emit an IPA.
+          IPA=$(find -L . -maxdepth 8 -name 'Swiftgram.ipa' -type f 2>/dev/null | head -1 || true)
+          if [ -n "$IPA" ]; then
+            echo "using Bazel IPA: $IPA"
+            cp "$IPA" ayugram.ipa
+          else
+            APP=$(find -L . -maxdepth 8 -name '*.app' -type d 2>/dev/null | head -1 || true)
+            if [ -z "$APP" ]; then
+              echo "::warning::no .app or .ipa was produced, so no IPA can be packaged"
+              exit 0
+            fi
+            echo "packaging: $APP"
+            rm -rf Payload
+            mkdir -p Payload
+            cp -R "$APP" Payload/
+            /usr/bin/zip -qry ayugram.ipa Payload
           fi
-
-          echo "packaging: $APP"
-          echo "--- signature status (unsigned is expected) ---"
-          codesign -dv "$APP" 2>&1 | head -5 || true
-
-          rm -rf Payload ayugram.ipa
-          mkdir -p Payload
-          cp -R "$APP" Payload/
-          # An .ipa is a zip whose root contains Payload/<App>.app.
-          /usr/bin/zip -qry ayugram.ipa Payload
           ls -lh ayugram.ipa
           echo "IPA_PATH=$PWD/ayugram.ipa" >> "$GITHUB_ENV"
 
