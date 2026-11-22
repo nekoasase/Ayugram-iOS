@@ -51,6 +51,7 @@ EXPECTED_TARGETS = {
     "submodules/TelegramUI/Sources/ChatHistoryEntriesForView.swift",
     # MARK: AyuGram - sideload-compatible entitlements.
     "Telegram/BUILD",
+    "submodules/TelegramUI/Sources/AppDelegate.swift",
 }
 
 TARGET_RE = re.compile(r"^\+\+\+ b/(.+)$", re.MULTILINE)
