@@ -510,7 +510,11 @@ official_carplay_fragment = """
 <key>com.apple.developer.carplay-messaging</key>
 <true/>
 """
-carplay_fragment = official_carplay_fragment # MARK: Swiftgram if telegram_bundle_id in official_bundle_ids else ""
+# MARK: AyuGram
+# A free Apple ID (sideload) does not grant carplay-messaging or
+# communication-notification entitlements. Keeping them in the binary makes
+# iOS reject the re-signed app with a black screen.
+carplay_fragment = ""
 
 icloud_fragment = "" if not telegram_enable_icloud else """
 <key>com.apple.developer.icloud-services</key>
@@ -555,11 +559,10 @@ aps_fragment = "" if telegram_aps_environment == "" else """
 <string>{telegram_aps_environment}</string>
 """.format(telegram_aps_environment=telegram_aps_environment)
 
+# MARK: AyuGram
+# App groups need a paid developer account; a sideloaded app must request only
+# the application-identifier that any provisioning profile grants.
 app_groups_fragment = """
-    <key>com.apple.security.application-groups</key>
-    <array>
-        <string>group.{telegram_bundle_id}</string>
-    </array>
     <key>application-identifier</key>
     <string>{telegram_team_id}.{telegram_bundle_id}</string>
 """.format(
@@ -571,7 +574,8 @@ official_communication_notifications_fragment = """
 <key>com.apple.developer.usernotifications.communication</key>
 <true/>
 """
-communication_notifications_fragment = official_communication_notifications_fragment # if telegram_bundle_id in official_bundle_ids else ""
+# MARK: AyuGram
+communication_notifications_fragment = ""
 
 official_notification_filtering_fragment = """
 <key>com.apple.developer.usernotifications.filtering</key>

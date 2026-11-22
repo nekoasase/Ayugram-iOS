@@ -49,6 +49,8 @@ EXPECTED_TARGETS = {
     # MARK: AyuGram - UI screens and the chat-history filter hook.
     "submodules/TelegramUI/BUILD",
     "submodules/TelegramUI/Sources/ChatHistoryEntriesForView.swift",
+    # MARK: AyuGram - sideload-compatible entitlements.
+    "Telegram/BUILD",
 }
 
 TARGET_RE = re.compile(r"^\+\+\+ b/(.+)$", re.MULTILINE)
