@@ -277,9 +277,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ayugram-ios-${{ inputs.configuration || 'release_sim_arm64' }}-${{ github.run_number }}
+          # MARK: AyuGram
+          # Only the re-signable IPA is useful here. Uploading every *.app
+          # bundle made the artifact almost 2 GB.
           path: |
             ayugram.ipa
-            build/artifacts/**
-            **/*.app
           if-no-files-found: warn
           retention-days: 14
