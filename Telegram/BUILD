@@ -348,14 +348,15 @@ composer_icon_folders = ["Swiftgram"]
     ) for name in alternate_icon_folders
 ]
 
-[
-    filegroup(
-        name = "{}_icon".format(name),
-        srcs = glob([
-            "Telegram-iOS/{}.icon/**/*".format(name),
-        ]),
-    ) for name in composer_icon_folders
-]
+# MARK: AyuGram
+# A plain appiconset with the user's own artwork; the stock Swiftgram.icon is
+# an Xcode SVG icon composition and ignored the PNG we replaced.
+filegroup(
+    name = "Swiftgram_icon",
+    srcs = glob([
+        "Telegram-iOS/Swiftgram.appiconset/**/*",
+    ]),
+)
 
 filegroup(
     name = "LaunchScreen",
