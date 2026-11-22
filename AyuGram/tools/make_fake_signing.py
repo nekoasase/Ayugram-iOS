@@ -66,6 +66,9 @@ def main():
             "get-task-allow": True,
             "keychain-access-groups": [args.team_id + ".*"],
             "com.apple.developer.team-identifier": args.team_id,
+            # Make.py reads this to pick the APNs environment. Development is
+            # what a free Apple ID sideload uses.
+            "aps-environment": "development",
         },
         "Name": "iOS Team Provisioning Profile: " + args.bundle_id,
         "ProvisionedDevices": [],
