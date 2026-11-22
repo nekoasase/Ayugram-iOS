@@ -176,7 +176,11 @@ jobs:
           config["api_id"] = api_id
           config["api_hash"] = api_hash
           config["bundle_id"] = f"org.{secrets.token_hex(8)}.AyuGram"
-          config["team_id"] = os.environ.get("TEAM_ID") or ""
+          # MARK: AyuGram
+          # rules_xcodeproj fails analysis when team_id is empty, even with
+          # --disableProvisioningProfiles. A placeholder is enough for an
+          # unsigned build that a sideloading tool re-signs later.
+          config["team_id"] = os.environ.get("TEAM_ID") or "AAAAAAAAAA"
 
           out = pathlib.Path("build-config")
           out.mkdir(exist_ok=True)
