@@ -381,7 +381,7 @@ private func ayuFilterEditController(
             return EmptyDisposable
         })
     } else {
-        existingPromise.set(.single(nil))
+        existingPromise.set(Signal<RegexFilter?, NoError>.single(nil))
     }
 
     let initialState = AyuFilterEditState(pattern: "", dialogIdText: "0", enabled: true, reversed: false, caseInsensitive: true)
