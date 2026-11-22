@@ -197,6 +197,7 @@ jobs:
             --cacheDir="$HOME/telegram-bazel-cache" \
             generateProject \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
+            --xcodeManagedCodesigning \
             --disableProvisioningProfiles
 
       - name: Build
@@ -207,6 +208,7 @@ jobs:
             --cacheDir="$HOME/telegram-bazel-cache" \
             build \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
+            --xcodeManagedCodesigning \
             --buildNumber="${{ github.run_number }}" \
             --configuration="${{ inputs.configuration || 'release_sim_arm64' }}" \
             --disableProvisioningProfiles
