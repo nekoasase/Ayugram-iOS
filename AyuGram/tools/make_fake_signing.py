@@ -77,7 +77,9 @@ def main():
     }
 
     unsigned = out / "unsigned.mobileprovision"
-    unsigned.write_bytes(plistlib.dumps(profile, fmt=plistlib.FMT_BINARY))
+    # Make.py pipes `openssl smime` output through a UTF-8 decoder, so the
+    # embedded plist must be XML rather than a binary plist.
+    unsigned.write_bytes(plistlib.dumps(profile, fmt=plistlib.FMT_XML))
     signed = profiles / "Telegram.mobileprovision"
     run("openssl", "smime", "-sign", "-binary", "-nodetach",
         "-in", unsigned, "-out", signed, "-outform", "DER",
