@@ -28,6 +28,16 @@ $remoteUrl = "https://github.com/$Repo.git"
 
 function Say($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Fail($msg) { Write-Host "ERROR: $msg" -ForegroundColor Red; exit 1 }
+# Native tools write warnings to stderr; with ErrorActionPreference=Stop PowerShell
+# would turn those into terminating errors. Silence stderr only for those calls.
+function Invoke-Native([string[]]$argv) {
+    $previousPreference = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    & $argv[0] @($argv[1..($argv.Length - 1)]) 2>$null
+    $code = $LASTEXITCODE
+    $ErrorActionPreference = $previousPreference
+    return $code
+}
 
 # 1. Authentication -----------------------------------------------------------
 Say 'Checking GitHub CLI authentication'
@@ -70,8 +80,8 @@ if ($LASTEXITCODE -ne 0) { Fail 'could not change the default branch' }
 
 # 4. Push ---------------------------------------------------------------------
 Say 'Configuring remote and pushing'
-& $git -C $checkout remote remove ayu 2>$null
-& $git -C $checkout remote add ayu $remoteUrl
+Invoke-Native @($git, '-C', $checkout, 'remote', 'remove', 'ayu') | Out-Null
+Invoke-Native @($git, '-C', $checkout, 'remote', 'add', 'ayu', $remoteUrl) | Out-Null
 & $git -C $checkout push -u ayu $Branch
 if ($LASTEXITCODE -ne 0) { Fail 'git push failed' }
 
