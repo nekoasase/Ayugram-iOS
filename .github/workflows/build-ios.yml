@@ -215,7 +215,8 @@ jobs:
             --xcodeManagedCodesigning \
             --buildNumber="${{ github.run_number }}" \
             --configuration="${{ inputs.configuration || 'release_sim_arm64' }}" \
-            --disableExtensions
+            --disableExtensions \
+            --disableProvisioningProfiles
 
       - name: Locate build products
         if: always()

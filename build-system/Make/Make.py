@@ -712,6 +712,8 @@ def build(bazel, arguments):
     # MARK: AyuGram
     if getattr(arguments, 'disableExtensions', False):
         bazel_command_line.set_disable_extensions()
+    if getattr(arguments, 'disableProvisioningProfiles', False):
+        bazel_command_line.set_disable_provisioning_profiles()
     bazel_command_line.set_profile_swift(arguments.profileSwift)
 
     bazel_command_line.set_split_swiftmodules(arguments.enableParallelSwiftmoduleGeneration)
@@ -1059,6 +1061,13 @@ if __name__ == '__main__':
         action='store_true',
         default=False,
         help='Skip extension targets (no provisioning profiles on unsigned CI builds).'
+    )
+    # MARK: AyuGram
+    buildParser.add_argument(
+        '--disableProvisioningProfiles',
+        action='store_true',
+        default=False,
+        help='Build without provisioning profiles (unsigned device build for sideloading).'
     )
     buildParser.add_argument(
         '--configuration',
