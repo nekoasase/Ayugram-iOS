@@ -53,8 +53,8 @@ private enum AyuReadersEntry: ItemListNodeEntry {
             return a == b && at == bt
         case let (.empty(a, at), .empty(b, bt)):
             return a == b && at == bt
-        case let (.reader(as, ai, ar), .reader(bs, bi, br)):
-            return as == bs && ai == bi && ar == br
+        case let (.reader(aSection, ai, ar), .reader(bSection, bi, br)):
+            return aSection == bSection && ai == bi && ar == br
         default:
             return false
         }
