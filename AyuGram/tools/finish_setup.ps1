@@ -80,10 +80,16 @@ if ($LASTEXITCODE -ne 0) { Fail 'could not change the default branch' }
 
 # 4. Push ---------------------------------------------------------------------
 Say 'Configuring remote and pushing'
+$token = (& gh auth token).Trim()
+if ([string]::IsNullOrWhiteSpace($token)) { Fail 'gh auth token is empty' }
+$authUrl = "https://x-access-token:$token@github.com/$Repo.git"
 Invoke-Native @($git, '-C', $checkout, 'remote', 'remove', 'ayu') | Out-Null
-Invoke-Native @($git, '-C', $checkout, 'remote', 'add', 'ayu', $remoteUrl) | Out-Null
+Invoke-Native @($git, '-C', $checkout, 'remote', 'add', 'ayu', $authUrl) | Out-Null
 & $git -C $checkout push -u ayu $Branch
-if ($LASTEXITCODE -ne 0) { Fail 'git push failed' }
+$pushCode = $LASTEXITCODE
+# Never leave the token in .git/config.
+Invoke-Native @($git, '-C', $checkout, 'remote', 'set-url', 'ayu', $remoteUrl) | Out-Null
+if ($pushCode -ne 0) { Fail 'git push failed' }
 
 # 5. Device build -------------------------------------------------------------
 if (-not $SkipBuild) {
