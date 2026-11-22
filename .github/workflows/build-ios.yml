@@ -192,6 +192,25 @@ jobs:
           print(f"placeholder credentials: {placeholder}", file=sys.stderr)
           PY
 
+      # MARK: AyuGram
+      # rules_apple cannot build a device target without a provisioning profile.
+      # Generate a throwaway self-signed one; Sideloadly re-signs the IPA later.
+      - name: Create self-signed signing material
+        run: |
+          set -euo pipefail
+          BUNDLE_ID=$(python3 -c 'import json;print(json.load(open("build-config/ci.json"))["bundle_id"])')
+          TEAM_ID=$(python3 -c 'import json;print(json.load(open("build-config/ci.json"))["team_id"])')
+          python3 AyuGram/tools/make_fake_signing.py \
+            --output-dir "$GITHUB_WORKSPACE/fake-signing" \
+            --team-id "$TEAM_ID" --bundle-id "$BUNDLE_ID"
+          security create-keychain -p ayugram build.keychain
+          security import "$GITHUB_WORKSPACE/fake-signing/certs/cert.p12" \
+            -k build.keychain -P ayugram -T /usr/bin/codesign
+          security set-keychain-settings -lut 21600 build.keychain
+          security unlock-keychain -p ayugram build.keychain
+          security list-keychains -d user -s build.keychain $(security list-keychains -d user | tr -d '"')
+          security set-key-partition-list -S apple-tool:,apple: -s -k ayugram build.keychain
+
       - name: Generate Xcode project
         run: |
           set -euo pipefail
@@ -201,8 +220,7 @@ jobs:
             --cacheDir="$HOME/telegram-bazel-cache" \
             generateProject \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
-            --xcodeManagedCodesigning \
-            --disableProvisioningProfiles
+            --codesigningInformationPath="$GITHUB_WORKSPACE/fake-signing"
 
       - name: Build
         run: |
@@ -212,11 +230,10 @@ jobs:
             --cacheDir="$HOME/telegram-bazel-cache" \
             build \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
-            --xcodeManagedCodesigning \
+            --codesigningInformationPath="$GITHUB_WORKSPACE/fake-signing" \
             --buildNumber="${{ github.run_number }}" \
             --configuration="${{ inputs.configuration || 'release_sim_arm64' }}" \
-            --disableExtensions \
-            --disableProvisioningProfiles
+            --disableExtensions
 
       - name: Locate build products
         if: always()
