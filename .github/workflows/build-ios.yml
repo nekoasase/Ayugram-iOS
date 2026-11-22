@@ -214,7 +214,8 @@ jobs:
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
             --xcodeManagedCodesigning \
             --buildNumber="${{ github.run_number }}" \
-            --configuration="${{ inputs.configuration || 'release_sim_arm64' }}"
+            --configuration="${{ inputs.configuration || 'release_sim_arm64' }}" \
+            --disableExtensions
 
       - name: Locate build products
         if: always()
