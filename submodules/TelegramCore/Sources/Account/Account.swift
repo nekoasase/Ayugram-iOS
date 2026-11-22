@@ -5,6 +5,8 @@ import MtProtoKit
 import TelegramApi
 import CryptoUtils
 import EncryptionProvider
+// MARK: AyuGram
+import AyuArchive
 
 private let accountRecordToActiveKeychainId = Atomic<[AccountRecordId: Int]>(value: [:])
 
