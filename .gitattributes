@@ -1,3 +1,17 @@
+# MARK: AyuGram
+# Keep text files LF on every platform: the AyuGram checks reject CRLF, and a
+# default Windows checkout would otherwise convert them.
+*.swift text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.txt text eol=lf
+*.patch text eol=lf
+*.json text eol=lf
+*.sql text eol=lf
+
 # Linguist overrides for vendored code
 submodules/AsyncDisplayKit/* linguist-vendored
 submodules/ffmpeg/* linguist-vendored
