@@ -66,9 +66,26 @@ def main():
             "get-task-allow": True,
             "keychain-access-groups": [args.team_id + ".*"],
             "com.apple.developer.team-identifier": args.team_id,
+            "com.apple.security.application-groups": ["group." + args.bundle_id],
             # Make.py reads this to pick the APNs environment. Development is
             # what a free Apple ID sideload uses.
             "aps-environment": "development",
+            # rules_apple validates that every key in the app's entitlements is
+            # also present in the profile. The app requests all of these (some
+            # conditionally), so allow them all on the throwaway profile.
+            "com.apple.developer.carplay-messaging": True,
+            "com.apple.developer.usernotifications.communication": True,
+            "com.apple.developer.usernotifications.filtering": True,
+            "com.apple.developer.pushkit.unrestricted-voip": True,
+            "com.apple.developer.siri": True,
+            "com.apple.developer.applesignin": ["Default"],
+            "com.apple.developer.icloud-services": ["CloudKit", "CloudDocuments"],
+            "com.apple.developer.icloud-container-identifiers": ["iCloud." + args.bundle_id],
+            "com.apple.developer.ubiquity-kvstore-identifier": application_id,
+            "com.apple.developer.icloud-container-environment": "Development",
+            "com.apple.developer.associated-domains": [],
+            "com.apple.developer.in-app-payments": [],
+            "com.apple.developer.background-tasks.continued-processing.gpu": True,
         },
         "Name": "iOS Team Provisioning Profile: " + args.bundle_id,
         "ProvisionedDevices": [],
