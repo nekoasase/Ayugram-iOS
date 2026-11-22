@@ -43,7 +43,9 @@ def main():
 
     run("openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes",
         "-keyout", key, "-out", cer, "-days", "3650",
-        "-subj", "/CN=AyuGram CI")
+        "-subj", "/CN=AyuGram CI",
+        "-addext", "extendedKeyUsage=codeSigning",
+        "-addext", "keyUsage=digitalSignature")
     run("openssl", "x509", "-in", cer, "-outform", "DER", "-out", der)
     # macOS `security import` cannot read OpenSSL 3's default AES/PBKDF2 PKCS#12.
     # Force the legacy PBE-SHA1-3DES / SHA1 layout it understands.

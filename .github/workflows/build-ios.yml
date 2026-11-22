@@ -204,12 +204,15 @@ jobs:
             --output-dir "$GITHUB_WORKSPACE/fake-signing" \
             --team-id "$TEAM_ID" --bundle-id "$BUNDLE_ID"
           security create-keychain -p ayugram build.keychain
-          security import "$GITHUB_WORKSPACE/fake-signing/certs/cert.p12" \
-            -k build.keychain -P ayugram -T /usr/bin/codesign
+          security default-keychain -s build.keychain
           security set-keychain-settings -lut 21600 build.keychain
           security unlock-keychain -p ayugram build.keychain
+          security import "$GITHUB_WORKSPACE/fake-signing/certs/cert.p12" \
+            -k build.keychain -P ayugram -T /usr/bin/codesign -A
           security list-keychains -d user -s build.keychain $(security list-keychains -d user | tr -d '"')
-          security set-key-partition-list -S apple-tool:,apple: -s -k ayugram build.keychain
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ayugram build.keychain
+          # Diagnostic: the codesigning step must see the throwaway identity.
+          security find-identity -v -p codesigning build.keychain
 
       - name: Generate Xcode project
         run: |
