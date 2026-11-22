@@ -45,8 +45,12 @@ def main():
         "-keyout", key, "-out", cer, "-days", "3650",
         "-subj", "/CN=AyuGram CI")
     run("openssl", "x509", "-in", cer, "-outform", "DER", "-out", der)
+    # macOS `security import` cannot read OpenSSL 3's default AES/PBKDF2 PKCS#12.
+    # Force the legacy PBE-SHA1-3DES / SHA1 layout it understands.
     run("openssl", "pkcs12", "-export", "-out", p12, "-inkey", key,
-        "-in", cer, "-passout", "pass:" + args.password)
+        "-in", cer, "-passout", "pass:" + args.password,
+        "-keypbe", "PBE-SHA1-3DES", "-certpbe", "PBE-SHA1-3DES",
+        "-macalg", "sha1")
 
     application_id = args.team_id + "." + args.bundle_id
     now = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
