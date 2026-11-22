@@ -220,7 +220,8 @@ jobs:
             --cacheDir="$HOME/telegram-bazel-cache" \
             generateProject \
             --configurationPath="$GITHUB_WORKSPACE/build-config/ci.json" \
-            --codesigningInformationPath="$GITHUB_WORKSPACE/fake-signing"
+            --codesigningInformationPath="$GITHUB_WORKSPACE/fake-signing" \
+            --disableExtensions
 
       - name: Build
         run: |
