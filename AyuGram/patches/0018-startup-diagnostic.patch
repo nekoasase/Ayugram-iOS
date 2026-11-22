@@ -1,29 +1,27 @@
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
-index f6aa39cc..0de46775 100644
+index 0de46775..9ac32dbe 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
 +++ b/submodules/TelegramUI/Sources/AppDelegate.swift
-@@ -73,6 +73,7 @@ private var testIsLaunched = false
- // Temporary startup diagnostic: shows a red overlay for 20 seconds so a
- // sideloaded build can report how far it got without a crash log.
- private var ayuDiagnosticWindow: UIWindow?
-+private var ayuLastException: String?
- private func ayuShowDiagnostic(_ message: String) {
-     let window = UIWindow(frame: UIScreen.main.bounds)
-     window.windowLevel = UIWindow.Level.alert + 1
-@@ -365,6 +366,16 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -586,7 +586,21 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          
-         // MARK: AyuGram
-         ayuShowDiagnostic("didFinishLaunching reached\nbundle: \(Bundle.main.bundleIdentifier ?? "nil")\nname: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "nil")\nios: \(UIDevice.current.systemVersion)")
-+        NSSetUncaughtExceptionHandler { exception in
-+            ayuLastException = "\(exception.name.rawValue): \(exception.reason ?? "nil")"
-+        }
-+        DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
-+            let windows = UIApplication.shared.windows.map { window -> String in
-+                let root = window.rootViewController.map { String(describing: type(of: $0)) } ?? "nil"
-+                return "\(String(describing: type(of: window))) root=\(root) hidden=\(window.isHidden)"
-+            }.joined(separator: "\n")
-+            ayuShowDiagnostic("stage t+8\nexception: \(ayuLastException ?? "none")\nwindows:\n\(windows)")
+         let baseAppBundleId = Bundle.main.bundleIdentifier!
+         let appGroupName = "group.\(baseAppBundleId)"
+-        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
++        // MARK: AyuGram
++        // A free Apple ID cannot grant app-group entitlements, so
++        // containerURL(forSecurityApplicationGroupIdentifier:) returns nil.
++        // The original code returned from didFinishLaunching at that point,
++        // leaving the window hidden ΓÇö a black screen. Fall back to the app's
++        // own Application Support directory.
++        var maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
++        if maybeAppGroupUrl == nil {
++            let fallback = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
++                .appendingPathComponent(baseAppBundleId, isDirectory: true)
++            if let fallback = fallback {
++                try? FileManager.default.createDirectory(at: fallback, withIntermediateDirectories: true, attributes: nil)
++            }
++            maybeAppGroupUrl = fallback
 +        }
          
-         let _ = voipTokenPromise.get().start(next: { token in
-             self.voipDeviceToken.set(.single(token))
+         let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
+         self.buildConfig = buildConfig

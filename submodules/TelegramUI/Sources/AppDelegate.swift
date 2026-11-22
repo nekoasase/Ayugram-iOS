@@ -586,7 +586,21 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         
         let baseAppBundleId = Bundle.main.bundleIdentifier!
         let appGroupName = "group.\(baseAppBundleId)"
-        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
+        // MARK: AyuGram
+        // A free Apple ID cannot grant app-group entitlements, so
+        // containerURL(forSecurityApplicationGroupIdentifier:) returns nil.
+        // The original code returned from didFinishLaunching at that point,
+        // leaving the window hidden — a black screen. Fall back to the app's
+        // own Application Support directory.
+        var maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
+        if maybeAppGroupUrl == nil {
+            let fallback = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
+                .appendingPathComponent(baseAppBundleId, isDirectory: true)
+            if let fallback = fallback {
+                try? FileManager.default.createDirectory(at: fallback, withIntermediateDirectories: true, attributes: nil)
+            }
+            maybeAppGroupUrl = fallback
+        }
         
         let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
         self.buildConfig = buildConfig
