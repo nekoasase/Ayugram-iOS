@@ -50,12 +50,64 @@ EXPECTED_TARGETS = {
     "submodules/TelegramUI/BUILD",
     "submodules/TelegramUI/Sources/ChatHistoryEntriesForView.swift",
     # MARK: AyuGram - sideload-compatible entitlements.
+    "Swiftgram/SGDebugUI/Sources/SGDebugUI.swift",
+    "Swiftgram/SGPayWall/Sources/SGPayWall.swift",
+    "Swiftgram/SGProUI/Sources/SGProUI.swift",
+    "Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift",
+    "Swiftgram/SGStrings/Strings/af.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/ar.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/ca.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/cs.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/da.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/de.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/el.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/en.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/es.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/fi.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/fr.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/he.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/hi.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/hu.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/id.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/it.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/ja.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/ko.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/nl.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/no.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/pl.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/pt.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/ro.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/ru.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/sr.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/sv.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/tr.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/uk.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/uz.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/vi.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/zh-hans.lproj/SGLocalizable.strings",
+    "Swiftgram/SGStrings/Strings/zh-hant.lproj/SGLocalizable.strings",
     "Telegram/BUILD",
+    "submodules/ChatListUI/Sources/ChatListController.swift",
+    "submodules/DebugSettingsUI/Sources/DebugController.swift",
+    "submodules/PasscodeUI/Sources/PasscodeEntryController.swift",
+    "submodules/PasscodeUI/Sources/PasscodeEntryControllerNode.swift",
+    "submodules/PasscodeUI/Sources/PasscodeSetupControllerNode.swift",
+    "submodules/PlatformRestrictionMatching/Sources/PlatformRestrictionMatching.swift",
+    "submodules/SettingsUI/Sources/Data and Storage/WebBrowserSettingsController.swift",
+    "submodules/SettingsUI/Sources/Themes/ThemeSettingsController.swift",
+    "submodules/TelegramCallsUI/Sources/CallKitIntegration.swift",
+    "submodules/TelegramCore/Sources/State/ManagedLocalInputActivities.swift",
+    "submodules/TelegramCore/Sources/State/ManagedSynchronizeConsumeMessageContentsOperations.swift",
+    "submodules/TelegramCore/Sources/State/SynchronizePeerReadState.swift",
+    "submodules/TelegramCore/Sources/Utils/PeerUtils.swift",
+    "submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift",
+    "submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoSettingsItems.swift",
     "submodules/TelegramUI/Sources/AppDelegate.swift",
+    "submodules/TelegramUI/Sources/ChatInterfaceStateContextMenus.swift",
 }
 
 TARGET_RE = re.compile(r"^\+\+\+ b/(.+)$", re.MULTILINE)
-MARK_RE = re.compile(r"^[+#]?\s*(?://|#)\s*MARK:\s*AyuGram", re.MULTILINE)
+MARK_RE = re.compile(r"^[+#*/\s]*(?://|#|/\*)\s*MARK:\s*AyuGram", re.MULTILINE)
 FLAG_RE = re.compile(r"AyuSettings\.shared\.([A-Za-z_][A-Za-z0-9_]*)")
 
 failures = []
@@ -123,7 +175,7 @@ def main():
 
         check(f"{patch.name}: marked as an AyuGram change", bool(MARK_RE.search(text)))
 
-        files = TARGET_RE.findall(text)
+        files = [item.strip() for item in TARGET_RE.findall(text)]
         check(f"{patch.name}: declares exactly one target file", len(files) == 1, str(files))
         targets.update(files)
 

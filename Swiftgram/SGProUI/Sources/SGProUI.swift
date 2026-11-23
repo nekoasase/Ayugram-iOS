@@ -28,7 +28,6 @@ private enum SGProControllerSection: Int32, SGItemListSection {
 private enum SGProDisclosureLink: String {
     case sessionBackupManager
     case messageFilter
-    case appIcons
     case appBages
 }
 
@@ -61,7 +60,7 @@ private func SGProControllerEntries(presentationData: PresentationData) -> [SGPr
     entries.append(.oneFromManySelector(id: id.count, section: .notifications, settingName: .pinnedMessageNotifications, text: "Notifications.PinnedMessages.Title".i18n(lang), value: "Notifications.PinnedMessages.value.\(SGSimpleSettings.shared.pinnedMessageNotifications)".i18n(lang), enabled: true))
     entries.append(.oneFromManySelector(id: id.count, section: .notifications, settingName: .mentionsAndRepliesNotifications, text: "Notifications.MentionsAndReplies.Title".i18n(lang), value: "Notifications.MentionsAndReplies.value.\(SGSimpleSettings.shared.mentionsAndRepliesNotifications)".i18n(lang), enabled: true))
     entries.append(.header(id: id.count, section: .appearance, text: presentationData.strings.Appearance_Title.uppercased(), badge: nil))
-    entries.append(.disclosure(id: id.count, section: .appearance, link: .appIcons, text: presentationData.strings.Appearance_AppIcon))
+    // MARK: AyuGram - no alternate icons in this fork
     entries.append(.disclosure(id: id.count, section: .appearance, link: .appBages, text: "AppBadge.Title".i18n(lang)))
     entries.append(.notice(id: id.count, section: .appearance, text: "AppBadge.Notice".i18n(lang)))
 
@@ -135,8 +134,6 @@ public func sgProController(context: AccountContext) -> ViewController {
                 pushControllerImpl?(sgSessionBackupManagerController(context: context, presentationData: presentationData))
             case .messageFilter:
                 pushControllerImpl?(sgMessageFilterController(presentationData: presentationData))
-            case .appIcons:
-                pushControllerImpl?(themeSettingsController(context: context, focusOnItemTag: .icon))
             case .appBages:
                 if #available(iOS 14.0, *) {
                     pushControllerImpl?(sgAppBadgeSettingsController(context: context, presentationData: presentationData))
@@ -171,7 +168,7 @@ public func sgProController(context: AccountContext) -> ViewController {
         
         let entries = SGProControllerEntries(presentationData: presentationData)
         
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Swiftgram Pro"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Nekogram Pro"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: entries, style: .blocks, ensureVisibleItemTag: /*focusOnItemTag*/ nil, initialScrollToItem: nil /* scrollToItem*/ )
         

@@ -1,0 +1,29 @@
+diff --git a/submodules/DebugSettingsUI/Sources/DebugController.swift b/submodules/DebugSettingsUI/Sources/DebugController.swift
+index ba5093bb..2dc0a092 100644
+--- a/submodules/DebugSettingsUI/Sources/DebugController.swift
++++ b/submodules/DebugSettingsUI/Sources/DebugController.swift
+@@ -1,3 +1,4 @@
++// MARK: AyuGram - Nekogram rebrand / sideload fixes
+ // MARK: Swiftgram
+ import SGLogging
+ import SGLoggingComposer
+@@ -311,7 +312,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
+         let arguments = arguments as! DebugControllerArguments
+         switch self {
+         case .SGDebug:
+-            return ItemListDisclosureItem(presentationData: presentationData, title: "Swiftgram Debug", label: "", sectionId: self.section, style: .blocks, action: {
++            return ItemListDisclosureItem(presentationData: presentationData, title: "Nekogram Debug", label: "", sectionId: self.section, style: .blocks, action: {
+                 guard let context = arguments.context else {
+                     return
+                 }
+@@ -425,8 +426,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
+             if case .sendSGLogs(_) = self {
+                 title = "Send Swiftgram Logs"
+                 logCollectionSignal = SGLogger.shared.collectLogs()
+-                fileName = "Log-iOS-Swiftgram.txt"
+-                appName = "Swiftgram"
++                fileName = "Log-iOS-Nekogram.txt"
++                appName = "Nekogram"
+             }
+             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: "", sectionId: self.section, style: .blocks, action: {
+                 let _ = (logCollectionSignal

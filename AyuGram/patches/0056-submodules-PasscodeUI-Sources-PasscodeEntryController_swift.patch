@@ -1,0 +1,18 @@
+diff --git a/submodules/PasscodeUI/Sources/PasscodeEntryController.swift b/submodules/PasscodeUI/Sources/PasscodeEntryController.swift
+index 7e21de88..255865d4 100644
+--- a/submodules/PasscodeUI/Sources/PasscodeEntryController.swift
++++ b/submodules/PasscodeUI/Sources/PasscodeEntryController.swift
+@@ -1,3 +1,4 @@
++// MARK: AyuGram - Nekogram rebrand / sideload fixes
+ import Foundation
+ import UIKit
+ import Display
+@@ -228,7 +229,7 @@ public final class PasscodeEntryController: ViewController {
+         
+         self.hasOngoingBiometricsRequest = true
+         
+-        self.biometricsDisposable.set((LocalAuth.auth(reason: self.presentationData.strings.EnterPasscode_TouchId.replacingOccurrences(of: "Telegram", with: "Swiftgram") /* MARK: Swiftgram */) |> deliverOnMainQueue).start(next: { [weak self] result, evaluatedPolicyDomainState in
++        self.biometricsDisposable.set((LocalAuth.auth(reason: self.presentationData.strings.EnterPasscode_TouchId.replacingOccurrences(of: "Telegram", with: "Nekogram") /* MARK: Swiftgram */) |> deliverOnMainQueue).start(next: { [weak self] result, evaluatedPolicyDomainState in
+             guard let strongSelf = self else {
+                 return
+             }

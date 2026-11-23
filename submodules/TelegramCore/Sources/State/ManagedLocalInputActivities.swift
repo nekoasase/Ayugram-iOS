@@ -198,6 +198,10 @@ private func requestActivity(postbox: Postbox, network: Network, accountPeerId: 
                     return .complete()
                 }
             } else if let peer = peer as? TelegramSecretChat, activity == .typingText {
+                // MARK: AyuGram
+                if AyuSettings.shared.isGhostModeActive(dialogId: peer.id.toInt64()) && AyuSettings.shared.ghostModeTyping {
+                    return .complete()
+                }
                 let _ = PeerId(peer.id.toInt64())
                 return network.request(Api.functions.messages.setEncryptedTyping(peer: .inputEncryptedChat(.init(chatId: Int32(peer.id.id._internalGetInt64Value()), accessHash: peer.accessHash)), typing: .boolTrue))
                 |> `catch` { _ -> Signal<Api.Bool, NoError> in

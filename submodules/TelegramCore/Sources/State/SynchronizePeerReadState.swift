@@ -236,6 +236,10 @@ private func pushPeerReadState(network: Network, postbox: Postbox, stateManager:
             case .idBased:
                 return .single(readState)
             case let .indexBased(maxIncomingReadIndex, _, _, _):
+                // MARK: AyuGram
+                if AyuSettings.shared.isGhostModeActive(dialogId: peerId.toInt64()) && AyuSettings.shared.ghostModeReadMessages {
+                    return .single(readState)
+                }
                 return network.request(Api.functions.messages.readEncryptedHistory(peer: inputPeer, maxDate: maxIncomingReadIndex.timestamp))
                     |> mapError { _ in
                         return PeerReadStateValidationError.retry

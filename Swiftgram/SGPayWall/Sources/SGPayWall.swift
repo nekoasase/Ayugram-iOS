@@ -1,3 +1,4 @@
+// MARK: AyuGram - Nekogram rebrand / sideload fixes
 import Foundation
 import SwiftUI
 import StoreKit
@@ -383,7 +384,7 @@ struct SGPayWallView: View {
                         
                         // Title and Subtitle
                         VStack(spacing: 8) {
-                            Text("Swiftgram Pro")
+                            Text("Nekogram Pro")
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                             

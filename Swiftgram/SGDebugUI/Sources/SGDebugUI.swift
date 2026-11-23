@@ -1,3 +1,4 @@
+// MARK: AyuGram - Nekogram rebrand / sideload fixes
 import Foundation
 import UniformTypeIdentifiers
 import SGItemListUI
@@ -201,7 +202,7 @@ public func sgDebugController(context: AccountContext) -> ViewController {
         
         let entries = SGDebugControllerEntries(presentationData: presentationData)
         
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Swiftgram Debug"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Nekogram Debug"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: entries, style: .blocks, ensureVisibleItemTag: /*focusOnItemTag*/ nil, initialScrollToItem: nil /* scrollToItem*/ )
         

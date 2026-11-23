@@ -1,3 +1,4 @@
+// MARK: AyuGram - Nekogram rebrand / sideload fixes
 import Foundation
 import Postbox
 import TelegramCore
@@ -12,7 +13,7 @@ public extension EngineRawMessage {
         if let author = self.author {
             let chatId = author.id.id._internalGetInt64Value()
             if contentSettings.appConfiguration.sgWebSettings.global.forceReasons.contains(chatId) {
-                return "Unavailable in Swiftgram due to App Store Guidelines"
+                return "Unavailable in Nekogram due to App Store Guidelines"
             } else if contentSettings.appConfiguration.sgWebSettings.global.unforceReasons.contains(chatId) {
                 return nil
             }
@@ -31,7 +32,7 @@ public extension RestrictedContentMessageAttribute {
         // MARK: Swiftgram
         if let chatId = chatId {
             if contentSettings.appConfiguration.sgWebSettings.global.forceReasons.contains(chatId) {
-                return "Unavailable in Swiftgram due to App Store Guidelines"
+                return "Unavailable in Nekogram due to App Store Guidelines"
             } else if contentSettings.appConfiguration.sgWebSettings.global.unforceReasons.contains(chatId) {
                 return nil
             }

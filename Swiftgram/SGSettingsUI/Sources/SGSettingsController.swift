@@ -355,7 +355,7 @@ private func SGControllerEntries(presentationData: PresentationData, callListSet
     entries.append(.header(id: id.count, section: .ayugram, text: "AyuGram", badge: nil))
     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostMode, value: AyuSettings.shared.ghostModeEnabled, text: "Ghost Mode", enabled: true))
     entries.append(.notice(id: id.count, section: .ayugram, text: "Does not report read receipts, typing or online status. Applies to every chat unless a chat has its own override."))
-    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostModeStories, value: AyuSettings.shared.ghostModeStories, text: "Ghost Mode for Stories", enabled: AyuSettings.shared.ghostModeEnabled))
+    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostModeStories, value: AyuSettings.shared.ghostModeReadStories, text: "Ghost Mode for Stories", enabled: AyuSettings.shared.ghostModeEnabled))
     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveDeletedMessages, value: AyuSettings.shared.saveDeletedMessages, text: "Save Deleted Messages", enabled: true))
     entries.append(.notice(id: id.count, section: .ayugram, text: "Keeps deleted and edited messages in AyuGram's own database, separately from the message cache."))
     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveEditedMessages, value: AyuSettings.shared.saveEditedMessages, text: "Save Edit History", enabled: AyuSettings.shared.saveDeletedMessages))
@@ -446,8 +446,10 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
         case .ayuGhostMode:
             AyuSettings.shared.ghostModeEnabled = value
             simplePromise.set(true)
+        // MARK: AyuGram - story views follow the master Ghost Mode switch
         case .ayuGhostModeStories:
-            AyuSettings.shared.ghostModeStories = value
+            AyuSettings.shared.ghostModeReadStories = value
+            simplePromise.set(true)
         case .ayuSaveDeletedMessages:
             AyuSettings.shared.saveDeletedMessages = value
             simplePromise.set(true)
@@ -786,7 +788,7 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
         
         let entries = SGControllerEntries(presentationData: presentationData, callListSettings: callListSettings, experimentalUISettings: experimentalUISettings, appConfiguration: appConfiguration, nameColors: PeerNameColors.with(availableReplyColors: availableReplyColors, availableProfileColors: availableProfileColors), state: state)
         
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Swiftgram"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Nekogram"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         
         // TODO(swiftgram): focusOnItemTag support
         /* var index = 0

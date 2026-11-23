@@ -1,0 +1,17 @@
+diff --git a/submodules/SettingsUI/Sources/Themes/ThemeSettingsController.swift b/submodules/SettingsUI/Sources/Themes/ThemeSettingsController.swift
+index abaa9a70..de328e2d 100644
+--- a/submodules/SettingsUI/Sources/Themes/ThemeSettingsController.swift
++++ b/submodules/SettingsUI/Sources/Themes/ThemeSettingsController.swift
+@@ -482,10 +482,8 @@ private func themeSettingsControllerEntries(
+     entries.append(.powerSaving)
+     entries.append(.stickersAndEmoji)
+     
+-    if !availableAppIcons.isEmpty {
+-        entries.append(.iconHeader(presentationData.theme, strings.Appearance_AppIcon.uppercased()))
+-        entries.append(.iconItem(presentationData.theme, presentationData.strings, availableAppIcons, isPremium, currentAppIconName))
+-    }
++    // MARK: AyuGram
++    // No alternate icons are shipped; the icon section is always hidden.
+     
+     entries.append(.otherHeader(presentationData.theme, strings.Appearance_Other.uppercased()))
+     if DeviceModel.current.isIpad {

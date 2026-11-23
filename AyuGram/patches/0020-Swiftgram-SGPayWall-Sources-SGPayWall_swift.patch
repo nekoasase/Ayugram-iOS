@@ -1,0 +1,18 @@
+diff --git a/Swiftgram/SGPayWall/Sources/SGPayWall.swift b/Swiftgram/SGPayWall/Sources/SGPayWall.swift
+index eff6713c..f2a831c3 100644
+--- a/Swiftgram/SGPayWall/Sources/SGPayWall.swift
++++ b/Swiftgram/SGPayWall/Sources/SGPayWall.swift
+@@ -1,3 +1,4 @@
++// MARK: AyuGram - Nekogram rebrand / sideload fixes
+ import Foundation
+ import SwiftUI
+ import StoreKit
+@@ -383,7 +384,7 @@ struct SGPayWallView: View {
+                         
+                         // Title and Subtitle
+                         VStack(spacing: 8) {
+-                            Text("Swiftgram Pro")
++                            Text("Nekogram Pro")
+                                 .font(.largeTitle)
+                                 .fontWeight(.bold)
+                             

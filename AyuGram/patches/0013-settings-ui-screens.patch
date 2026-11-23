@@ -1,50 +1,34 @@
 diff --git a/Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift b/Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift
-index 565de578..1a661d05 100644
+index 1a661d05..8c3f92d6 100644
 --- a/Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift
 +++ b/Swiftgram/SGSettingsUI/Sources/SGSettingsController.swift
-@@ -5,6 +5,7 @@ import SGStrings
- import SGAPIToken
- // MARK: AyuGram
- import AyuSettings
-+import AyuGramUI
- 
- import SGItemListUI
- import Foundation
-@@ -140,6 +141,10 @@ private enum SGSliderSetting: String {
- private enum SGDisclosureLink: String {
-     case contentSettings
-     case languageSettings
-+    // MARK: AyuGram
-+    case ayuDeletedMessages
-+    case ayuFilters
-+    case ayuImportArchive
- }
- 
- private struct PeerNameColorScreenState: Equatable {
-@@ -358,6 +363,12 @@ private func SGControllerEntries(presentationData: PresentationData, callListSet
-     entries.append(.notice(id: id.count, section: .ayugram, text: "Records who read a message and when. Telegram does not report the reader for read contents in groups, so those are stored without one."))
-     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuAdBlockSponsored, value: AyuSettings.shared.adBlockEnabled, text: "Block Sponsored Messages", enabled: true))
-     entries.append(.notice(id: id.count, section: .ayugram, text: "Hides sponsored posts in channels. Filter lists and web content blocking are not implemented."))
-+
-+    // MARK: AyuGram
-+    // The screens that make the collected data usable.
-+    entries.append(.disclosure(id: id.count, section: .ayugram, link: .ayuDeletedMessages, text: "Deleted Messages"))
-+    entries.append(.disclosure(id: id.count, section: .ayugram, link: .ayuFilters, text: "Regex Filters"))
-+    entries.append(.disclosure(id: id.count, section: .ayugram, link: .ayuImportArchive, text: "Import Android Archive"))
-     
-     return filterSGItemListUIEntrires(entries: entries, by: state.searchQuery)
- }
-@@ -739,6 +750,13 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
-                     }
-                     strongContext.sharedContext.applicationBindings.openUrl(url)
-                 })
-+            // MARK: AyuGram
-+            case .ayuDeletedMessages:
-+                pushControllerImpl?(ayuDeletedMessagesController(context: context))
-+            case .ayuFilters:
-+                pushControllerImpl?(ayuFiltersController(context: context))
-+            case .ayuImportArchive:
-+                pushControllerImpl?(ayuArchiveImportController(context: context))
-         }
-     }, searchInput: { searchQuery in
-         updateState { state in
+@@ -355,7 +355,7 @@ private func SGControllerEntries(presentationData: PresentationData, callListSet
+     entries.append(.header(id: id.count, section: .ayugram, text: "AyuGram", badge: nil))
+     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostMode, value: AyuSettings.shared.ghostModeEnabled, text: "Ghost Mode", enabled: true))
+     entries.append(.notice(id: id.count, section: .ayugram, text: "Does not report read receipts, typing or online status. Applies to every chat unless a chat has its own override."))
+-    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostModeStories, value: AyuSettings.shared.ghostModeStories, text: "Ghost Mode for Stories", enabled: AyuSettings.shared.ghostModeEnabled))
++    entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuGhostModeStories, value: AyuSettings.shared.ghostModeReadStories, text: "Ghost Mode for Stories", enabled: AyuSettings.shared.ghostModeEnabled))
+     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveDeletedMessages, value: AyuSettings.shared.saveDeletedMessages, text: "Save Deleted Messages", enabled: true))
+     entries.append(.notice(id: id.count, section: .ayugram, text: "Keeps deleted and edited messages in AyuGram's own database, separately from the message cache."))
+     entries.append(.toggle(id: id.count, section: .ayugram, settingName: .ayuSaveEditedMessages, value: AyuSettings.shared.saveEditedMessages, text: "Save Edit History", enabled: AyuSettings.shared.saveDeletedMessages))
+@@ -446,8 +446,10 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
+         case .ayuGhostMode:
+             AyuSettings.shared.ghostModeEnabled = value
+             simplePromise.set(true)
++        // MARK: AyuGram - story views follow the master Ghost Mode switch
+         case .ayuGhostModeStories:
+-            AyuSettings.shared.ghostModeStories = value
++            AyuSettings.shared.ghostModeReadStories = value
++            simplePromise.set(true)
+         case .ayuSaveDeletedMessages:
+             AyuSettings.shared.saveDeletedMessages = value
+             simplePromise.set(true)
+@@ -786,7 +788,7 @@ public func sgSettingsController(context: AccountContext/*, focusOnItemTag: Int?
+         
+         let entries = SGControllerEntries(presentationData: presentationData, callListSettings: callListSettings, experimentalUISettings: experimentalUISettings, appConfiguration: appConfiguration, nameColors: PeerNameColors.with(availableReplyColors: availableReplyColors, availableProfileColors: availableProfileColors), state: state)
+         
+-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Swiftgram"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
++        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text("Nekogram"), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+         
+         // TODO(swiftgram): focusOnItemTag support
+         /* var index = 0

@@ -3,6 +3,8 @@ import Postbox
 import SwiftSignalKit
 import TelegramApi
 import MtProtoKit
+// MARK: AyuGram
+import AyuSettings
 
 
 private final class ManagedSynchronizeConsumeMessageContentsOperationHelper {
@@ -110,6 +112,10 @@ func managedSynchronizeConsumeMessageContentOperations(postbox: Postbox, network
 }
 
 private func synchronizeConsumeMessageContents(transaction: Transaction, network: Network, stateManager: AccountStateManager, peerId: PeerId, operation: SynchronizeConsumeMessageContentsOperation) -> Signal<Void, NoError> {
+    // MARK: AyuGram
+    if AyuSettings.shared.isGhostModeActive(dialogId: peerId.toInt64()) && AyuSettings.shared.ghostModeReadMessages {
+        return .complete()
+    }
     if peerId.namespace == Namespaces.Peer.CloudUser || peerId.namespace == Namespaces.Peer.CloudGroup {
         return network.request(Api.functions.messages.readMessageContents(id: operation.messageIds.map { $0.id }))
         |> map(Optional.init)

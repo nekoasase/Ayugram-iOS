@@ -1,0 +1,18 @@
+diff --git a/submodules/TelegramCallsUI/Sources/CallKitIntegration.swift b/submodules/TelegramCallsUI/Sources/CallKitIntegration.swift
+index be26322e..8cf01e37 100644
+--- a/submodules/TelegramCallsUI/Sources/CallKitIntegration.swift
++++ b/submodules/TelegramCallsUI/Sources/CallKitIntegration.swift
+@@ -1,3 +1,4 @@
++// MARK: AyuGram - Nekogram rebrand / sideload fixes
+ import SGAppGroupIdentifier
+ import Foundation
+ import UIKit
+@@ -160,7 +161,7 @@ class CallKitProviderDelegate: NSObject, CXProviderDelegate {
+     
+     private static func providerConfiguration() -> CXProviderConfiguration {
+         // MARK: Swiftgram
+-        let providerConfiguration = CXProviderConfiguration(localizedName: "Swiftgram")
++        let providerConfiguration = CXProviderConfiguration(localizedName: "Nekogram")
+         
+         providerConfiguration.supportsVideo = true
+         providerConfiguration.maximumCallsPerCallGroup = 1

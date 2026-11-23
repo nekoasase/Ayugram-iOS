@@ -139,6 +139,15 @@ public final class AyuSettings {
         set { self.defaults.set(newValue, forKey: Keys.ghostModeStories.rawValue) }
     }
 
+    // MARK: AyuGram
+    // The Android original suppresses story views together with read receipts.
+    // The key was registered but never read, so the master switch alone left
+    // story views enabled. This property makes the key live again.
+    public var ghostModeReadStories: Bool {
+        get { self.defaults.bool(forKey: Keys.ghostModeReadStories.rawValue) }
+        set { self.defaults.set(newValue, forKey: Keys.ghostModeReadStories.rawValue) }
+    }
+
     public var ghostModeSendOnline: Bool {
         get { self.defaults.bool(forKey: Keys.ghostModeSendOnline.rawValue) }
         set { self.defaults.set(newValue, forKey: Keys.ghostModeSendOnline.rawValue) }
@@ -283,7 +292,8 @@ public final class AyuSettings {
     /// Swiftgram already ships a story stealth mode (`storyStealthMode` +
     /// `canUseStealthMode`). AyuGram's own story setting must not fight it: ghost
     /// mode suppresses story views when *either* flag is on.
+    // MARK: AyuGram
     public var suppressesStoryViews: Bool {
-        return self.ghostModeEnabled && self.ghostModeStories
+        return self.ghostModeEnabled && (self.ghostModeReadStories || self.ghostModeStories)
     }
 }

@@ -1,3 +1,4 @@
+// MARK: AyuGram - Nekogram rebrand / sideload fixes
 import Foundation
 import Postbox
 import SGSimpleSettings
@@ -34,7 +35,7 @@ public extension Peer {
         // MARK: Swiftgram
         let chatId = self.id.id._internalGetInt64Value()
         if contentSettings.appConfiguration.sgWebSettings.global.forceReasons.contains(chatId) {
-            return "Unavailable in Swiftgram due to App Store Guidelines"
+            return "Unavailable in Nekogram due to App Store Guidelines"
         } else if contentSettings.appConfiguration.sgWebSettings.global.unforceReasons.contains(chatId) {
             return nil
         }

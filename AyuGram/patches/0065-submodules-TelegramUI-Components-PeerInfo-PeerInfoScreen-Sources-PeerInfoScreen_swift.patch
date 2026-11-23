@@ -1,0 +1,27 @@
+diff --git a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
+index 9b67108e..9614a0ed 100644
+--- a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
++++ b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
+@@ -1,3 +1,4 @@
++// MARK: AyuGram - Nekogram rebrand / sideload fixes
+ // MARK: Swiftgram
+ import SGDebugUI
+ import SGSimpleSettings
+@@ -7209,7 +7210,7 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+ 
+         // MARK: Swiftgram
+         #if DEBUG
+-        items.append(.action(ContextMenuActionItem(text: "Swiftgram Debug", icon: { theme in
++        items.append(.action(ContextMenuActionItem(text: "Nekogram Debug", icon: { theme in
+             return generateTintedImage(image: nil, color: theme.contextMenu.primaryColor)
+         }, action: { [weak self] _, f in
+             guard let self = self else {
+@@ -7623,7 +7624,7 @@ extension PeerInfoScreenImpl {
+ 
+         // MARK: Swiftgram
+         #if DEBUG
+-        items.append(.action(ContextMenuActionItem(text: "Swiftgram Debug", icon: { theme in
++        items.append(.action(ContextMenuActionItem(text: "Nekogram Debug", icon: { theme in
+             return generateTintedImage(image: nil, color: theme.contextMenu.primaryColor)
+         }, action: { [weak self] _, f in
+             guard let self = self else {
